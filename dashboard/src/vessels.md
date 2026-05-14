@@ -37,11 +37,11 @@ const typeData = Object.entries(casualties.by_type)
   wrapper.style.cssText = "display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:2rem;";
 
   const cards = [
-    {value: casualties.total_affected.toLocaleString(), label: "Total Affected", borderColor: "#1e40af"},
-    {value: Math.round(casualties.ppe_deficient_pct*100) + "%", label: "PPE Deficient", borderColor: "#dc2626"},
-    {value: Math.round(casualties.ppe_used_pct*100) + "%", label: "PPE Used", borderColor: "#16a34a"},
-    {value: Math.round(casualties.on_duty_pct*100) + "%", label: "On Duty", borderColor: "#1e40af"},
-    {value: vessels.incidents_with_vessel_loss.toLocaleString(), label: "Vessel Losses", borderColor: "#1e40af"},
+    {value: (casualties.total_affected ?? 0).toLocaleString(), label: "Total Affected", borderColor: "#1e40af"},
+    {value: Math.round((casualties.ppe_deficient_pct ?? 0)*100) + "%", label: "PPE Deficient", borderColor: "#dc2626"},
+    {value: Math.round((casualties.ppe_used_pct ?? 0)*100) + "%", label: "PPE Used", borderColor: "#16a34a"},
+    {value: Math.round((casualties.on_duty_pct ?? 0)*100) + "%", label: "On Duty", borderColor: "#1e40af"},
+    {value: (vessels.incidents_with_vessel_loss ?? 0).toLocaleString(), label: "Vessel Losses", borderColor: "#1e40af"},
   ];
 
   cards.forEach(c => {
@@ -151,7 +151,7 @@ Plot.plot({
     flag.textContent = item.flag;
     const count = document.createElement("span");
     count.style.cssText = "font-weight:600;color:#1e40af;min-width:40px;text-align:right;";
-    count.textContent = item.count.toLocaleString();
+    count.textContent = (item.count ?? 0).toLocaleString();
     row.append(rank, flag, count);
     list.appendChild(row);
   });
