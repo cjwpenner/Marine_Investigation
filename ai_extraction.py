@@ -3,6 +3,7 @@ import json
 import re
 import os
 import anthropic
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -124,17 +125,30 @@ def parse_extraction_response(text: str) -> dict | None:
     return None
 
 
+@retry(
+    stop=stop_after_attempt(6),
+    wait=wait_exponential(multiplier=2, min=5, max=120),
+    retry=retry_if_exception_type((anthropic.RateLimitError, anthropic.APIStatusError)),
+    reraise=True,
+)
+async def _call_claude(prompt: str) -> str:
+    """Inner call with retry on rate-limit / overload. Re-raises if all attempts fail."""
+    client = get_client()
+    message = await client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return message.content[0].text
+
+
 async def extract_incident_analysis(description: str, weather: dict) -> dict | None:
-    """Call Claude Sonnet 4.6 to extract structured analysis from an incident description."""
+    """Call Claude Sonnet 4.6 to extract structured analysis from an incident description.
+
+    Raises anthropic.RateLimitError / APIStatusError if rate-limited after all retries,
+    so the caller can log it prominently. Returns None only for parse failures.
+    """
     is_short = len(description) < SHORT_DESCRIPTION_THRESHOLD
     prompt = build_extraction_prompt(description, weather, short=is_short)
-    client = get_client()
-    try:
-        message = await client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=1024,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        return parse_extraction_response(message.content[0].text)
-    except Exception:
-        return None
+    text = await _call_claude(prompt)
+    return parse_extraction_response(text)

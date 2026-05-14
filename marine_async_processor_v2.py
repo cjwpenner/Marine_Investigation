@@ -141,30 +141,47 @@ async def main():
         return
 
     completed = 0
+    rate_limit_skips = 0
+    other_skips = 0
     start = time.time()
     tasks = []
 
     for incident in to_process:
         async def handle(inc=incident):
-            nonlocal completed
+            nonlocal completed, rate_limit_skips, other_skips
             try:
                 result = await process_incident(inc)
                 if result:
                     await write_result(result)
             except Exception as e:
-                print(f"  WARN: skipping {inc.get('Occurrence_Id')} due to error: {e}")
+                import anthropic as _anthropic
+                cause = getattr(e, '__cause__', e)
+                if isinstance(cause, (_anthropic.RateLimitError, _anthropic.APIStatusError)):
+                    rate_limit_skips += 1
+                    print(f"\n*** RATE LIMIT: skipped {inc.get('Occurrence_Id')} "
+                          f"after retries ({rate_limit_skips} total skips). "
+                          f"Consider reducing CONCURRENCY. ***")
+                else:
+                    other_skips += 1
+                    print(f"  WARN: skipping {inc.get('Occurrence_Id')} — {type(cause).__name__}: {cause}")
             finally:
                 completed += 1
                 if completed % 100 == 0:
                     elapsed = time.time() - start
                     rate = completed / max(elapsed, 0.001)
                     remaining = (len(to_process) - completed) / max(rate, 0.001)
+                    skip_note = f", {rate_limit_skips} rate-limit skips" if rate_limit_skips else ""
                     print(f"  {completed}/{len(to_process)} processed "
-                          f"({rate:.1f}/s, ~{remaining/60:.0f}min remaining)")
+                          f"({rate:.1f}/s, ~{remaining/60:.0f}min remaining{skip_note})")
         tasks.append(handle())
 
     await asyncio.gather(*tasks)
-    print(f"\nDone. {OUTPUT_FILE} written with {completed} records attempted.")
+    print(f"\nDone. {OUTPUT_FILE} written.")
+    print(f"  Attempted: {completed}  |  Rate-limit skips: {rate_limit_skips}  |  Other skips: {other_skips}")
+    if rate_limit_skips:
+        print(f"\n  *** {rate_limit_skips} incidents skipped due to rate limiting. ***")
+        print(f"  Re-run the script to retry them (already-processed IDs are skipped automatically).")
+        print(f"  If this keeps happening, lower CONCURRENCY in the script (currently {CONCURRENCY}).")
 
 
 if __name__ == "__main__":
