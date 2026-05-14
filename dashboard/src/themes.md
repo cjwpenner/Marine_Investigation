@@ -10,6 +10,12 @@ const themes = await FileAttachment("data/themes.json").json();
 const escapeHtml = str => str == null ? "" : String(str)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
   .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+
+function severityScore(t) {
+  const sb = t.severity_breakdown || {};
+  const total = Object.values(sb).reduce((a,b) => a+b, 0) || 1;
+  return ((sb["Very Serious"] || 0) * 1.0 + (sb["Serious"] || 0) * 0.5) / total;
+}
 ```
 
 # Incident Themes
@@ -28,7 +34,12 @@ Plot.plot({
     Plot.barX(themes, {
       x: "incident_count",
       y: "title",
-      fill: (d, i) => ["#1e40af","#2563eb","#3b82f6","#60a5fa","#93c5fd","#bfdbfe","#1d4ed8"][i % 7],
+      fill: d => {
+        const s = severityScore(d);
+        if (s > 0.2) return "#dc2626";      // high severity — red
+        if (s > 0.05) return "#d97706";     // medium — amber
+        return "#1e40af";                    // low — blue
+      },
       tip: true,
       sort: {y: "-x"}
     })
@@ -174,12 +185,33 @@ function renderCards() {
         body.appendChild(prevBox);
       }
 
+      // Search input for representative cases
+      const searchWrap = document.createElement("div");
+      searchWrap.style.cssText = "margin-bottom:8px;";
+      const searchInput = document.createElement("input");
+      searchInput.type = "text";
+      searchInput.placeholder = "Search cases...";
+      searchInput.style.cssText = "width:100%;padding:5px 8px;font-size:11px;border:1px solid #e2e8f0;border-radius:4px;box-sizing:border-box;";
+      searchWrap.appendChild(searchInput);
+      searchInput.addEventListener("input", () => {
+        const val = searchInput.value;
+        renderCards();
+        // Restore focus and value after re-render
+        const newInput = container.querySelector("input[type=text]");
+        if (newInput) { newInput.value = val; newInput.focus(); }
+      });
+      body.appendChild(searchWrap);
+
       // Representative cases
       const caseLabel = document.createElement("div");
       caseLabel.style.cssText = "font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
       caseLabel.textContent = "Representative Cases";
       body.appendChild(caseLabel);
-      (t.representative_cases ?? []).slice(0, 5).forEach(c => {
+      const query = searchInput.value.trim().toLowerCase();
+      const filteredCases = (t.representative_cases ?? [])
+        .filter(c => !query || (c.description ?? "").toLowerCase().includes(query))
+        .slice(0, 10);
+      filteredCases.forEach(c => {
         const caseBox = document.createElement("div");
         caseBox.style.cssText = "border:1px solid #e2e8f0;border-radius:4px;padding:8px;margin-bottom:6px;background:#fff;";
         const caseMeta = document.createElement("div");
