@@ -112,7 +112,7 @@ def main():
         print(f"ERROR: {INPUT_FILE} not found. Run marine_async_processor_v2.py first.")
         return
 
-    records = [json.loads(l) for l in open(INPUT_FILE) if l.strip()]
+    records = [json.loads(l) for l in open(INPUT_FILE, encoding="utf-8") if l.strip()]
     valid = [r for r in records if r.get("Embedding") and r.get("Analysis")]
     print(f"{len(records)} total records, {len(valid)} with embeddings for clustering.")
 
@@ -180,19 +180,24 @@ def main():
         f.write("".join(md_sections))
     print(f"Written {OUTPUT_MD}")
 
-    with open(OUTPUT_THEMES_JSON, "w") as f:
+    with open(OUTPUT_THEMES_JSON, "w", encoding="utf-8") as f:
         json.dump(themes, f, indent=2)
     print(f"Written {OUTPUT_THEMES_JSON}")
 
     # Write theme_id back into the JSONL
     print("Writing theme IDs back to JSONL...")
-    id_to_theme = {r["Occurrence_Id"]: labels[i] for i, r in enumerate(valid)}
+    id_to_theme = {
+        r["Occurrence_Id"]: labels[i]
+        for i, r in enumerate(valid)
+        if r.get("Occurrence_Id") is not None
+    }
     updated_lines = []
-    for line in open(INPUT_FILE):
+    for line in open(INPUT_FILE, encoding="utf-8"):
         r = json.loads(line)
-        r["theme_id"] = id_to_theme.get(r["Occurrence_Id"], -1)
+        oid = r.get("Occurrence_Id")
+        r["theme_id"] = id_to_theme.get(oid, -1) if oid is not None else -1
         updated_lines.append(json.dumps(r))
-    with open(INPUT_FILE, "w") as f:
+    with open(INPUT_FILE, "w", encoding="utf-8") as f:
         f.write("\n".join(updated_lines) + "\n")
     print("Theme IDs written.")
 
