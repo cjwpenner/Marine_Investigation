@@ -15,7 +15,7 @@ load_dotenv(find_dotenv())
 
 INPUT_FILE = Path(__file__).parent.parent.parent / "stitched_marine_data.json"
 OUTPUT_FILE = Path(__file__).parent / "analyzed_incidents_v2.jsonl"
-CONCURRENCY = 15
+CONCURRENCY = 30
 
 openai_client = None
 write_lock = None
@@ -73,11 +73,13 @@ async def process_incident(incident: dict) -> dict | None:
     if not description or not occ_id:
         return None
 
-    async with semaphore:
-        # Step 1: Weather enrichment (sync call in thread pool)
-        loop = asyncio.get_event_loop()
-        weather = await loop.run_in_executor(None, enrich_weather, incident)
+    # Step 1: Weather enrichment runs outside the semaphore — Open-Meteo has no
+    # rate limit, so there's no reason to tie up a Claude slot while waiting on HTTP.
+    loop = asyncio.get_running_loop()
+    weather = await loop.run_in_executor(None, enrich_weather, incident)
 
+    # Semaphore only covers the rate-limited Claude + OpenAI calls
+    async with semaphore:
         # Step 2: AI extraction
         analysis = await extract_incident_analysis(description, weather)
         if not analysis:
