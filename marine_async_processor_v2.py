@@ -145,16 +145,20 @@ async def main():
     for incident in to_process:
         async def handle(inc=incident):
             nonlocal completed
-            result = await process_incident(inc)
-            if result:
-                await write_result(result)
-            completed += 1
-            if completed % 100 == 0:
-                elapsed = time.time() - start
-                rate = completed / elapsed
-                remaining = (len(to_process) - completed) / max(rate, 0.001)
-                print(f"  {completed}/{len(to_process)} processed "
-                      f"({rate:.1f}/s, ~{remaining/60:.0f}min remaining)")
+            try:
+                result = await process_incident(inc)
+                if result:
+                    await write_result(result)
+            except Exception as e:
+                print(f"  WARN: skipping {inc.get('Occurrence_Id')} due to error: {e}")
+            finally:
+                completed += 1
+                if completed % 100 == 0:
+                    elapsed = time.time() - start
+                    rate = completed / max(elapsed, 0.001)
+                    remaining = (len(to_process) - completed) / max(rate, 0.001)
+                    print(f"  {completed}/{len(to_process)} processed "
+                          f"({rate:.1f}/s, ~{remaining/60:.0f}min remaining)")
         tasks.append(handle())
 
     await asyncio.gather(*tasks)
