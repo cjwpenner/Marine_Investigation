@@ -1,0 +1,27 @@
+:root {
+  --theme-foreground: #1e293b;
+  --theme-background: #f8f9fc;
+  --theme-foreground-muted: #64748b;
+  --theme-background-alt: #ffffff;
+  --theme-border: #e2e8f0;
+  --accent-blue: #1e40af;
+}
+.stat-card {
+  background: var(--theme-background-alt);
+  border: 1px solid var(--theme-border);
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid var(--accent-blue);
+}
+.stat-card .value { font-size: 2rem; font-weight: 800; color: var(--theme-foreground); }
+.stat-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--theme-foreground-muted); }
+.theme-card {
+  background: var(--theme-background-alt);
+  border: 1px solid var(--theme-border);
+  border-top: 3px solid var(--accent-blue);
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+.theme-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }

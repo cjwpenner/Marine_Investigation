@@ -1,0 +1,14 @@
+{
+  "name": "marine-safety-observatory",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "observable preview",
+    "build": "observable build",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@observablehq/framework": "latest"
+  }
+}
