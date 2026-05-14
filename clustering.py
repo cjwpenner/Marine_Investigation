@@ -32,7 +32,7 @@ def select_representatives(records: list, n: int = 10) -> list:
     seen = set()
     result = []
     for r in weighted:
-        rid = r.get("Occurrence_Id")
+        rid = r.get("Occurrence_Id") or id(r)
         if rid not in seen:
             seen.add(rid)
             result.append(r)
@@ -46,6 +46,8 @@ def build_cluster_text(records: list) -> str:
     Build a text description of a cluster for Claude synthesis.
     Includes category distribution, contributing factor types, and pattern summaries.
     """
+    if not records:
+        return "No records in cluster."
     categories: dict = {}
     factor_types: dict = {}
     summaries = []

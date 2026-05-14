@@ -40,6 +40,19 @@ def test_select_representatives_weights_severity():
     reps = select_representatives(records, n=1)
     assert reps[0]["Occurrence_Id"] == "a"
 
+def test_cluster_embeddings_has_noise_for_sparse_points():
+    """HDBSCAN should mark isolated points as noise (-1)."""
+    rng = np.random.default_rng(0)
+    # 3 tight clusters + 5 isolated outlier points
+    cluster_pts = np.vstack([
+        rng.normal(loc, 0.1, (30, 5)) for loc in [[-5,0,0,0,0],[5,0,0,0,0],[0,5,0,0,0]]
+    ])
+    # Add 5 truly isolated outlier points far from any cluster
+    outliers = rng.uniform(10, 20, (5, 5))
+    embeddings = np.vstack([cluster_pts, outliers])
+    labels = cluster_embeddings(embeddings)
+    assert -1 in labels
+
 def test_build_cluster_text_includes_key_fields():
     records = [
         {"Analysis": {
