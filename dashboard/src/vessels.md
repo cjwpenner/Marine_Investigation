@@ -34,11 +34,12 @@ const typeData = Object.entries(casualties.by_type)
 ```js
 {
   const wrapper = document.createElement("div");
-  wrapper.style.cssText = "display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;";
+  wrapper.style.cssText = "display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:2rem;";
 
   const cards = [
     {value: casualties.total_affected.toLocaleString(), label: "Total Affected", borderColor: "#1e40af"},
     {value: Math.round(casualties.ppe_deficient_pct*100) + "%", label: "PPE Deficient", borderColor: "#dc2626"},
+    {value: Math.round(casualties.ppe_used_pct*100) + "%", label: "PPE Used", borderColor: "#16a34a"},
     {value: Math.round(casualties.on_duty_pct*100) + "%", label: "On Duty", borderColor: "#1e40af"},
     {value: vessels.incidents_with_vessel_loss.toLocaleString(), label: "Vessel Losses", borderColor: "#1e40af"},
   ];
@@ -130,10 +131,30 @@ Plot.plot({
 ## Top Flag States
 
 ```js
-Plot.plot({
-  height: 240,
-  x: {label: "Flag state"},
-  y: {label: "Incidents"},
-  marks: [Plot.barY(vessels.by_flag_state.slice(0,15), {x:"flag", y:"count", fill:"#1e40af", tip:true, sort:{x:"-y"}})]
-})
+{
+  const list = document.createElement("div");
+  list.style.cssText = "font-size:12px;";
+  const header = document.createElement("div");
+  header.style.cssText = "display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid #e2e8f0;margin-bottom:4px;";
+  const hFlag = document.createElement("span"); hFlag.textContent = "Flag State";
+  const hCount = document.createElement("span"); hCount.textContent = "Incidents";
+  header.append(hFlag, hCount);
+  list.appendChild(header);
+  vessels.by_flag_state.slice(0, 15).forEach((item, i) => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f8fafc;";
+    const rank = document.createElement("span");
+    rank.style.cssText = "color:#94a3b8;font-size:10px;min-width:18px;";
+    rank.textContent = (i + 1) + ".";
+    const flag = document.createElement("span");
+    flag.style.cssText = "flex:1;padding-left:4px;color:#1e293b;";
+    flag.textContent = item.flag;
+    const count = document.createElement("span");
+    count.style.cssText = "font-weight:600;color:#1e40af;min-width:40px;text-align:right;";
+    count.textContent = item.count.toLocaleString();
+    row.append(rank, flag, count);
+    list.appendChild(row);
+  });
+  display(list);
+}
 ```
