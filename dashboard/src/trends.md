@@ -58,14 +58,19 @@ const toYear = view(Inputs.select(years, {label: "To year", value: maxYear}));
 
 ```js
 const filtered = timeSeries.filter(d => d.year_month >= fromYear && d.year_month <= toYear + "-99");
+// Reshape to long form so Plot.stackY stacks correctly (three barY without stackY would overlap)
+const stackData = filtered.flatMap(d => [
+  {year_month: d.year_month, count: d.less_serious,  severity: "Less Serious"},
+  {year_month: d.year_month, count: d.serious,        severity: "Serious"},
+  {year_month: d.year_month, count: d.very_serious,   severity: "Very Serious"},
+]);
 Plot.plot({
   height: 240, marginLeft: 40,
   x: {label: null},
   y: {label: "Incidents"},
+  color: {domain: ["Less Serious","Serious","Very Serious"], range: ["#bfdbfe","#d97706","#dc2626"]},
   marks: [
-    Plot.barY(filtered, {x: "year_month", y: "less_serious", fill: "#bfdbfe", tip: true}),
-    Plot.barY(filtered, {x: "year_month", y: "serious", fill: "#d97706", tip: true}),
-    Plot.barY(filtered, {x: "year_month", y: "very_serious", fill: "#dc2626", tip: true}),
+    Plot.barY(stackData, Plot.stackY({x: "year_month", y: "count", fill: "severity", tip: true})),
     Plot.ruleY([0])
   ]
 })
