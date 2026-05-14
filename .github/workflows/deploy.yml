@@ -3,7 +3,7 @@ name: Deploy Dashboard to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - "dashboard/**"
       - ".github/workflows/deploy.yml"
