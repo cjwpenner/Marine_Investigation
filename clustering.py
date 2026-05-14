@@ -1,22 +1,37 @@
 # clustering.py
 import numpy as np
 import hdbscan
+import umap
 
 SEVERITY_WEIGHTS = {"Very Serious": 4, "Serious": 2, "Less Serious": 1, "Marine Incident": 1}
 
 
-def cluster_embeddings(embeddings: np.ndarray, min_cluster_size: int = 20) -> list:
+def cluster_embeddings(embeddings: np.ndarray, min_cluster_size: int = 8) -> list:
     """
-    Run HDBSCAN on a 2D numpy array of embeddings.
-    Returns list of integer cluster labels (-1 = noise/outlier).
+    Reduce high-dimensional embeddings with UMAP, then cluster with HDBSCAN.
+
+    UMAP compresses 1536-dim vectors to 50 dims that preserve local neighbourhood
+    structure, giving HDBSCAN meaningful density gradients instead of the near-uniform
+    distances that cause it to collapse everything into one giant cluster.
     """
+    print(f"  UMAP: reducing {embeddings.shape[1]}-dim embeddings → 50 dims …")
+    reducer = umap.UMAP(
+        n_components=50,
+        n_neighbors=15,
+        min_dist=0.0,
+        metric="cosine",
+        random_state=42,
+    )
+    reduced = reducer.fit_transform(embeddings)
+
+    print(f"  HDBSCAN: clustering {len(reduced)} points (min_cluster_size={min_cluster_size}) …")
     clusterer = hdbscan.HDBSCAN(
         min_cluster_size=min_cluster_size,
-        min_samples=5,
+        min_samples=3,
         metric="euclidean",
         cluster_selection_method="eom",
     )
-    return clusterer.fit_predict(embeddings).tolist()
+    return clusterer.fit_predict(reduced).tolist()
 
 
 def select_representatives(records: list, n: int = 10) -> list:

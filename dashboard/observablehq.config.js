@@ -2,6 +2,7 @@
 export default {
   title: "Marine Safety Observatory",
   root: "src",
+  base: "/Marine_Investigation",
   pages: [
     {name: "Map", path: "/map"},
     {name: "Themes", path: "/themes"},
