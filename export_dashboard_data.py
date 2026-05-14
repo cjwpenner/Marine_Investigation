@@ -9,7 +9,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 SCRIPT_DIR = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent.parent.parent
+PROJECT_ROOT = SCRIPT_DIR.parent.parent  # .worktrees/marine-dashboard → .worktrees → MarineInvestigation/
 
 ANALYZED_JSONL = SCRIPT_DIR / "analyzed_incidents_v2.jsonl"
 THEMES_JSON = SCRIPT_DIR / "themes_raw.json"
