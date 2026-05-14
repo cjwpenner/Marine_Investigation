@@ -64,3 +64,28 @@ def test_themes_json_preserves_all_themes():
     result = build_themes_json(SAMPLE_THEMES)
     assert len(result) == 1
     assert result[0]["theme_id"] == 0
+
+def test_weather_stats_includes_beaufort_and_sea_state():
+    from export_dashboard_data import build_weather_stats
+    incidents = [
+        {**SAMPLE_INCIDENTS[0], "Weather_Enrichment": {
+            "natural_light_calculated": "Day",
+            "wind_kph": 25.0,   # Beaufort 5 (20-28 kph)
+            "wave_height_m": 0.8,
+            "sea_state_reported": "Slight",
+            "weather_was_factor": False,
+        }},
+    ]
+    result = build_weather_stats(incidents)
+    assert "by_wind_force_beaufort" in result
+    assert "by_sea_state_reported" in result
+    assert result["by_wind_force_beaufort"]["4"] == 1   # 25 kph = Beaufort 4
+    assert result["by_sea_state_reported"]["Slight"] == 1
+
+def test_kph_to_beaufort_boundaries():
+    from export_dashboard_data import kph_to_beaufort
+    assert kph_to_beaufort(0) == 0
+    assert kph_to_beaufort(5) == 1
+    assert kph_to_beaufort(11) == 2
+    assert kph_to_beaufort(50) == 7   # 50-61 kph = Force 7
+    assert kph_to_beaufort(200) == 12

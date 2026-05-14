@@ -91,10 +91,21 @@ def build_time_series(incidents: list) -> list:
     return result
 
 
+def kph_to_beaufort(kph: float) -> int:
+    """Convert wind speed in km/h to Beaufort force (0-12)."""
+    thresholds = [1, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103, 118]
+    for force, threshold in enumerate(thresholds):
+        if kph < threshold:
+            return force
+    return 12
+
+
 def build_weather_stats(incidents: list) -> dict:
     """Aggregated weather and lighting distributions."""
     natural_light = defaultdict(int)
     wave_bands = defaultdict(int)
+    beaufort_counts = defaultdict(int)
+    sea_state_counts = defaultdict(int)
     monthly_weather = defaultdict(lambda: {"count": 0, "factor": 0})
 
     def wave_band(h):
@@ -112,6 +123,12 @@ def build_weather_stats(incidents: list) -> dict:
         natural_light[nl] += 1
         band = wave_band(we.get("wave_height_m"))
         if band: wave_bands[band] += 1
+        wind_kph = we.get("wind_kph")
+        if wind_kph is not None:
+            beaufort_counts[str(kph_to_beaufort(wind_kph))] += 1
+        sea_state = we.get("sea_state_reported")
+        if sea_state:
+            sea_state_counts[sea_state] += 1
         month_str = (r.get("Local_Date_Main_Event") or "")[:7]
         if len(month_str) == 7:
             month = int(month_str[5:7])
@@ -128,6 +145,8 @@ def build_weather_stats(incidents: list) -> dict:
     return {
         "by_natural_light": dict(natural_light),
         "by_wave_height_band": dict(wave_bands),
+        "by_wind_force_beaufort": dict(sorted(beaufort_counts.items(), key=lambda x: int(x[0]))),
+        "by_sea_state_reported": dict(sea_state_counts),
         "weather_factor_by_month": weather_by_month,
     }
 
@@ -187,11 +206,27 @@ def build_casualties_json(affected_csv_path: str) -> dict:
     }
 
 
+def gt_band(gt_str: str) -> str:
+    """Bucket gross tonnage string into a band label."""
+    try:
+        gt = float(gt_str)
+        if gt < 500: return "<500GT"
+        if gt < 3000: return "500-3000GT"
+        if gt < 10000: return "3000-10000GT"
+        if gt < 50000: return "10000-50000GT"
+        return "50000GT+"
+    except (ValueError, TypeError):
+        return "Unknown"
+
+
 def build_vessels_json(vessels_csv_path: str) -> dict:
     """Aggregate vessel data from CSV."""
     by_category = defaultdict(int)
     by_flag = defaultdict(int)
+    by_gt = defaultdict(int)
     commercial = recreational = vessel_loss = 0
+
+    GT_BAND_ORDER = ["<500GT", "500-3000GT", "3000-10000GT", "10000-50000GT", "50000GT+", "Unknown"]
 
     with open(vessels_csv_path, encoding="utf-8", errors="replace") as f:
         reader = csv.DictReader(f, delimiter=";")
@@ -200,6 +235,7 @@ def build_vessels_json(vessels_csv_path: str) -> dict:
             by_category[cat] += 1
             flag = row.get("Flag_State", "Unknown")
             if flag: by_flag[flag] += 1
+            by_gt[gt_band(row.get("GT_Gross_Tonnage", ""))] += 1
             if row.get("Is_Commercial_Vessel", "").lower() == "yes": commercial += 1
             else: recreational += 1
             if row.get("Loss_Of_Vessel_Damage", "").lower() in ("total loss", "constructive total loss"):
@@ -209,6 +245,7 @@ def build_vessels_json(vessels_csv_path: str) -> dict:
         "by_category": dict(sorted(by_category.items(), key=lambda x: -x[1])),
         "by_flag_state": [{"flag": k, "count": v}
                           for k, v in sorted(by_flag.items(), key=lambda x: -x[1])[:30]],
+        "by_gt_band": {b: by_gt[b] for b in GT_BAND_ORDER if b in by_gt},
         "commercial_vs_recreational": {"Commercial": commercial, "Recreational": recreational},
         "incidents_with_vessel_loss": vessel_loss,
     }
@@ -237,14 +274,14 @@ def main():
         print(f"ERROR: {ANALYZED_JSONL} not found. Run marine_async_processor_v2.py first.")
         return
 
-    incidents = [json.loads(l) for l in open(ANALYZED_JSONL) if l.strip()]
+    incidents = [json.loads(l) for l in open(ANALYZED_JSONL, encoding="utf-8") if l.strip()]
     print(f"Loaded {len(incidents)} incidents.")
 
     print("Loading themes...")
     if not THEMES_JSON.exists():
         print(f"ERROR: {THEMES_JSON} not found. Run marine_theme_generator_v2.py first.")
         return
-    themes = json.load(open(THEMES_JSON))
+    themes = json.load(open(THEMES_JSON, encoding="utf-8"))
     print(f"Loaded {len(themes)} themes.")
 
     print("Assigning theme IDs to incidents without them...")
@@ -261,7 +298,7 @@ def main():
 
     for filename, data in outputs.items():
         path = OUTPUT_DIR / filename
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
         size_kb = path.stat().st_size // 1024
         print(f"  Written {path} ({size_kb} KB)")
