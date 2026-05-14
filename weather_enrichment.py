@@ -11,17 +11,18 @@ OPEN_METEO_MARINE = "https://marine-api.open-meteo.com/v1/marine"
 
 def calculate_natural_light(lat: Optional[float], lon: Optional[float],
                              dt: datetime.datetime) -> Optional[str]:
-    """Return Day/Night/Dusk/Dawn based on sun position at lat/lon/datetime."""
+    """Return Day/Night/Dusk/Dawn based on sun position at lat/lon/datetime (UTC input)."""
     if lat is None or lon is None:
         return None
     try:
         location = LocationInfo(latitude=lat, longitude=lon)
         s = sun(location.observer, date=dt.date())
-        if s["dawn"] <= dt.replace(tzinfo=s["dawn"].tzinfo) < s["sunrise"]:
+        dt_utc = dt.replace(tzinfo=datetime.timezone.utc)
+        if s["dawn"] <= dt_utc < s["sunrise"]:
             return "Dawn"
-        elif s["sunrise"] <= dt.replace(tzinfo=s["sunrise"].tzinfo) < s["sunset"]:
+        elif s["sunrise"] <= dt_utc < s["sunset"]:
             return "Day"
-        elif s["sunset"] <= dt.replace(tzinfo=s["sunset"].tzinfo) < s["dusk"]:
+        elif s["sunset"] <= dt_utc < s["dusk"]:
             return "Dusk"
         else:
             return "Night"

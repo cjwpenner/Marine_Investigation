@@ -71,3 +71,35 @@ def test_enrich_weather_combines_reported_and_calculated():
     assert result["natural_light_source"] == "both_agree"
     assert result["wind_kph"] == 25.0
     assert result["weather_data_source"] == "open_meteo"
+
+
+def test_enrich_weather_disagree_source():
+    """When reported and calculated natural light differ, source should be 'disagree'."""
+    incident = {
+        "Latitude": 51.5, "Longitude": -0.1,
+        "Local_Date_Main_Event": "2023-04-12T12:00:00",
+        "Natural_Light": "Night",  # Reported as Night
+    }
+    mock_weather = {"wind_kph": 10.0, "wind_gust_kph": 15.0, "wave_height_m": 0.5,
+                    "wave_period_s": 5.0, "wave_direction_deg": 180,
+                    "precip_mm": 0.0, "temp_c": 15.0, "cloud_cover_pct": 20}
+    with patch("weather_enrichment.get_open_meteo_weather", return_value=mock_weather):
+        result = enrich_weather(incident)
+    # Noon UTC in London is definitely Day — should disagree with reported "Night"
+    assert result["natural_light_reported"] == "Night"
+    assert result["natural_light_calculated"] == "Day"
+    assert result["natural_light_source"] == "disagree"
+
+
+def test_enrich_weather_calculated_only_source():
+    """When no Natural_Light in CSV, source should be 'calculated_only'."""
+    incident = {
+        "Latitude": 51.5, "Longitude": -0.1,
+        "Local_Date_Main_Event": "2023-04-12T12:00:00",
+        # No Natural_Light field
+    }
+    with patch("weather_enrichment.get_open_meteo_weather", return_value=None):
+        result = enrich_weather(incident)
+    assert result["natural_light_reported"] is None
+    assert result["natural_light_calculated"] == "Day"
+    assert result["natural_light_source"] == "calculated_only"
