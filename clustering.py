@@ -57,6 +57,8 @@ def build_cluster_text(records: list) -> str:
         cat = a.get("incident_category", "other")
         categories[cat] = categories.get(cat, 0) + 1
         for f in a.get("contributing_factors", []):
+            if not isinstance(f, dict):
+                continue
             ft = f.get("type", "unknown")
             factor_types[ft] = factor_types.get(ft, 0) + 1
             desc = f.get("description")

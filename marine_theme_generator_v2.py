@@ -76,6 +76,8 @@ def compute_cluster_stats(records: list) -> dict:
     for r in records:
         a = r.get("Analysis") or {}
         for f in a.get("contributing_factors", []):
+            if not isinstance(f, dict):
+                continue
             ft = f.get("type", "")
             if ft in factor_counts:
                 factor_counts[ft] += 1
