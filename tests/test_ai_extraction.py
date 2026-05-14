@@ -60,11 +60,16 @@ def test_parse_extraction_response_invalid_returns_none():
 
 @pytest.mark.asyncio
 async def test_extract_incident_analysis_calls_claude():
+    import ai_extraction
     mock_message = MagicMock()
     mock_message.content = [MagicMock(text=json.dumps(VALID_RESPONSE))]
     mock_client = MagicMock()
     mock_client.messages.create = AsyncMock(return_value=mock_message)
-    with patch("ai_extraction.get_client", return_value=mock_client):
+    original_client = ai_extraction._client
+    try:
+        ai_extraction._client = mock_client
         result = await extract_incident_analysis(SAMPLE_DESCRIPTION, SAMPLE_WEATHER)
+    finally:
+        ai_extraction._client = original_client
     assert result["incident_category"] == "mooring"
     assert result["pattern_discovery_summary"] is not None

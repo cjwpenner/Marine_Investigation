@@ -3,7 +3,6 @@ import json
 import re
 import os
 import anthropic
-from functools import lru_cache
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,9 +15,13 @@ VALID_CONFIDENCE = {"high", "medium", "low"}
 SHORT_DESCRIPTION_THRESHOLD = 200
 
 
-@lru_cache(maxsize=1)
+_client: anthropic.AsyncAnthropic | None = None
+
 def get_client() -> anthropic.AsyncAnthropic:
-    return anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    global _client
+    if _client is None:
+        _client = anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    return _client
 
 
 def build_extraction_prompt(description: str, weather: dict, short: bool = False) -> str:
@@ -101,13 +104,23 @@ def parse_extraction_response(text: str) -> dict | None:
             return json.loads(match.group(1))
         except json.JSONDecodeError:
             pass
-    # Try finding first { ... } block
-    match = re.search(r"\{.*\}", text, re.DOTALL)
-    if match:
-        try:
-            return json.loads(match.group(0))
-        except json.JSONDecodeError:
-            pass
+    # Try finding first balanced { ... } block
+    start = text.find("{")
+    if start != -1:
+        depth, end = 0, -1
+        for i, ch in enumerate(text[start:], start):
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    end = i
+                    break
+        if end != -1:
+            try:
+                return json.loads(text[start:end + 1])
+            except json.JSONDecodeError:
+                pass
     return None
 
 
