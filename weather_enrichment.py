@@ -17,7 +17,10 @@ def calculate_natural_light(lat: Optional[float], lon: Optional[float],
     try:
         location = LocationInfo(latitude=lat, longitude=lon)
         s = sun(location.observer, date=dt.date())
-        dt_utc = dt.replace(tzinfo=datetime.timezone.utc)
+        if dt.tzinfo is not None:
+            dt_utc = dt.astimezone(datetime.timezone.utc)
+        else:
+            dt_utc = dt.replace(tzinfo=datetime.timezone.utc)
         if s["dawn"] <= dt_utc < s["sunrise"]:
             return "Dawn"
         elif s["sunrise"] <= dt_utc < s["sunset"]:
@@ -33,7 +36,7 @@ def calculate_natural_light(lat: Optional[float], lon: Optional[float],
 def get_open_meteo_weather(lat: Optional[float], lon: Optional[float],
                             date_str: str, hour: int) -> Optional[dict]:
     """Fetch ERA5 atmospheric and marine weather for a specific lat/lon/date/hour."""
-    if lat is None or lon is None:
+    if lat is None or lon is None or not date_str:
         return None
     params = {
         "latitude": lat, "longitude": lon,
@@ -52,6 +55,11 @@ def get_open_meteo_weather(lat: Optional[float], lon: Optional[float],
             return None
         atmo = atmo_resp.json()["hourly"]
         marine = marine_resp.json()["hourly"]
+        # Guard against empty or missing hourly data
+        if not atmo.get("wind_speed_10m"):
+            return None
+        if not marine.get("wave_height"):
+            return None
         # Pick the closest hour index (hourly data, 24 values)
         idx = min(hour, len(atmo["wind_speed_10m"]) - 1)
         m_idx = min(hour, len(marine["wave_height"]) - 1)

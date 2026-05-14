@@ -103,3 +103,21 @@ def test_enrich_weather_calculated_only_source():
     assert result["natural_light_reported"] is None
     assert result["natural_light_calculated"] == "Day"
     assert result["natural_light_source"] == "calculated_only"
+
+
+def test_get_open_meteo_weather_network_error_returns_none():
+    with patch("weather_enrichment.requests.get", side_effect=Exception("Network error")):
+        result = get_open_meteo_weather(51.5, -0.1, "2023-04-12", 12)
+    assert result is None
+
+
+def test_get_open_meteo_weather_non_200_returns_none():
+    with patch("weather_enrichment.requests.get") as mock_get:
+        mock_get.return_value = MagicMock(status_code=500)
+        result = get_open_meteo_weather(51.5, -0.1, "2023-04-12", 12)
+    assert result is None
+
+
+def test_get_open_meteo_weather_missing_date_str_returns_none():
+    result = get_open_meteo_weather(51.5, -0.1, None, 12)
+    assert result is None
