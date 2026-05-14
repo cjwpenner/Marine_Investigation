@@ -64,7 +64,8 @@ def build_time_series(incidents: list) -> list:
         sev = r.get("Occurrence_Severity", "")
         if sev == "Very Serious": m["very_serious"] += 1
         elif sev == "Serious": m["serious"] += 1
-        else: m["less_serious"] += 1
+        elif sev == "Less Serious": m["less_serious"] += 1
+        # else: unknown severity — not counted in named buckets, still in total
         we = r.get("Weather_Enrichment") or {}
         a = r.get("Analysis") or {}
         nl = we.get("natural_light_calculated") or we.get("natural_light_reported", "")
@@ -164,6 +165,7 @@ def build_casualties_json(affected_csv_path: str) -> dict:
     by_injury = defaultdict(int)
     by_body_part = defaultdict(int)
     ppe_used = ppe_deficient = on_duty = total = 0
+    ppe_denominator = ppe_deficient_denominator = on_duty_denominator = 0
 
     def age_band(age_str):
         try:
@@ -188,11 +190,19 @@ def build_casualties_json(affected_csv_path: str) -> dict:
             if inj: by_injury[inj] += 1
             body = row.get("Parts_of_Body_Injured", "")
             if body: by_body_part[body] += 1
-            if row.get("PPE_Used", "").lower() == "yes": ppe_used += 1
-            if row.get("PPE_Deficient", "").lower() == "yes": ppe_deficient += 1
-            if row.get("On_Duty", "").lower() == "yes": on_duty += 1
+            ppe_used_val = row.get("PPE_Used", "").lower()
+            if ppe_used_val in ("yes", "no"):
+                ppe_denominator += 1
+                if ppe_used_val == "yes": ppe_used += 1
+            ppe_def_val = row.get("PPE_Deficient", "").lower()
+            if ppe_def_val in ("yes", "no"):
+                ppe_deficient_denominator += 1
+                if ppe_def_val == "yes": ppe_deficient += 1
+            on_duty_val = row.get("On_Duty", "").lower()
+            if on_duty_val in ("yes", "no"):
+                on_duty_denominator += 1
+                if on_duty_val == "yes": on_duty += 1
 
-    t = max(total, 1)
     return {
         "total_affected": total,
         "by_type": dict(by_type),
@@ -200,9 +210,9 @@ def build_casualties_json(affected_csv_path: str) -> dict:
         "by_age_band": dict(by_age_band),
         "by_injury_type": dict(sorted(by_injury.items(), key=lambda x: -x[1])[:20]),
         "by_body_part": dict(sorted(by_body_part.items(), key=lambda x: -x[1])[:20]),
-        "ppe_used_pct": round(ppe_used / t, 3),
-        "ppe_deficient_pct": round(ppe_deficient / t, 3),
-        "on_duty_pct": round(on_duty / t, 3),
+        "ppe_used_pct": round(ppe_used / max(ppe_denominator, 1), 3),
+        "ppe_deficient_pct": round(ppe_deficient / max(ppe_deficient_denominator, 1), 3),
+        "on_duty_pct": round(on_duty / max(on_duty_denominator, 1), 3),
     }
 
 
@@ -225,6 +235,7 @@ def build_vessels_json(vessels_csv_path: str) -> dict:
     by_flag = defaultdict(int)
     by_gt = defaultdict(int)
     commercial = recreational = vessel_loss = 0
+    commercial_unknown = 0
 
     GT_BAND_ORDER = ["<500GT", "500-3000GT", "3000-10000GT", "10000-50000GT", "50000GT+", "Unknown"]
 
@@ -236,8 +247,10 @@ def build_vessels_json(vessels_csv_path: str) -> dict:
             flag = row.get("Flag_State", "Unknown")
             if flag: by_flag[flag] += 1
             by_gt[gt_band(row.get("GT_Gross_Tonnage", ""))] += 1
-            if row.get("Is_Commercial_Vessel", "").lower() == "yes": commercial += 1
-            else: recreational += 1
+            is_comm = row.get("Is_Commercial_Vessel", "").lower()
+            if is_comm == "yes": commercial += 1
+            elif is_comm == "no": recreational += 1
+            else: commercial_unknown += 1
             if row.get("Loss_Of_Vessel_Damage", "").lower() in ("total loss", "constructive total loss"):
                 vessel_loss += 1
 
@@ -246,7 +259,7 @@ def build_vessels_json(vessels_csv_path: str) -> dict:
         "by_flag_state": [{"flag": k, "count": v}
                           for k, v in sorted(by_flag.items(), key=lambda x: -x[1])[:30]],
         "by_gt_band": {b: by_gt[b] for b in GT_BAND_ORDER if b in by_gt},
-        "commercial_vs_recreational": {"Commercial": commercial, "Recreational": recreational},
+        "commercial_vs_recreational": {"Commercial": commercial, "Recreational": recreational, "Unknown": commercial_unknown},
         "incidents_with_vessel_loss": vessel_loss,
     }
 
