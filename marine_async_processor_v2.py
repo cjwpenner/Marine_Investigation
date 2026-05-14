@@ -32,7 +32,7 @@ def get_openai_client():
 def load_processed_ids() -> set:
     processed = set()
     if OUTPUT_FILE.exists():
-        with open(OUTPUT_FILE) as f:
+        with open(OUTPUT_FILE, encoding="utf-8") as f:
             for line in f:
                 try:
                     processed.add(json.loads(line)["Occurrence_Id"])
@@ -104,7 +104,7 @@ async def process_incident(incident: dict) -> dict | None:
 
 async def write_result(result: dict):
     async with write_lock:
-        with open(OUTPUT_FILE, "a") as f:
+        with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
             f.write(json.dumps(result) + "\n")
 
 
@@ -125,7 +125,7 @@ async def main():
     else:
         INPUT_FILE_PATH = INPUT_FILE
 
-    with open(INPUT_FILE_PATH) as f:
+    with open(INPUT_FILE_PATH, encoding="utf-8") as f:
         records = json.load(f)
     print(f"Loaded {len(records)} records.")
 
