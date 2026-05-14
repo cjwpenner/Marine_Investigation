@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Vessels &amp; People | Marine Safety Observatory</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_import/style.f64546e2.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_import/style.f64546e2.css">
+<link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/a96a6bbb.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/87adea64.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/3785bf2d.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/720b7f0a.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/cbf6ba23.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/d4ec0aa1.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/42820bfa.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.86d48a53.js";
+import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
+
+registerFile("./data/casualties.json", {"name":"./data/casualties.json","mimeType":"application/json","path":"./_file/data/casualties.fd3fe010.json","lastModified":1778781127942,"size":573});
+registerFile("./data/vessels.json", {"name":"./data/vessels.json","mimeType":"application/json","path":"./_file/data/vessels.eedb25cb.json","lastModified":1778781127943,"size":492});
+
+define({id: "c6791e0c", inputs: ["FileAttachment"], outputs: ["Plot","vessels","casualties","vesselCatData","injuryData","bodyPartData","AGE_ORDER","ageData","typeData"], body: async (FileAttachment) => {
+const Plot = await import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js");
+const vessels = await FileAttachment("./data/vessels.json").json();
+const casualties = await FileAttachment("./data/casualties.json").json();
+
+const vesselCatData = Object.entries(vessels.by_category)
+  .map(([k,v]) => ({category:k, count:v}))
+  .sort((a,b) => b.count - a.count);
+
+const injuryData = Object.entries(casualties.by_injury_type)
+  .map(([k,v]) => ({type:k, count:v}))
+  .sort((a,b) => b.count - a.count).slice(0,12);
+
+const bodyPartData = Object.entries(casualties.by_body_part)
+  .map(([k,v]) => ({part:k, count:v}))
+  .sort((a,b) => b.count - a.count).slice(0,12);
+
+const AGE_ORDER = ["<25","25-34","35-44","45-54","55-64","65+"];
+const ageData = Object.entries(casualties.by_age_band)
+  .map(([k,v]) => ({age:k, count:v}))
+  .filter(d => d.age !== "Unknown")
+  .sort((a,b) => AGE_ORDER.indexOf(a.age) - AGE_ORDER.indexOf(b.age));
+
+const typeData = Object.entries(casualties.by_type)
+  .map(([k,v]) => ({type:k, count:v}));
+return {Plot,vessels,casualties,vesselCatData,injuryData,bodyPartData,AGE_ORDER,ageData,typeData};
+}});
+
+define({id: "5a01d6cc", inputs: ["casualties","vessels","display"], body: (casualties,vessels,display) => {
+{
+  const wrapper = document.createElement("div");
+  wrapper.style.cssText = "display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:2rem;";
+
+  const cards = [
+    {value: (casualties.total_affected ?? 0).toLocaleString(), label: "Total Affected", borderColor: "#1e40af"},
+    {value: Math.round((casualties.ppe_deficient_pct ?? 0)*100) + "%", label: "PPE Deficient", borderColor: "#dc2626"},
+    {value: Math.round((casualties.ppe_used_pct ?? 0)*100) + "%", label: "PPE Used", borderColor: "#16a34a"},
+    {value: Math.round((casualties.on_duty_pct ?? 0)*100) + "%", label: "On Duty", borderColor: "#1e40af"},
+    {value: (vessels.incidents_with_vessel_loss ?? 0).toLocaleString(), label: "Vessel Losses", borderColor: "#1e40af"},
+  ];
+
+  cards.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "stat-card";
+    card.style.borderLeftColor = c.borderColor;
+    const valEl = document.createElement("div");
+    valEl.className = "value";
+    valEl.textContent = c.value;
+    const lblEl = document.createElement("div");
+    lblEl.className = "label";
+    lblEl.textContent = c.label;
+    card.append(valEl, lblEl);
+    wrapper.appendChild(card);
+  });
+
+  display(wrapper);
+}
+}});
+
+define({id: "24bd7241", inputs: ["Plot","vesselCatData","display"], body: async (Plot,vesselCatData,display) => {
+display(await(
+Plot.plot({
+  height: 220, marginLeft: 110,
+  x: {label: "Incidents"},
+  marks: [Plot.barX(vesselCatData, {x:"count", y:"category", fill:"#1e40af", tip:true, sort:{y:"-x"}})]
+})
+))
+}});
+
+define({id: "99003d2a", inputs: ["Plot","typeData","display"], body: async (Plot,typeData,display) => {
+display(await(
+Plot.plot({
+  height: 220,
+  marks: [Plot.barY(typeData, {x:"type", y:"count", fill:"#3b82f6", tip:true, sort:{x:"-y"}})]
+})
+))
+}});
+
+define({id: "addee5c4", inputs: ["Plot","ageData","display"], body: async (Plot,ageData,display) => {
+display(await(
+Plot.plot({
+  height: 180, marginLeft: 50,
+  x: {label: "Age band"},
+  y: {label: "Persons"},
+  marks: [Plot.barY(ageData, {x:"age", y:"count", fill:"#1e40af", tip:true})]
+})
+))
+}});
+
+define({id: "7a04faa8", inputs: ["Plot","injuryData","display"], body: async (Plot,injuryData,display) => {
+display(await(
+Plot.plot({
+  height: 180, marginLeft: 110,
+  x: {label: "Count"},
+  marks: [Plot.barX(injuryData, {x:"count", y:"type", fill:"#3b82f6", tip:true, sort:{y:"-x"}})]
+})
+))
+}});
+
+define({id: "4268772e", inputs: ["Plot","bodyPartData","display"], body: async (Plot,bodyPartData,display) => {
+display(await(
+Plot.plot({
+  height: 200, marginLeft: 130,
+  x: {label: "Count"},
+  marks: [Plot.barX(bodyPartData, {x:"count", y:"part", fill:"#60a5fa", tip:true, sort:{y:"-x"}})]
+})
+))
+}});
+
+define({id: "489f9fe4", inputs: ["vessels","display"], body: (vessels,display) => {
+{
+  const list = document.createElement("div");
+  list.style.cssText = "font-size:12px;";
+  const header = document.createElement("div");
+  header.style.cssText = "display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid #e2e8f0;margin-bottom:4px;";
+  const hFlag = document.createElement("span"); hFlag.textContent = "Flag State";
+  const hCount = document.createElement("span"); hCount.textContent = "Incidents";
+  header.append(hFlag, hCount);
+  list.appendChild(header);
+  vessels.by_flag_state.slice(0, 15).forEach((item, i) => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f8fafc;";
+    const rank = document.createElement("span");
+    rank.style.cssText = "color:#94a3b8;font-size:10px;min-width:18px;";
+    rank.textContent = (i + 1) + ".";
+    const flag = document.createElement("span");
+    flag.style.cssText = "flex:1;padding-left:4px;color:#1e293b;";
+    flag.textContent = item.flag;
+    const count = document.createElement("span");
+    count.style.cssText = "font-weight:600;color:#1e40af;min-width:40px;text-align:right;";
+    count.textContent = (item.count ?? 0).toLocaleString();
+    row.append(rank, flag, count);
+    list.appendChild(row);
+  });
+  display(list);
+}
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Marine Safety Observatory</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./map">Map</a></li>
+    <li class="observablehq-link"><a href="./themes">Themes</a></li>
+    <li class="observablehq-link"><a href="./trends">Trends</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./vessels">Vessels &amp; People</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#by-vessel-type">By Vessel Type</a></li>
+<li class="observablehq-secondary-link"><a href="#casualties-by-type">Casualties by Type</a></li>
+<li class="observablehq-secondary-link"><a href="#age-distribution">Age Distribution</a></li>
+<li class="observablehq-secondary-link"><a href="#injury-types">Injury Types</a></li>
+<li class="observablehq-secondary-link"><a href="#body-parts-injured">Body Parts Injured</a></li>
+<li class="observablehq-secondary-link"><a href="#top-flag-states">Top Flag States</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:c6791e0c:--></div>
+<h1 id="vessels-and-people" tabindex="-1"><a class="observablehq-header-anchor" href="#vessels-and-people">Vessels &amp; People</a></h1>
+<div class="observablehq observablehq--block"><!--:5a01d6cc:--></div>
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+<div>
+<h2 id="by-vessel-type" tabindex="-1"><a class="observablehq-header-anchor" href="#by-vessel-type">By Vessel Type</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:24bd7241:--></div>
+</div><div>
+<h2 id="casualties-by-type" tabindex="-1"><a class="observablehq-header-anchor" href="#casualties-by-type">Casualties by Type</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:99003d2a:--></div>
+</div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
+<div>
+<h2 id="age-distribution" tabindex="-1"><a class="observablehq-header-anchor" href="#age-distribution">Age Distribution</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:addee5c4:--></div>
+</div><div>
+<h2 id="injury-types" tabindex="-1"><a class="observablehq-header-anchor" href="#injury-types">Injury Types</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:7a04faa8:--></div>
+</div></div>
+<h2 id="body-parts-injured" tabindex="-1"><a class="observablehq-header-anchor" href="#body-parts-injured">Body Parts Injured</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:4268772e:--></div>
+<h2 id="top-flag-states" tabindex="-1"><a class="observablehq-header-anchor" href="#top-flag-states">Top Flag States</a></h2>
+<div class="observablehq observablehq--block"><!--:489f9fe4:--></div>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./trends"><span>Trends</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-14T17:52:16">May 14, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>

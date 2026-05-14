@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Marine Safety Observatory</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_import/style.f64546e2.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_import/style.f64546e2.css">
+<link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/a96a6bbb.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/87adea64.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/3785bf2d.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/720b7f0a.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/cbf6ba23.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/d4ec0aa1.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/42820bfa.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.86d48a53.js";
+import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
+
+registerFile("./data/casualties.json", {"name":"./data/casualties.json","mimeType":"application/json","path":"./_file/data/casualties.fd3fe010.json","lastModified":1778781127942,"size":573});
+registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.767366a0.json","lastModified":1778781127943,"size":1246});
+registerFile("./data/themes.json", {"name":"./data/themes.json","mimeType":"application/json","path":"./_file/data/themes.27fb721f.json","lastModified":1778781127943,"size":2550});
+registerFile("./data/time_series.json", {"name":"./data/time_series.json","mimeType":"application/json","path":"./_file/data/time_series.7be1182b.json","lastModified":1778781127943,"size":3660});
+registerFile("./data/weather_stats.json", {"name":"./data/weather_stats.json","mimeType":"application/json","path":"./_file/data/weather_stats.31a37768.json","lastModified":1778781127943,"size":743});
+
+define({id: "4be0b46d", inputs: ["FileAttachment"], outputs: ["Plot","escapeHtml","incidents","themes","timeSeries","weatherStats","totalIncidents","casualties","totalCasualties","nightPct","weatherPct","themeCount"], body: async (FileAttachment) => {
+const Plot = await import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js");
+const escapeHtml = str => str == null ? "" : String(str)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+const incidents = await FileAttachment("./data/incidents_map.json").json();
+const themes = await FileAttachment("./data/themes.json").json();
+const timeSeries = await FileAttachment("./data/time_series.json").json();
+const weatherStats = await FileAttachment("./data/weather_stats.json").json();
+
+const totalIncidents = incidents.length;
+const casualties = await FileAttachment("./data/casualties.json").json();
+const totalCasualties = Number(casualties.total_affected);
+const nightPct = Math.round(
+  incidents.filter(d => d.natural_light === "Night" || d.natural_light === "Dusk").length
+  / totalIncidents * 100
+);
+const weatherPct = Math.round(
+  incidents.filter(d => d.weather_was_factor).length / totalIncidents * 100
+);
+const themeCount = themes.length;
+return {Plot,escapeHtml,incidents,themes,timeSeries,weatherStats,totalIncidents,casualties,totalCasualties,nightPct,weatherPct,themeCount};
+}});
+
+define({id: "432aa2e1", inputs: ["totalIncidents","totalCasualties","nightPct","weatherPct","themeCount","html"], outputs: ["labels","values"], body: (totalIncidents,totalCasualties,nightPct,weatherPct,themeCount,html) => {
+const labels = ["Incidents","Casualties","Night / Dusk","Weather Factor","Themes"];
+const values = [
+  totalIncidents.toLocaleString(),
+  totalCasualties.toLocaleString(),
+  nightPct + "%",
+  weatherPct + "%",
+  String(themeCount)
+];
+html`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:700px;">
+  ${labels.map((label, i) => html`<div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.15);">
+    <div style="font-size:1.6rem;font-weight:800;">${values[i]}</div>
+    <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.65;margin-top:2px;">${label}</div>
+  </div>`)}
+</div>`
+return {labels,values};
+}});
+
+define({id: "4c9a1f10", inputs: ["html","themes","escapeHtml"], outputs: ["icons","colors"], body: (html,themes,escapeHtml) => {
+const icons = ["⚓","🚨","⚠️","🔧","🗺️","👥","🛟"];
+const colors = ["#1e40af","#2563eb","#3b82f6","#60a5fa","#93c5fd","#1d4ed8","#1e3a8a"];
+html`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;">
+  ${themes.slice(0,4).map((t, i) => html`<a href="./themes" style="text-decoration:none;">
+    <div class="theme-card" style="border-top-color:${colors[i % colors.length]};">
+      <div style="font-size:1.4rem;margin-bottom:6px;">${icons[i % icons.length]}</div>
+      <div style="font-weight:700;color:#1e293b;font-size:13px;margin-bottom:4px;">${escapeHtml(t.title)}</div>
+      <div style="font-size:11px;color:#64748b;">${escapeHtml(String(t.incident_count.toLocaleString()))} incidents</div>
+    </div>
+  </a>`)}
+</div>`
+return {icons,colors};
+}});
+
+define({id: "84644e80", inputs: ["Plot","timeSeries","display"], body: async (Plot,timeSeries,display) => {
+display(await(
+Plot.plot({
+  height: 220,
+  marginLeft: 40,
+  x: {label: null},
+  y: {label: "Incidents"},
+  marks: [
+    Plot.barY(timeSeries, {x: "year_month", y: "less_serious", fill: "#bfdbfe", tip: true}),
+    Plot.barY(timeSeries, {x: "year_month", y: "serious", fill: "#d97706", tip: true}),
+    Plot.barY(timeSeries, {x: "year_month", y: "very_serious", fill: "#dc2626", tip: true}),
+    Plot.ruleY([0])
+  ]
+})
+))
+}});
+
+define({id: "801776e4", inputs: ["weatherStats","Plot"], outputs: ["lightData"], body: (weatherStats,Plot) => {
+const lightData = Object.entries(weatherStats.by_natural_light)
+  .map(([k,v]) => ({light: k, count: v}))
+  .filter(d => d.light !== "Unknown")
+  .sort((a,b) => b.count - a.count);
+
+Plot.plot({
+  height: 160,
+  marginLeft: 80,
+  x: {label: "Incidents"},
+  marks: [
+    Plot.barX(lightData, {
+      x: "count", y: "light",
+      fill: d => ({"Day":"#60a5fa","Night":"#1e293b","Dusk":"#d97706","Dawn":"#f59e0b"})[d.light] ?? "#94a3b8",
+      tip: true, sort: {y: "-x"}
+    })
+  ]
+})
+return {lightData};
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link observablehq-link-active"><a href="./">Marine Safety Observatory</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./map">Map</a></li>
+    <li class="observablehq-link"><a href="./themes">Themes</a></li>
+    <li class="observablehq-link"><a href="./trends">Trends</a></li>
+    <li class="observablehq-link"><a href="./vessels">Vessels &amp; People</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#incident-themes">Incident Themes</a></li>
+<li class="observablehq-secondary-link"><a href="#monthly-trend">Monthly Trend</a></li>
+<li class="observablehq-secondary-link"><a href="#lighting-conditions">Lighting Conditions</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:4be0b46d:--></div>
+<div style="background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 60%,#2563eb 100%);padding:32px 24px;margin:-1rem -1rem 2rem;color:#fff;">
+  <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.7;margin-bottom:8px;">European Waters · 2021–2025 · Open Data Analysis</div>
+  <h1 style="font-size:2rem;font-weight:800;margin:0 0 8px;color:#fff;">Marine Incident Analysis</h1>
+  <p style="opacity:0.85;max-width:580px;margin:0 0 24px;line-height:1.6;">AI-assisted analysis of reported marine incidents. Explore where accidents happen, what causes them, and how weather, lighting and human factors contribute.</p>
+<div class="observablehq observablehq--block"><!--:432aa2e1:--></div>
+</div>
+<h2 id="incident-themes" tabindex="-1"><a class="observablehq-header-anchor" href="#incident-themes">Incident Themes</a></h2>
+<div class="observablehq observablehq--block"><!--:4c9a1f10:--></div>
+<div style="text-align:center;margin-bottom:2rem;">
+  <a href="./map" style="display:inline-block;background:#1e40af;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:600;font-size:13px;">🗺️ Explore the Incident Map</a>
+</div>
+<h2 id="monthly-trend" tabindex="-1"><a class="observablehq-header-anchor" href="#monthly-trend">Monthly Trend</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:84644e80:--></div>
+<h2 id="lighting-conditions" tabindex="-1"><a class="observablehq-header-anchor" href="#lighting-conditions">Lighting Conditions</a></h2>
+<div class="observablehq observablehq--block"><!--:801776e4:--></div>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="next" href="./map"><span>Map</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-14T17:52:16">May 14, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>

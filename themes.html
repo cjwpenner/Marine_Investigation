@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Incident Themes | Marine Safety Observatory</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_import/style.f64546e2.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_import/style.f64546e2.css">
+<link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/a96a6bbb.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/87adea64.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/3785bf2d.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/720b7f0a.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/cbf6ba23.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/d4ec0aa1.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/42820bfa.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.86d48a53.js";
+import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
+
+registerFile("./data/themes.json", {"name":"./data/themes.json","mimeType":"application/json","path":"./_file/data/themes.27fb721f.json","lastModified":1778781127943,"size":2550});
+
+define({id: "329a2a0c", inputs: ["FileAttachment"], outputs: ["Plot","themes","escapeHtml","severityScore"], body: async (FileAttachment) => {
+const Plot = await import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js");
+const themes = await FileAttachment("./data/themes.json").json();
+
+// escapeHtml for safely rendering external data in html templates
+const escapeHtml = str => str == null ? "" : String(str)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+
+function severityScore(t) {
+  const sb = t.severity_breakdown || {};
+  const total = Object.values(sb).reduce((a,b) => a+b, 0) || 1;
+  return ((sb["Very Serious"] || 0) * 1.0 + (sb["Serious"] || 0) * 0.5) / total;
+}
+return {Plot,themes,escapeHtml,severityScore};
+}});
+
+define({id: "12b9d9fa", inputs: ["Plot","themes","severityScore","display"], body: async (Plot,themes,severityScore,display) => {
+display(await(
+// Theme sizes as horizontal bar chart (safe fallback for treemap)
+Plot.plot({
+  height: Math.max(200, themes.length * 36),
+  marginLeft: 220,
+  x: {label: "Incidents"},
+  marks: [
+    Plot.barX(themes, {
+      x: "incident_count",
+      y: "title",
+      fill: d => {
+        const s = severityScore(d);
+        if (s > 0.2) return "#dc2626";      // high severity — red
+        if (s > 0.05) return "#d97706";     // medium — amber
+        return "#1e40af";                    // low — blue
+      },
+      tip: true,
+      sort: {y: "-x"}
+    })
+  ]
+})
+))
+}});
+
+define({id: "a1109973", inputs: ["themes"], outputs: ["container","expandedId","renderCards"], body: (themes) => {
+// expandable theme cards — all dynamic data via textContent
+const container = document.createElement("div");
+let expandedId = null;
+
+function renderCards(searchQuery = "") {
+  while (container.firstChild) container.removeChild(container.firstChild);
+  themes.forEach(t => {
+    const card = document.createElement("div");
+    card.style.cssText = "background:#fff;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:12px;overflow:hidden;";
+
+    const COLORS = ["#1e40af","#2563eb","#3b82f6","#60a5fa","#93c5fd","#bfdbfe","#1d4ed8"];
+    const color = COLORS[t.theme_id % COLORS.length] ?? "#1e40af";
+
+    // Header
+    const hdr = document.createElement("div");
+    hdr.style.cssText = `padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-top:3px solid ${color};`;
+    hdr.addEventListener("click", () => {
+      expandedId = expandedId === t.theme_id ? null : t.theme_id;
+      renderCards();
+    });
+
+    const titleWrap = document.createElement("div");
+    const titleEl = document.createElement("div");
+    titleEl.style.cssText = "font-weight:700;font-size:14px;color:#1e293b;";
+    titleEl.textContent = t.title;
+    const countEl = document.createElement("div");
+    countEl.style.cssText = "font-size:11px;color:#64748b;margin-top:2px;";
+    countEl.textContent = (t.incident_count ?? 0).toLocaleString() + " incidents";
+    titleWrap.append(titleEl, countEl);
+
+    const chevron = document.createElement("span");
+    chevron.style.color = "#94a3b8";
+    chevron.textContent = expandedId === t.theme_id ? "▲" : "▼";
+    hdr.append(titleWrap, chevron);
+    card.appendChild(hdr);
+
+    if (expandedId === t.theme_id) {
+      const body = document.createElement("div");
+      body.style.cssText = "padding:14px 16px;border-top:1px solid #f1f5f9;background:#fafafa;";
+
+      // Description
+      const descEl = document.createElement("p");
+      descEl.style.cssText = "color:#475569;font-size:13px;line-height:1.6;margin-bottom:14px;";
+      descEl.textContent = t.description;
+      body.appendChild(descEl);
+
+      // Factor grid
+      const grid = document.createElement("div");
+      grid.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;";
+
+      // Contributing factor types
+      const factorCol = document.createElement("div");
+      const factorLabel = document.createElement("div");
+      factorLabel.style.cssText = "font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
+      factorLabel.textContent = "Contributing Factor Types";
+      factorCol.appendChild(factorLabel);
+      Object.entries(t.top_contributing_factor_types || {})
+        .sort((a,b) => b[1]-a[1])
+        .forEach(([type, pct]) => {
+          const row = document.createElement("div");
+          row.style.marginBottom = "5px";
+          const rowLabel = document.createElement("div");
+          rowLabel.style.cssText = "display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;";
+          const typeSpan = document.createElement("span");
+          typeSpan.style.cssText = "color:#475569;text-transform:capitalize;";
+          typeSpan.textContent = type;
+          const pctSpan = document.createElement("span");
+          pctSpan.style.cssText = "font-weight:600;color:#1e293b;";
+          pctSpan.textContent = Math.round(pct * 100) + "%";
+          rowLabel.append(typeSpan, pctSpan);
+          const barWrap = document.createElement("div");
+          barWrap.style.cssText = "height:4px;background:#f1f5f9;border-radius:2px;";
+          const bar = document.createElement("div");
+          bar.style.cssText = `height:100%;background:${color};border-radius:2px;width:${Math.round(pct * 100)}%;`;
+          barWrap.appendChild(bar);
+          row.append(rowLabel, barWrap);
+          factorCol.appendChild(row);
+        });
+
+      // Human factor flags
+      const flagCol = document.createElement("div");
+      const flagLabel = document.createElement("div");
+      flagLabel.style.cssText = "font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
+      flagLabel.textContent = "Human Factor Flags";
+      flagCol.appendChild(flagLabel);
+      [
+        {label: "Fatigue", pct: t.fatigue_factor_pct},
+        {label: "Training gap", pct: t.training_factor_pct},
+        {label: "PPE issue", pct: t.ppe_factor_pct},
+        {label: "Communication", pct: t.communication_factor_pct},
+      ].forEach(f => {
+        const row = document.createElement("div");
+        row.style.cssText = "display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;";
+        const lbl = document.createElement("span");
+        lbl.style.color = "#475569";
+        lbl.textContent = f.label;
+        const val = document.createElement("span");
+        val.style.cssText = "font-weight:600;color:" + ((f.pct ?? 0) > 0.3 ? "#dc2626" : "#1e293b") + ";";
+        val.textContent = Math.round((f.pct ?? 0) * 100) + "%";
+        row.append(lbl, val);
+        flagCol.appendChild(row);
+      });
+
+      // SOLAS
+      if (t.solas_chapters?.length) {
+        const solasEl = document.createElement("div");
+        solasEl.style.cssText = "margin-top:10px;font-size:11px;color:#64748b;";
+        const solasStrong = document.createElement("strong");
+        solasStrong.textContent = "SOLAS: ";
+        solasEl.appendChild(solasStrong);
+        solasEl.appendChild(document.createTextNode(t.solas_chapters.join(", ")));
+        flagCol.appendChild(solasEl);
+      }
+
+      grid.append(factorCol, flagCol);
+      body.appendChild(grid);
+
+      // Preventable by
+      if (t.preventable_by?.length) {
+        const prevBox = document.createElement("div");
+        prevBox.style.cssText = "background:#f0fdf4;border-radius:4px;padding:10px;margin-bottom:12px;";
+        const prevLabel = document.createElement("div");
+        prevLabel.style.cssText = "font-size:10px;font-weight:700;color:#166534;text-transform:uppercase;margin-bottom:4px;";
+        prevLabel.textContent = "Preventable by";
+        const prevList = document.createElement("ul");
+        prevList.style.cssText = "margin:0;padding-left:16px;font-size:11px;color:#475569;";
+        t.preventable_by.forEach(p => {
+          const li = document.createElement("li");
+          li.textContent = p;
+          prevList.appendChild(li);
+        });
+        prevBox.append(prevLabel, prevList);
+        body.appendChild(prevBox);
+      }
+
+      // Search input for representative cases
+      const searchWrap = document.createElement("div");
+      searchWrap.style.cssText = "margin-bottom:8px;";
+      const searchInput = document.createElement("input");
+      searchInput.type = "text";
+      searchInput.placeholder = "Search cases...";
+      searchInput.style.cssText = "width:100%;padding:5px 8px;font-size:11px;border:1px solid #e2e8f0;border-radius:4px;box-sizing:border-box;";
+      searchWrap.appendChild(searchInput);
+      searchInput.addEventListener("input", () => {
+        const val = searchInput.value;
+        renderCards(val);   // pass current value so filter doesn't lag a keystroke
+        const newInput = container.querySelector("input[type=text]");
+        if (newInput) { newInput.value = val; newInput.focus(); }
+      });
+      body.appendChild(searchWrap);
+
+      // Representative cases
+      const caseLabel = document.createElement("div");
+      caseLabel.style.cssText = "font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
+      caseLabel.textContent = "Representative Cases";
+      body.appendChild(caseLabel);
+      const query = searchQuery.trim().toLowerCase();
+      const filteredCases = (t.representative_cases ?? [])
+        .filter(c => !query || (c.description ?? "").toLowerCase().includes(query))
+        .slice(0, 10);
+      filteredCases.forEach(c => {
+        const caseBox = document.createElement("div");
+        caseBox.style.cssText = "border:1px solid #e2e8f0;border-radius:4px;padding:8px;margin-bottom:6px;background:#fff;";
+        const caseMeta = document.createElement("div");
+        caseMeta.style.cssText = "font-size:10px;color:#94a3b8;margin-bottom:3px;";
+        caseMeta.textContent = (c.severity ?? "") + " · " + (c.id ?? "").slice(0, 8) + "...";
+        const caseDesc = document.createElement("div");
+        caseDesc.style.cssText = "font-size:11px;color:#475569;line-height:1.4;";
+        caseDesc.textContent = (c.description ?? "").slice(0, 250);
+        caseBox.append(caseMeta, caseDesc);
+        body.appendChild(caseBox);
+      });
+
+      card.appendChild(body);
+    }
+    container.appendChild(card);
+  });
+  return container;
+}
+
+renderCards()
+return {container,expandedId,renderCards};
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Marine Safety Observatory</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./map">Map</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./themes">Themes</a></li>
+    <li class="observablehq-link"><a href="./trends">Trends</a></li>
+    <li class="observablehq-link"><a href="./vessels">Vessels &amp; People</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#theme-overview">Theme Overview</a></li>
+<li class="observablehq-secondary-link"><a href="#theme-details">Theme Details</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:329a2a0c:--></div>
+<h1 id="incident-themes" tabindex="-1"><a class="observablehq-header-anchor" href="#incident-themes">Incident Themes</a></h1>
+<p>AI-identified clusters of incidents with shared latent causes. Click any theme to expand.</p>
+<h2 id="theme-overview" tabindex="-1"><a class="observablehq-header-anchor" href="#theme-overview">Theme Overview</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:12b9d9fa:--></div>
+<h2 id="theme-details" tabindex="-1"><a class="observablehq-header-anchor" href="#theme-details">Theme Details</a></h2>
+<div class="observablehq observablehq--block"><!--:a1109973:--></div>
+</main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./map"><span>Map</span></a><a rel="next" href="./trends"><span>Trends</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-14T17:52:16">May 14, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>
