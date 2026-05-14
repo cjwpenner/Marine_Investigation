@@ -1,0 +1,69 @@
+<h2>Proposed Approaches</h2>
+<p class="subtitle">Three ways to scope and structure this project. Click your preferred direction.</p>
+
+<div class="options">
+
+  <div class="option" data-choice="incremental" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Incremental — Pipeline first, dashboard second</h3>
+      <p>Run the improved Python pipeline (Claude Sonnet + HDBSCAN + richer fields) to produce a new <code>analyzed_incidents_v2.jsonl</code> and a new <code>marine_accident_themes_analysis_v2.md</code>. Compare themes old vs new. Then build the dashboard from the improved data. Two clear phases, easier to check quality at each step.</p>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Can validate theme quality before building dashboard</li><li>Lower risk — catch data issues early</li><li>Old and new .md reports directly comparable</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Longer before you see anything visual</li><li>Pipeline changes may force dashboard rework</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="parallel" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Parallel — Build both simultaneously</h3>
+      <p>Build the improved pipeline and the dashboard at the same time. The dashboard is scaffolded using the <em>existing</em> <code>analyzed_incidents.jsonl</code> data, then hot-swapped to the improved data once the pipeline finishes. Fastest time-to-seeing-something, but requires designing the data contracts upfront.</p>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Fastest overall — see visuals early</li><li>Dashboard and pipeline developed together</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>More complex to coordinate</li><li>Dashboard may need rework if new data shape differs</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="data-contract" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Data-contract first — Define outputs, then build both <span style="background:#1e40af;color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;margin-left:4px;">Recommended</span></h3>
+      <p>Start by defining the exact JSON schema the dashboard needs (a data contract), then build the pipeline to produce it and the dashboard to consume it. A short prep step that prevents rework in both directions. The pipeline outputs lightweight pre-aggregated JSON files; the dashboard never touches raw CSVs.</p>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Clean separation — pipeline and dashboard are decoupled</li><li>Easiest to maintain or re-run pipeline later</li><li>Dashboard loads fast (pre-aggregated, not raw data)</li><li>Both .md reports (old and new) preserved for comparison</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Small upfront design cost before writing code</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:16px;margin-top:20px;">
+  <div style="font-size:12px;font-weight:700;color:#1e40af;margin-bottom:6px;">What gets built (all approaches)</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:#334155;">
+    <div>
+      <div style="font-weight:600;margin-bottom:3px;">🐍 Python Pipeline (improved)</div>
+      <ul style="margin:0;padding-left:16px;color:#64748b;">
+        <li>Claude Sonnet 4.6 for extraction</li>
+        <li>Richer JSON schema (vessel type, severity weight, regulatory refs)</li>
+        <li>HDBSCAN clustering</li>
+        <li>New marine_accident_themes_analysis_v2.md</li>
+        <li>Pre-aggregated dashboard JSON exports</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-weight:600;margin-bottom:3px;">🌐 Observable Framework Dashboard</div>
+      <ul style="margin:0;padding-left:16px;color:#64748b;">
+        <li>Landing page with key stats + map preview</li>
+        <li>Interactive map (heatmap ↔ pin toggle)</li>
+        <li>Themes explorer with drill-down</li>
+        <li>Weather &amp; time trends charts</li>
+        <li>Casualty breakdown</li>
+        <li>GitHub Pages deployment</li>
+      </ul>
+    </div>
+  </div>
+</div>

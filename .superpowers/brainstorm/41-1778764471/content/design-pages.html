@@ -1,0 +1,200 @@
+<h2>Design: Inner Pages</h2>
+<p class="subtitle">The four deep pages linked from the landing page. Click any to select if you want changes.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:0 auto;">
+
+  <!-- MAP PAGE -->
+  <div class="card" data-choice="map" onclick="toggleSelect(this)" style="cursor:default;">
+    <div class="card-image" style="padding:0;background:#0f172a;border-radius:6px 6px 0 0;overflow:hidden;">
+      <div style="background:#1e293b;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #334155;">
+        <span style="color:#e2e8f0;font-size:11px;font-weight:700;">🗺️ Incident Map</span>
+        <div style="display:flex;gap:5px;">
+          <div style="background:#1e40af;border-radius:3px;padding:2px 7px;font-size:9px;color:#fff;">Heatmap</div>
+          <div style="background:#334155;border-radius:3px;padding:2px 7px;font-size:9px;color:#94a3b8;">Pins</div>
+        </div>
+      </div>
+      <!-- Filter bar -->
+      <div style="background:#1e293b;padding:5px 12px;display:flex;gap:6px;border-bottom:1px solid #0f172a;flex-wrap:wrap;">
+        <div style="background:#334155;border-radius:3px;padding:2px 7px;font-size:8px;color:#94a3b8;">Severity ▾</div>
+        <div style="background:#334155;border-radius:3px;padding:2px 7px;font-size:8px;color:#94a3b8;">Vessel type ▾</div>
+        <div style="background:#334155;border-radius:3px;padding:2px 7px;font-size:8px;color:#94a3b8;">Year ▾</div>
+        <div style="background:#334155;border-radius:3px;padding:2px 7px;font-size:8px;color:#94a3b8;">🌙 Night only</div>
+        <div style="background:#334155;border-radius:3px;padding:2px 7px;font-size:8px;color:#94a3b8;">🌊 Weather factor</div>
+      </div>
+      <!-- Map area -->
+      <div style="height:110px;position:relative;overflow:hidden;background:#162032;">
+        <div style="position:absolute;top:15px;left:80px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(220,38,38,0.65) 0%,rgba(249,115,22,0.35) 45%,transparent 70%);"></div>
+        <div style="position:absolute;top:20px;left:190px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(220,38,38,0.75) 0%,rgba(249,115,22,0.4) 45%,transparent 70%);"></div>
+        <div style="position:absolute;top:10px;left:310px;width:55px;height:55px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,0.55) 0%,rgba(234,179,8,0.25) 45%,transparent 70%);"></div>
+        <!-- Side panel hint -->
+        <div style="position:absolute;right:0;top:0;bottom:0;width:110px;background:#1e293b;border-left:1px solid #334155;padding:8px;display:flex;flex-direction:column;gap:4px;">
+          <div style="font-size:8px;color:#60a5fa;font-weight:700;">SELECTED INCIDENT</div>
+          <div style="font-size:8px;color:#e2e8f0;font-weight:600;line-height:1.3;">Mooring line parted during berthing</div>
+          <div style="font-size:7px;color:#64748b;">English Channel · 2023</div>
+          <div style="background:#dc2626;border-radius:2px;padding:1px 4px;width:fit-content;font-size:7px;color:#fff;">Serious</div>
+          <div style="font-size:7px;color:#94a3b8;margin-top:2px;">🌙 Night · 🌊 Rough sea</div>
+          <div style="font-size:7px;color:#60a5fa;margin-top:2px;text-decoration:underline;">View full analysis →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:10px 12px;">
+      <h3 style="margin-bottom:4px;">Map Page</h3>
+      <p style="font-size:11px;color:#64748b;margin:0;">Full-screen map with filter bar. Heatmap/pin toggle. Click a pin → side panel with incident summary, severity, weather/lighting context, and AI analysis. Links to full incident detail.</p>
+    </div>
+  </div>
+
+  <!-- THEMES PAGE -->
+  <div class="card" data-choice="themes" onclick="toggleSelect(this)" style="cursor:default;">
+    <div class="card-image" style="padding:0;background:#f8f9fc;border-radius:6px 6px 0 0;overflow:hidden;border:1px solid #e2e8f0;">
+      <div style="background:#fff;padding:8px 12px;border-bottom:1px solid #e2e8f0;">
+        <span style="color:#1e293b;font-size:11px;font-weight:700;">🧩 Incident Themes</span>
+      </div>
+      <!-- Treemap mock -->
+      <div style="padding:8px;display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:auto auto;gap:3px;height:130px;">
+        <div style="grid-row:span 2;background:#1e40af;border-radius:4px;display:flex;flex-direction:column;justify-content:flex-end;padding:6px;">
+          <div style="color:#fff;font-size:8px;font-weight:700;">Mooring & Operations</div>
+          <div style="color:rgba(255,255,255,0.6);font-size:7px;">1,161 incidents</div>
+        </div>
+        <div style="background:#2563eb;border-radius:4px;display:flex;flex-direction:column;justify-content:flex-end;padding:5px;">
+          <div style="color:#fff;font-size:7px;font-weight:700;">Pilot Ladder</div>
+          <div style="color:rgba(255,255,255,0.6);font-size:6px;">743</div>
+        </div>
+        <div style="background:#3b82f6;border-radius:4px;display:flex;flex-direction:column;justify-content:flex-end;padding:5px;">
+          <div style="color:#fff;font-size:7px;font-weight:700;">Human Factors</div>
+          <div style="color:rgba(255,255,255,0.6);font-size:6px;">677</div>
+        </div>
+        <div style="background:#60a5fa;border-radius:4px;display:flex;flex-direction:column;justify-content:flex-end;padding:5px;">
+          <div style="color:#fff;font-size:7px;font-weight:700;">Engine Failures</div>
+          <div style="color:rgba(255,255,255,0.6);font-size:6px;">654</div>
+        </div>
+        <div style="background:#93c5fd;border-radius:4px;display:flex;flex-direction:column;justify-content:flex-end;padding:5px;">
+          <div style="color:#1e40af;font-size:7px;font-weight:700;">Navigation</div>
+          <div style="color:#3b82f6;font-size:6px;">509</div>
+        </div>
+      </div>
+      <!-- Click to expand hint -->
+      <div style="background:#eff6ff;border-top:1px solid #bfdbfe;padding:6px 10px;">
+        <div style="font-size:8px;color:#1e40af;">▼ Click a theme to expand — contributing factors, SOLAS chapters, representative cases</div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:10px 12px;">
+      <h3 style="margin-bottom:4px;">Themes Page</h3>
+      <p style="font-size:11px;color:#64748b;margin:0;">Treemap sized by incident count. Click any theme → expanded panel with AI description, top contributing factor types, SOLAS references, and a searchable list of representative cases.</p>
+    </div>
+  </div>
+
+  <!-- TRENDS PAGE -->
+  <div class="card" data-choice="trends" onclick="toggleSelect(this)" style="cursor:default;">
+    <div class="card-image" style="padding:0;background:#f8f9fc;border-radius:6px 6px 0 0;overflow:hidden;border:1px solid #e2e8f0;">
+      <div style="background:#fff;padding:8px 12px;border-bottom:1px solid #e2e8f0;">
+        <span style="color:#1e293b;font-size:11px;font-weight:700;">📈 Trends</span>
+      </div>
+      <div style="padding:8px;display:flex;flex-direction:column;gap:6px;">
+        <!-- Timeline -->
+        <div style="background:#fff;border-radius:4px;padding:7px;border:1px solid #f1f5f9;">
+          <div style="font-size:8px;font-weight:700;color:#475569;margin-bottom:5px;">Incidents per month by severity</div>
+          <div style="display:flex;align-items:flex-end;gap:2px;height:38px;">
+            <div style="flex:1;background:#bfdbfe;border-radius:1px 1px 0 0;height:50%;"></div>
+            <div style="flex:1;background:#bfdbfe;border-radius:1px 1px 0 0;height:40%;"></div>
+            <div style="flex:1;background:#93c5fd;border-radius:1px 1px 0 0;height:65%;"></div>
+            <div style="flex:1;background:#3b82f6;border-radius:1px 1px 0 0;height:75%;"></div>
+            <div style="flex:1;background:#3b82f6;border-radius:1px 1px 0 0;height:60%;"></div>
+            <div style="flex:1;background:#1e40af;border-radius:1px 1px 0 0;height:85%;"></div>
+            <div style="flex:1;background:#1e40af;border-radius:1px 1px 0 0;height:100%;"></div>
+            <div style="flex:1;background:#1e40af;border-radius:1px 1px 0 0;height:80%;"></div>
+            <div style="flex:1;background:#3b82f6;border-radius:1px 1px 0 0;height:70%;"></div>
+            <div style="flex:1;background:#3b82f6;border-radius:1px 1px 0 0;height:55%;"></div>
+            <div style="flex:1;background:#93c5fd;border-radius:1px 1px 0 0;height:45%;"></div>
+            <div style="flex:1;background:#bfdbfe;border-radius:1px 1px 0 0;height:50%;"></div>
+          </div>
+        </div>
+        <!-- Lighting + Weather mini row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+          <div style="background:#fff;border-radius:4px;padding:6px;border:1px solid #f1f5f9;">
+            <div style="font-size:8px;font-weight:700;color:#475569;margin-bottom:4px;">By lighting condition</div>
+            <div style="display:flex;gap:2px;align-items:center;">
+              <div style="flex:2.8;height:10px;background:#1e40af;border-radius:2px 0 0 2px;"></div>
+              <div style="flex:1.4;height:10px;background:#3b82f6;"></div>
+              <div style="flex:0.5;height:10px;background:#93c5fd;"></div>
+              <div style="flex:0.3;height:10px;background:#bfdbfe;border-radius:0 2px 2px 0;"></div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:3px;">
+              <span style="font-size:7px;color:#64748b;">■ Day</span>
+              <span style="font-size:7px;color:#64748b;">■ Night</span>
+              <span style="font-size:7px;color:#64748b;">■ Dusk</span>
+              <span style="font-size:7px;color:#64748b;">■ Dawn</span>
+            </div>
+          </div>
+          <div style="background:#fff;border-radius:4px;padding:6px;border:1px solid #f1f5f9;">
+            <div style="font-size:8px;font-weight:700;color:#475569;margin-bottom:4px;">Wind force at incident</div>
+            <div style="display:flex;align-items:flex-end;gap:1px;height:22px;">
+              <div style="flex:1;background:#bfdbfe;height:30%;border-radius:1px 1px 0 0;"></div>
+              <div style="flex:1;background:#93c5fd;height:50%;border-radius:1px 1px 0 0;"></div>
+              <div style="flex:1;background:#3b82f6;height:100%;border-radius:1px 1px 0 0;"></div>
+              <div style="flex:1;background:#3b82f6;height:85%;border-radius:1px 1px 0 0;"></div>
+              <div style="flex:1;background:#1e40af;height:70%;border-radius:1px 1px 0 0;"></div>
+              <div style="flex:1;background:#1e40af;height:55%;border-radius:1px 1px 0 0;"></div>
+              <div style="flex:1;background:#3b82f6;height:40%;border-radius:1px 1px 0 0;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;">
+              <span style="font-size:7px;color:#94a3b8;">Bf1</span><span style="font-size:7px;color:#94a3b8;">Bf7+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:10px 12px;">
+      <h3 style="margin-bottom:4px;">Trends Page</h3>
+      <p style="font-size:11px;color:#64748b;margin:0;">Monthly incident timeline by severity. Lighting condition breakdown (day/night/dawn/dusk). Wind force and wave height distributions. Seasonal patterns. Weather factor % over time.</p>
+    </div>
+  </div>
+
+  <!-- VESSELS & PEOPLE PAGE -->
+  <div class="card" data-choice="vessels" onclick="toggleSelect(this)" style="cursor:default;">
+    <div class="card-image" style="padding:0;background:#f8f9fc;border-radius:6px 6px 0 0;overflow:hidden;border:1px solid #e2e8f0;">
+      <div style="background:#fff;padding:8px 12px;border-bottom:1px solid #e2e8f0;">
+        <span style="color:#1e293b;font-size:11px;font-weight:700;">🚢 Vessels &amp; People</span>
+      </div>
+      <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+        <!-- Vessel type bar -->
+        <div style="background:#fff;border-radius:4px;padding:7px;border:1px solid #f1f5f9;">
+          <div style="font-size:8px;font-weight:700;color:#475569;margin-bottom:5px;">Incidents by vessel type</div>
+          <div style="display:flex;flex-direction:column;gap:3px;">
+            <div><div style="display:flex;justify-content:space-between;"><span style="font-size:7px;color:#64748b;">Cargo</span><span style="font-size:7px;font-weight:600;color:#1e293b;">28%</span></div><div style="height:4px;background:#f1f5f9;border-radius:2px;"><div style="width:28%;height:100%;background:#1e40af;border-radius:2px;"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;"><span style="font-size:7px;color:#64748b;">Passenger</span><span style="font-size:7px;font-weight:600;color:#1e293b;">23%</span></div><div style="height:4px;background:#f1f5f9;border-radius:2px;"><div style="width:23%;height:100%;background:#3b82f6;border-radius:2px;"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;"><span style="font-size:7px;color:#64748b;">Tanker</span><span style="font-size:7px;font-weight:600;color:#1e293b;">18%</span></div><div style="height:4px;background:#f1f5f9;border-radius:2px;"><div style="width:18%;height:100%;background:#60a5fa;border-radius:2px;"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;"><span style="font-size:7px;color:#64748b;">Fishing</span><span style="font-size:7px;font-weight:600;color:#1e293b;">16%</span></div><div style="height:4px;background:#f1f5f9;border-radius:2px;"><div style="width:16%;height:100%;background:#93c5fd;border-radius:2px;"></div></div></div>
+          </div>
+        </div>
+        <!-- Casualty donut mock -->
+        <div style="background:#fff;border-radius:4px;padding:7px;border:1px solid #f1f5f9;">
+          <div style="font-size:8px;font-weight:700;color:#475569;margin-bottom:4px;">Casualties by type</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:38px;height:38px;border-radius:50%;background:conic-gradient(#1e40af 0% 58%,#3b82f6 58% 79%,#93c5fd 79% 100%);"></div>
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <div style="display:flex;align-items:center;gap:3px;"><div style="width:6px;height:6px;border-radius:1px;background:#1e40af;"></div><span style="font-size:7px;color:#64748b;">Crew 58%</span></div>
+              <div style="display:flex;align-items:center;gap:3px;"><div style="width:6px;height:6px;border-radius:1px;background:#3b82f6;"></div><span style="font-size:7px;color:#64748b;">Passenger 21%</span></div>
+              <div style="display:flex;align-items:center;gap:3px;"><div style="width:6px;height:6px;border-radius:1px;background:#93c5fd;"></div><span style="font-size:7px;color:#64748b;">Other 21%</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- Flag state -->
+        <div style="background:#fff;border-radius:4px;padding:7px;border:1px solid #f1f5f9;grid-column:span 2;">
+          <div style="font-size:8px;font-weight:700;color:#475569;margin-bottom:4px;">Top flag states by incident count</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:3px;padding:2px 6px;font-size:7px;color:#1e40af;">🇬🇧 UK — 1,842</div>
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:3px;padding:2px 6px;font-size:7px;color:#1e40af;">🇳🇱 Netherlands — 934</div>
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:3px;padding:2px 6px;font-size:7px;color:#1e40af;">🇳🇴 Norway — 721</div>
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:3px;padding:2px 6px;font-size:7px;color:#1e40af;">🇩🇪 Germany — 612</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:2px 6px;font-size:7px;color:#64748b;">+ 22 more →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:10px 12px;">
+      <h3 style="margin-bottom:4px;">Vessels &amp; People Page</h3>
+      <p style="font-size:11px;color:#64748b;margin:0;">Incidents by vessel type, flag state choropleth map, casualty breakdown (crew vs passenger), age/gender demographics, PPE usage rates, injury body-part frequency.</p>
+    </div>
+  </div>
+
+</div>

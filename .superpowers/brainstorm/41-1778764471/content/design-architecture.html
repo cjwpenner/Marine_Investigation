@@ -1,0 +1,140 @@
+<h2>Design: System Architecture</h2>
+<p class="subtitle">How the pieces connect. Does this overall structure look right?</p>
+
+<div style="font-family:system-ui,sans-serif;max-width:860px;margin:0 auto;">
+
+  <!-- Pipeline Row -->
+  <div style="margin-bottom:24px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:10px;">① IMPROVED PYTHON PIPELINE</div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;min-width:110px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:3px;">📄</div>
+        <div style="font-size:11px;font-weight:600;color:#1e293b;">Raw CSVs</div>
+        <div style="font-size:9px;color:#94a3b8;">occurrences<br>vessels<br>affected_persons</div>
+      </div>
+
+      <div style="color:#94a3b8;font-size:18px;">→</div>
+
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;min-width:120px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:3px;">🔗</div>
+        <div style="font-size:11px;font-weight:600;color:#1e293b;">stitch_dataset.py</div>
+        <div style="font-size:9px;color:#94a3b8;">unchanged</div>
+      </div>
+
+      <div style="color:#94a3b8;font-size:18px;">→</div>
+
+      <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:10px 14px;min-width:140px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:3px;">🤖</div>
+        <div style="font-size:11px;font-weight:600;color:#1e293b;">marine_async_processor_v2.py</div>
+        <div style="font-size:9px;color:#92400e;margin-top:3px;">Claude Sonnet 4.6<br>Richer schema<br>+ weather data</div>
+      </div>
+
+      <div style="color:#94a3b8;font-size:18px;">→</div>
+
+      <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:10px 14px;min-width:140px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:3px;">🧩</div>
+        <div style="font-size:11px;font-weight:600;color:#1e293b;">marine_theme_generator_v2.py</div>
+        <div style="font-size:9px;color:#92400e;margin-top:3px;">HDBSCAN clustering<br>Claude Sonnet 4.6<br>severity-weighted</div>
+      </div>
+
+      <div style="color:#94a3b8;font-size:18px;">→</div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:6px;padding:6px 10px;font-size:10px;font-weight:600;color:#166534;">analyzed_incidents_v2.jsonl</div>
+        <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:6px;padding:6px 10px;font-size:10px;font-weight:600;color:#166534;">themes_analysis_v2.md ★</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Data Contract Row -->
+  <div style="margin-bottom:24px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:10px;">② DATA EXPORT (the contract layer)</div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+
+      <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;min-width:140px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:3px;">📦</div>
+        <div style="font-size:11px;font-weight:600;color:#166534;">analyzed_incidents_v2.jsonl<br>+ original CSVs</div>
+      </div>
+
+      <div style="color:#94a3b8;font-size:18px;">→</div>
+
+      <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:10px 14px;min-width:130px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:3px;">⚙️</div>
+        <div style="font-size:11px;font-weight:600;color:#1e293b;">export_dashboard_data.py</div>
+        <div style="font-size:9px;color:#92400e;margin-top:3px;">new script<br>pre-aggregates everything</div>
+      </div>
+
+      <div style="color:#94a3b8;font-size:18px;">→</div>
+
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:4px 10px;font-size:10px;color:#1e40af;font-weight:600;">incidents_map.json <span style="font-weight:400;color:#64748b">(lat/lon/severity/theme)</span></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:4px 10px;font-size:10px;color:#1e40af;font-weight:600;">themes.json <span style="font-weight:400;color:#64748b">(clusters + descriptions)</span></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:4px 10px;font-size:10px;color:#1e40af;font-weight:600;">time_series.json <span style="font-weight:400;color:#64748b">(monthly counts by severity)</span></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:4px 10px;font-size:10px;color:#1e40af;font-weight:600;">weather_stats.json <span style="font-weight:400;color:#64748b">(wind/sea state aggregates)</span></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:4px 10px;font-size:10px;color:#1e40af;font-weight:600;">casualties.json <span style="font-weight:400;color:#64748b">(injuries, demographics)</span></div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:4px 10px;font-size:10px;color:#1e40af;font-weight:600;">vessels.json <span style="font-weight:400;color:#64748b">(by type, flag state)</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dashboard Row -->
+  <div style="margin-bottom:24px;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:10px;">③ OBSERVABLE FRAMEWORK DASHBOARD → GITHUB PAGES</div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;min-width:100px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:3px;">📁</div>
+        <div style="font-size:11px;font-weight:600;color:#1e40af;">JSON files</div>
+        <div style="font-size:9px;color:#64748b;">6 lightweight<br>data files</div>
+      </div>
+
+      <div style="color:#94a3b8;font-size:18px;">→</div>
+
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <div style="background:#fff;border:2px solid #1e40af;border-radius:8px;padding:8px 12px;text-align:center;min-width:90px;">
+          <div style="font-size:14px;margin-bottom:2px;">🏠</div>
+          <div style="font-size:10px;font-weight:700;color:#1e40af;">Landing</div>
+          <div style="font-size:9px;color:#64748b;">Hero stats<br>Map preview<br>Theme cards</div>
+        </div>
+        <div style="background:#fff;border:2px solid #1e40af;border-radius:8px;padding:8px 12px;text-align:center;min-width:90px;">
+          <div style="font-size:14px;margin-bottom:2px;">🗺️</div>
+          <div style="font-size:10px;font-weight:700;color:#1e40af;">Map</div>
+          <div style="font-size:9px;color:#64748b;">Heatmap ↔ pins<br>Filters<br>Incident cards</div>
+        </div>
+        <div style="background:#fff;border:2px solid #1e40af;border-radius:8px;padding:8px 12px;text-align:center;min-width:90px;">
+          <div style="font-size:14px;margin-bottom:2px;">🧩</div>
+          <div style="font-size:10px;font-weight:700;color:#1e40af;">Themes</div>
+          <div style="font-size:9px;color:#64748b;">Treemap<br>Theme detail<br>Case list</div>
+        </div>
+        <div style="background:#fff;border:2px solid #1e40af;border-radius:8px;padding:8px 12px;text-align:center;min-width:90px;">
+          <div style="font-size:14px;margin-bottom:2px;">📈</div>
+          <div style="font-size:10px;font-weight:700;color:#1e40af;">Trends</div>
+          <div style="font-size:9px;color:#64748b;">Timeline<br>Seasonal<br>Weather</div>
+        </div>
+        <div style="background:#fff;border:2px solid #1e40af;border-radius:8px;padding:8px 12px;text-align:center;min-width:90px;">
+          <div style="font-size:14px;margin-bottom:2px;">🚢</div>
+          <div style="font-size:10px;font-weight:700;color:#1e40af;">Vessels &amp; People</div>
+          <div style="font-size:9px;color:#64748b;">Ship types<br>Flag states<br>Casualties</div>
+        </div>
+      </div>
+
+      <div style="color:#94a3b8;font-size:18px;">→</div>
+
+      <div style="background:#f0fdf4;border:2px solid #16a34a;border-radius:8px;padding:10px 14px;min-width:100px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:3px;">🌐</div>
+        <div style="font-size:11px;font-weight:600;color:#166534;">GitHub Pages</div>
+        <div style="font-size:9px;color:#64748b;">Static site<br>git push deploy</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Note on comparison -->
+  <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:12px;color:#92400e;">
+    <strong>★ Both .md reports preserved:</strong> <code>marine_accident_themes_analysis.md</code> (original) and <code>marine_accident_themes_analysis_v2.md</code> (improved) are both generated so you can compare themes side-by-side.
+  </div>
+
+</div>

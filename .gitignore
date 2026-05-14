@@ -1,0 +1,34 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Data files (large, regenerated)
+stitched_marine_data.json
+analyzed_incidents_v2.jsonl
+analyzed_incidents.jsonl
+poc_ai_insights.json
+
+# Node / dashboard build
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.observablehq/cache/
+
+# Git worktrees
+.worktrees/
+
+# OS
+.DS_Store
+Thumbs.db
