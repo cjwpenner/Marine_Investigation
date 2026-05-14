@@ -54,7 +54,7 @@ Plot.plot({
 const container = document.createElement("div");
 let expandedId = null;
 
-function renderCards() {
+function renderCards(searchQuery = "") {
   while (container.firstChild) container.removeChild(container.firstChild);
   themes.forEach(t => {
     const card = document.createElement("div");
@@ -77,7 +77,7 @@ function renderCards() {
     titleEl.textContent = t.title;
     const countEl = document.createElement("div");
     countEl.style.cssText = "font-size:11px;color:#64748b;margin-top:2px;";
-    countEl.textContent = t.incident_count.toLocaleString() + " incidents";
+    countEl.textContent = (t.incident_count ?? 0).toLocaleString() + " incidents";
     titleWrap.append(titleEl, countEl);
 
     const chevron = document.createElement("span");
@@ -195,8 +195,7 @@ function renderCards() {
       searchWrap.appendChild(searchInput);
       searchInput.addEventListener("input", () => {
         const val = searchInput.value;
-        renderCards();
-        // Restore focus and value after re-render
+        renderCards(val);   // pass current value so filter doesn't lag a keystroke
         const newInput = container.querySelector("input[type=text]");
         if (newInput) { newInput.value = val; newInput.focus(); }
       });
@@ -207,7 +206,7 @@ function renderCards() {
       caseLabel.style.cssText = "font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
       caseLabel.textContent = "Representative Cases";
       body.appendChild(caseLabel);
-      const query = searchInput.value.trim().toLowerCase();
+      const query = searchQuery.trim().toLowerCase();
       const filteredCases = (t.representative_cases ?? [])
         .filter(c => !query || (c.description ?? "").toLowerCase().includes(query))
         .slice(0, 10);
