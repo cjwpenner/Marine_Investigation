@@ -4,6 +4,9 @@ title: Marine Safety Observatory
 
 ```js
 import * as Plot from "npm:@observablehq/plot";
+const escapeHtml = str => str == null ? "" : String(str)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 const incidents = await FileAttachment("data/incidents_map.json").json();
 const themes = await FileAttachment("data/themes.json").json();
 const timeSeries = await FileAttachment("data/time_series.json").json();
@@ -11,7 +14,7 @@ const weatherStats = await FileAttachment("data/weather_stats.json").json();
 
 const totalIncidents = incidents.length;
 const casualties = await FileAttachment("data/casualties.json").json();
-const totalCasualties = casualties.total_affected;
+const totalCasualties = Number(casualties.total_affected);
 const nightPct = Math.round(
   incidents.filter(d => d.natural_light === "Night" || d.natural_light === "Dusk").length
   / totalIncidents * 100
@@ -55,8 +58,8 @@ html`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margi
   ${themes.slice(0,4).map((t, i) => html`<a href="./themes" style="text-decoration:none;">
     <div class="theme-card" style="border-top-color:${colors[i % colors.length]};">
       <div style="font-size:1.4rem;margin-bottom:6px;">${icons[i % icons.length]}</div>
-      <div style="font-weight:700;color:#1e293b;font-size:13px;margin-bottom:4px;">${t.title}</div>
-      <div style="font-size:11px;color:#64748b;">${t.incident_count.toLocaleString()} incidents</div>
+      <div style="font-weight:700;color:#1e293b;font-size:13px;margin-bottom:4px;">${escapeHtml(t.title)}</div>
+      <div style="font-size:11px;color:#64748b;">${escapeHtml(String(t.incident_count.toLocaleString()))} incidents</div>
     </div>
   </a>`)}
 </div>`
