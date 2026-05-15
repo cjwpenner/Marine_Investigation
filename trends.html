@@ -60,41 +60,79 @@
 import {define} from "./_observablehq/client.86d48a53.js";
 import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
 
-registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.47557a04.json","lastModified":1778830781255,"size":8460333});
-registerFile("./data/time_series.json", {"name":"./data/time_series.json","mimeType":"application/json","path":"./_file/data/time_series.b7e71da3.json","lastModified":1778830781260,"size":15283});
-registerFile("./data/weather_stats.json", {"name":"./data/weather_stats.json","mimeType":"application/json","path":"./_file/data/weather_stats.71cb2814.json","lastModified":1778830781260,"size":1488});
+registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.614d635d.json","lastModified":1778831479734,"size":9314056});
+registerFile("./data/time_series.json", {"name":"./data/time_series.json","mimeType":"application/json","path":"./_file/data/time_series.b7e71da3.json","lastModified":1778831479740,"size":15283});
+registerFile("./data/weather_stats.json", {"name":"./data/weather_stats.json","mimeType":"application/json","path":"./_file/data/weather_stats.7cef6d3c.json","lastModified":1778831479740,"size":2349});
 
-define({id: "304c5265", inputs: ["FileAttachment"], outputs: ["Plot","timeSeries","weatherStats","incidentsMap","lightData","waveData","WAVE_ORDER","beaufortData","catNight","catTotal","overallNightPct","nightByCat","years","minYear","maxYear"], body: async (FileAttachment) => {
+define({id: "6bd74340", inputs: ["FileAttachment"], outputs: ["Plot","timeSeries","weatherStats","incidentsMap","lightData","SEA_STATE_ORDER","seaStateData","windForceData","weatherTypeData","VIS_ORDER","visibilityData","catNight","catTotal","overallNightPct","nightByCat","years","minYear","maxYear"], body: async (FileAttachment) => {
 const Plot = await import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js");
 const timeSeries = await FileAttachment("./data/time_series.json").json();
 const weatherStats = await FileAttachment("./data/weather_stats.json").json();
 const incidentsMap = await FileAttachment("./data/incidents_map.json").json();
 
+// Lighting conditions (exclude Unknown)
 const lightData = Object.entries(weatherStats.by_natural_light)
   .map(([k,v]) => ({light: k, count: v}))
-  .filter(d => d.light !== "Unknown")
+  .filter(d => d.light !== "Unknown" && d.light !== "Unknown NL")
   .sort((a,b) => b.count - a.count);
 
-const waveData = Object.entries(weatherStats.by_wave_height_band)
-  .map(([k,v]) => ({band: k, count: v}));
-const WAVE_ORDER = ["0-0.5m","0.5-1.5m","1.5-2.5m","2.5-4m","4m+"];
-waveData.sort((a,b) => WAVE_ORDER.indexOf(a.band) - WAVE_ORDER.indexOf(b.band));
+// Sea state — sort by Douglas scale order
+const SEA_STATE_ORDER = [
+  "0 - Calm glassy - (0 m)",
+  "1 - Calm rippled - (0 - 0.1 m)",
+  "2 - Smooth - (0.1 - 0.5 m)",
+  "3 - Slight - (0.5 - 1.25 m)",
+  "4 - Moderate - (1.25 - 2.5 m)",
+  "5 - Rough - (2.5 - 4 m)",
+  "6 - Very rough - (4.0 - 6.0 m)",
+  "7 - High - (6.0 - 9.0 m)",
+  "8 - Very high - (9.0 - 14.0 m)",
+  "9 - Phenomenal - (> 14.0 m)"
+];
+const seaStateData = Object.entries(weatherStats.by_sea_state ?? {})
+  .map(([k,v]) => ({state: k, count: v}))
+  .sort((a,b) => SEA_STATE_ORDER.indexOf(a.state) - SEA_STATE_ORDER.indexOf(b.state));
 
-const beaufortData = Object.entries(weatherStats.by_wind_force_beaufort ?? {})
-  .map(([k, v]) => ({force: "F" + k, n: k, count: v}))
-  .sort((a, b) => +a.n - +b.n);
+// Wind force — strip long label to just "F0"–"F12"
+const windForceData = Object.entries(weatherStats.by_wind_force ?? {})
+  .filter(([k]) => k !== "Beaufort scale: Unknown")
+  .map(([k,v]) => {
+    const match = k.match(/^(\d+)/);
+    return {label: match ? "F" + match[1] : k, force: match ? +match[1] : 99, count: v};
+  })
+  .sort((a,b) => a.force - b.force);
 
-// Night incidents by category
+// Weather type (exclude Unknown variants)
+const weatherTypeData = Object.entries(weatherStats.by_weather_type ?? {})
+  .map(([k,v]) => ({type: k, count: v}))
+  .filter(d => !d.type.startsWith("Unknown"))
+  .sort((a,b) => b.count - a.count);
+
+// Visibility
+const VIS_ORDER = [
+  "Calm glassy - (0 m)",
+  "Very good - Vis >= 25.0 nm",
+  "Good - 5.0 <= Vis < 25.0 nm",
+  "Moderate - 2.0 <=Vis < 5.0 nm",
+  "Poor - 0.5 <=Vis < 2.0 nm",
+  "Very poor - Vis < 0.5 nm"
+];
+const visibilityData = Object.entries(weatherStats.by_visibility ?? {})
+  .map(([k,v]) => ({vis: k, count: v}))
+  .filter(d => !d.vis.startsWith("Unknown"))
+  .sort((a,b) => VIS_ORDER.indexOf(a.vis) - VIS_ORDER.indexOf(b.vis));
+
+// Night incidents by category (Night + Twilight)
 const catNight = {};
 const catTotal = {};
 for (const inc of incidentsMap) {
   const cat = inc.incident_category ?? "other";
   catTotal[cat] = (catTotal[cat] ?? 0) + 1;
-  if (inc.natural_light === "Night" || inc.natural_light === "Dusk") {
+  if (inc.natural_light === "Night" || inc.natural_light === "Twilight") {
     catNight[cat] = (catNight[cat] ?? 0) + 1;
   }
 }
-const overallNightPct = incidentsMap.filter(d => d.natural_light === "Night" || d.natural_light === "Dusk").length / Math.max(incidentsMap.length, 1);
+const overallNightPct = incidentsMap.filter(d => d.natural_light === "Night" || d.natural_light === "Twilight").length / Math.max(incidentsMap.length, 1);
 const nightByCat = Object.entries(catTotal)
   .map(([cat, total]) => ({
     cat,
@@ -107,7 +145,7 @@ const nightByCat = Object.entries(catTotal)
 const years = [...new Set(timeSeries.map(d => d.year_month.slice(0, 4)))].sort();
 const minYear = years[0] ?? "2010";
 const maxYear = years[years.length - 1] ?? "2024";
-return {Plot,timeSeries,weatherStats,incidentsMap,lightData,waveData,WAVE_ORDER,beaufortData,catNight,catTotal,overallNightPct,nightByCat,years,minYear,maxYear};
+return {Plot,timeSeries,weatherStats,incidentsMap,lightData,SEA_STATE_ORDER,seaStateData,windForceData,weatherTypeData,VIS_ORDER,visibilityData,catNight,catTotal,overallNightPct,nightByCat,years,minYear,maxYear};
 }});
 
 define({id: "1aac5076", inputs: ["view","Inputs","years","minYear","maxYear"], outputs: ["fromYear","toYear"], body: (view,Inputs,years,minYear,maxYear) => {
@@ -116,9 +154,8 @@ const toYear = view(Inputs.select(years, {label: "To year", value: maxYear}));
 return {fromYear,toYear};
 }});
 
-define({id: "70fc5929", inputs: ["timeSeries","fromYear","toYear","Plot"], outputs: ["filtered","stackData"], body: (timeSeries,fromYear,toYear,Plot) => {
+define({id: "8ff88d6a", inputs: ["timeSeries","fromYear","toYear","Plot"], outputs: ["filtered","stackData"], body: (timeSeries,fromYear,toYear,Plot) => {
 const filtered = timeSeries.filter(d => d.year_month >= fromYear && d.year_month <= toYear + "-99");
-// Reshape to long form so Plot.stackY stacks correctly (three barY without stackY would overlap)
 const stackData = filtered.flatMap(d => [
   {year_month: d.year_month, count: d.less_serious,  severity: "Less Serious"},
   {year_month: d.year_month, count: d.serious,        severity: "Serious"},
@@ -137,40 +174,67 @@ Plot.plot({
 return {filtered,stackData};
 }});
 
-define({id: "448baa9b", inputs: ["Plot","lightData"], outputs: ["LIGHT_COLORS"], body: (Plot,lightData) => {
-const LIGHT_COLORS = {Day: "#60a5fa", Night: "#1e293b", Dusk: "#d97706", Dawn: "#f59e0b"};
-Plot.plot({
-  height: 80, marginLeft: 10,
-  x: {label: "Incidents", percent: false},
-  color: {domain: ["Day","Night","Dusk","Dawn"], range: ["#60a5fa","#1e293b","#d97706","#f59e0b"], legend: true},
-  marks: [
-    Plot.barX(lightData, Plot.stackX({x: "count", fill: "light", tip: true,
-      order: ["Day","Dusk","Dawn","Night"]}))
-  ]
-})
-return {LIGHT_COLORS};
-}});
-
-define({id: "3833040d", inputs: ["Plot","waveData","display"], body: async (Plot,waveData,display) => {
+define({id: "8708c3db", inputs: ["Plot","lightData","display"], body: async (Plot,lightData,display) => {
 display(await(
 Plot.plot({
-  height: 200, marginLeft: 80,
+  height: 80, marginLeft: 10,
   x: {label: "Incidents"},
+  color: {domain: ["Daylight","Night","Twilight"], range: ["#60a5fa","#1e293b","#d97706"], legend: true},
   marks: [
-    Plot.barX(waveData, {x: "count", y: "band", fill: "#1e40af", tip: true})
+    Plot.barX(lightData, Plot.stackX({x: "count", fill: "light", tip: true,
+      order: ["Daylight","Twilight","Night"]}))
   ]
 })
 ))
 }});
 
-define({id: "2db55b38", inputs: ["Plot","beaufortData","display"], body: async (Plot,beaufortData,display) => {
+define({id: "4c47eb19", inputs: ["Plot","seaStateData","display"], body: async (Plot,seaStateData,display) => {
+display(await(
+Plot.plot({
+  height: 220, marginLeft: 200,
+  x: {label: "Incidents"},
+  marks: [
+    Plot.barX(seaStateData, {x: "count", y: "state", fill: "#1e40af", tip: true,
+      sort: {y: null}})
+  ]
+})
+))
+}});
+
+define({id: "a029217d", inputs: ["Plot","windForceData","display"], body: async (Plot,windForceData,display) => {
 display(await(
 Plot.plot({
   height: 200, marginLeft: 40,
   x: {label: "Beaufort force"},
   y: {label: "Incidents"},
   marks: [
-    Plot.barY(beaufortData, {x: "force", y: "count", fill: "#1e40af", tip: true})
+    Plot.barY(windForceData, {x: "label", y: "count", fill: "#1e40af", tip: true})
+  ]
+})
+))
+}});
+
+define({id: "568ee239", inputs: ["Plot","weatherTypeData","display"], body: async (Plot,weatherTypeData,display) => {
+display(await(
+Plot.plot({
+  height: 200, marginLeft: 80,
+  x: {label: "Incidents"},
+  marks: [
+    Plot.barX(weatherTypeData, {x: "count", y: "type", fill: "#1e40af", tip: true,
+      sort: {y: "-x"}})
+  ]
+})
+))
+}});
+
+define({id: "4ff16f63", inputs: ["Plot","visibilityData","display"], body: async (Plot,visibilityData,display) => {
+display(await(
+Plot.plot({
+  height: 180, marginLeft: 220,
+  x: {label: "Incidents"},
+  marks: [
+    Plot.barX(visibilityData, {x: "count", y: "vis", fill: "#1e40af", tip: true,
+      sort: {y: null}})
   ]
 })
 ))
@@ -191,7 +255,7 @@ Plot.plot({
 ))
 }});
 
-define({id: "97fc42dc", inputs: ["Plot","timeSeries","display"], body: async (Plot,timeSeries,display) => {
+define({id: "374ddf68", inputs: ["Plot","timeSeries","display"], body: async (Plot,timeSeries,display) => {
 display(await(
 Plot.plot({
   height: 180, marginLeft: 40,
@@ -199,17 +263,17 @@ Plot.plot({
   y: {label: "Night %", percent: true},
   marks: [
     Plot.lineY(timeSeries, {x: "year_month", y: "night_pct", stroke: "#1e293b", strokeWidth: 2}),
-    Plot.dot(timeSeries, {x: "year_month", y: "night_pct", fill: "#1e293b", tip: true})
+    Plot.dot(timeSeries, {x: "year_month", y: "night_pct", fill: "#1e293b", r: 2, tip: true})
   ]
 })
 ))
 }});
 
-define({id: "4ea87c98", inputs: ["Plot","nightByCat","overallNightPct","display"], body: async (Plot,nightByCat,overallNightPct,display) => {
+define({id: "38f32b1f", inputs: ["Plot","nightByCat","overallNightPct","display"], body: async (Plot,nightByCat,overallNightPct,display) => {
 display(await(
 Plot.plot({
   height: 250, marginLeft: 120,
-  x: {label: "Night / dusk %", percent: true},
+  x: {label: "Night / twilight %", percent: true},
   marks: [
     Plot.barX(nightByCat, {
       x: "night_pct", y: "cat", fill: d => d.night_pct > overallNightPct ? "#1e293b" : "#60a5fa",
@@ -247,8 +311,10 @@ Plot.plot({
 <ol>
 <li class="observablehq-secondary-link"><a href="#incidents-per-month">Incidents per Month</a></li>
 <li class="observablehq-secondary-link"><a href="#lighting-conditions">Lighting Conditions</a></li>
-<li class="observablehq-secondary-link"><a href="#wave-height-at-incident">Wave Height at Incident</a></li>
-<li class="observablehq-secondary-link"><a href="#wind-force-distribution-beaufort">Wind Force Distribution (Beaufort)</a></li>
+<li class="observablehq-secondary-link"><a href="#sea-state-at-incident">Sea State at Incident</a></li>
+<li class="observablehq-secondary-link"><a href="#wind-force-beaufort">Wind Force (Beaufort)</a></li>
+<li class="observablehq-secondary-link"><a href="#weather-conditions">Weather Conditions</a></li>
+<li class="observablehq-secondary-link"><a href="#visibility-at-incident">Visibility at Incident</a></li>
 <li class="observablehq-secondary-link"><a href="#weather-factor-by-month">Weather Factor by Month</a></li>
 <li class="observablehq-secondary-link"><a href="#night-incident-by-month">Night Incident % by Month</a></li>
 <li class="observablehq-secondary-link"><a href="#night-incidents-by-category">Night Incidents by Category</a></li>
@@ -256,32 +322,41 @@ Plot.plot({
 </nav>
 </aside>
 <main id="observablehq-main" class="observablehq">
-<div class="observablehq observablehq--block"><!--:304c5265:--></div>
+<div class="observablehq observablehq--block"><!--:6bd74340:--></div>
 <h1 id="trends" tabindex="-1"><a class="observablehq-header-anchor" href="#trends">Trends</a></h1>
 <div class="observablehq observablehq--block"><!--:1aac5076:--></div>
 <h2 id="incidents-per-month" tabindex="-1"><a class="observablehq-header-anchor" href="#incidents-per-month">Incidents per Month</a></h2>
-<div class="observablehq observablehq--block"><!--:70fc5929:--></div>
+<div class="observablehq observablehq--block"><!--:8ff88d6a:--></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
 <div>
 <h2 id="lighting-conditions" tabindex="-1"><a class="observablehq-header-anchor" href="#lighting-conditions">Lighting Conditions</a></h2>
-<div class="observablehq observablehq--block"><!--:448baa9b:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:8708c3db:--></div>
 </div>
 <div>
-<h2 id="wave-height-at-incident" tabindex="-1"><a class="observablehq-header-anchor" href="#wave-height-at-incident">Wave Height at Incident</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:3833040d:--></div>
+<h2 id="sea-state-at-incident" tabindex="-1"><a class="observablehq-header-anchor" href="#sea-state-at-incident">Sea State at Incident</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:4c47eb19:--></div>
 </div></div>
-<h2 id="wind-force-distribution-beaufort" tabindex="-1"><a class="observablehq-header-anchor" href="#wind-force-distribution-beaufort">Wind Force Distribution (Beaufort)</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:2db55b38:--></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
+<div>
+<h2 id="wind-force-beaufort" tabindex="-1"><a class="observablehq-header-anchor" href="#wind-force-beaufort">Wind Force (Beaufort)</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:a029217d:--></div>
+</div>
+<div>
+<h2 id="weather-conditions" tabindex="-1"><a class="observablehq-header-anchor" href="#weather-conditions">Weather Conditions</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:568ee239:--></div>
+</div></div>
+<h2 id="visibility-at-incident" tabindex="-1"><a class="observablehq-header-anchor" href="#visibility-at-incident">Visibility at Incident</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:4ff16f63:--></div>
 <h2 id="weather-factor-by-month" tabindex="-1"><a class="observablehq-header-anchor" href="#weather-factor-by-month">Weather Factor by Month</a></h2>
 <div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:d354265c:--></div>
 <h2 id="night-incident-by-month" tabindex="-1"><a class="observablehq-header-anchor" href="#night-incident-by-month">Night Incident % by Month</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:97fc42dc:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:374ddf68:--></div>
 <h2 id="night-incidents-by-category" tabindex="-1"><a class="observablehq-header-anchor" href="#night-incidents-by-category">Night Incidents by Category</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:4ea87c98:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:38f32b1f:--></div>
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./themes"><span>Themes</span></a><a rel="next" href="./vessels"><span>Vessels &amp; People</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T07:39:49">May 15, 2026</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T07:51:30">May 15, 2026</a>.</div>
 </footer>
 </div>
 </body>
