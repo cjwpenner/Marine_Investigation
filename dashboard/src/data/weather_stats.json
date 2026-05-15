@@ -6,25 +6,7 @@
     "Twilight": 311,
     "Unknown NL": 1
   },
-  "by_wave_height_band": {
-    "0-0.5m": 1596,
-    "2.5-4m": 211,
-    "1.5-2.5m": 526,
-    "0.5-1.5m": 1852,
-    "4m+": 52
-  },
-  "by_wind_force_beaufort": {
-    "0": 5,
-    "1": 468,
-    "2": 1477,
-    "3": 1598,
-    "4": 1044,
-    "5": 510,
-    "6": 218,
-    "7": 58,
-    "8": 8
-  },
-  "by_sea_state_reported": {
+  "by_sea_state": {
     "3 - Slight - (0.5 - 1.25 m)": 1122,
     "2 - Smooth - (0.1 - 0.5 m)": 927,
     "0 - Calm glassy - (0 m)": 419,
@@ -36,6 +18,40 @@
     "7 - High - (6.0 - 9.0 m)": 14,
     "8 - Very High - (9.0 - 14.0 m)": 5,
     "Unknown SS": 2
+  },
+  "by_wind_force": {
+    "3 - Gentle Breeze - knot (7-10) m/s (4-5)": 961,
+    "4 - Moderate Breeze - knot (11-16) m/s (6-8)": 973,
+    "6 - Strong Breeze - knot (22-27) m/s (11-14)": 355,
+    "1 - Light air - knot (1-3) m/s (1-2)": 394,
+    "Beaufort scale: Unknown": 2864,
+    "5 - Fresh Breeze - knot (17-21) m/s (9-11)": 590,
+    "7 - Near Gale - knot (28-33) m/s (14-17)": 159,
+    "2 - Light Breeze - knot (4-6) m/s (2-3)": 736,
+    "0 - Calm - knot (0-1) m/s (0-1)": 154,
+    "9 - Strong Gale - knot (41-47) m/s (21-24)": 40,
+    "8 - Gale - knot (34-40) m/s (17-21)": 102,
+    "10 - Storm - knot (48-55) m/s (25-28)": 13,
+    "12 - Hurricane - knot (+64) m/s (+33)": 3,
+    "11 - Violent Storm - knot (56-63) m/s (29-32)": 6
+  },
+  "by_weather_type": {
+    "Unknown": 3669,
+    "Overcast": 841,
+    "Clear": 2465,
+    "Rain": 332,
+    "Fog": 35,
+    "Snow": 6,
+    "Unknown W": 2
+  },
+  "by_visibility": {
+    "Good - 5.0 <= Vis < 25.0 nm": 2689,
+    "Very good - Vis >= 25.0 nm": 710,
+    "Moderate - 2.0 <=Vis < 5.0 nm": 327,
+    "Unknown": 3527,
+    "Poor - 0.5 <=Vis < 2.0 nm": 70,
+    "Very poor - Vis < 0.5 nm": 25,
+    "Unknown Vis": 2
   },
   "weather_factor_by_month": [
     {
