@@ -1,0 +1,144 @@
+{
+  "by_category": {
+    "Merchant Vessel >= 100gt": 4469,
+    "Small Commercial (under 100gt, excl. FVs)": 1414,
+    "Recreational (non Commercial)": 1354,
+    "Fishing Vessel": 758,
+    "Other - Assorted": 23
+  },
+  "by_flag_state": [
+    {
+      "flag": "UNITED KINGDOM",
+      "count": 5363
+    },
+    {
+      "flag": "LIBERIA",
+      "count": 257
+    },
+    {
+      "flag": "MALTA",
+      "count": 220
+    },
+    {
+      "flag": "NETHERLANDS",
+      "count": 216
+    },
+    {
+      "flag": "PANAMA",
+      "count": 205
+    },
+    {
+      "flag": "MARSHALL ISLANDS",
+      "count": 199
+    },
+    {
+      "flag": "PORTUGAL",
+      "count": 181
+    },
+    {
+      "flag": "CYPRUS",
+      "count": 164
+    },
+    {
+      "flag": "ANTIGUA AND BARBUDA",
+      "count": 143
+    },
+    {
+      "flag": "BAHAMAS",
+      "count": 136
+    },
+    {
+      "flag": "NORWAY",
+      "count": 117
+    },
+    {
+      "flag": "DENMARK",
+      "count": 77
+    },
+    {
+      "flag": "ISLE OF MAN",
+      "count": 73
+    },
+    {
+      "flag": "BERMUDA",
+      "count": 58
+    },
+    {
+      "flag": "FRANCE",
+      "count": 58
+    },
+    {
+      "flag": "BARBADOS",
+      "count": 52
+    },
+    {
+      "flag": "CHINA (HONG KONG S.A.R)",
+      "count": 49
+    },
+    {
+      "flag": "SINGAPORE",
+      "count": 45
+    },
+    {
+      "flag": "GERMANY",
+      "count": 39
+    },
+    {
+      "flag": "ITALY",
+      "count": 30
+    },
+    {
+      "flag": "BELGIUM",
+      "count": 29
+    },
+    {
+      "flag": "GREECE",
+      "count": 26
+    },
+    {
+      "flag": "GIBRALTAR",
+      "count": 22
+    },
+    {
+      "flag": "LATVIA",
+      "count": 22
+    },
+    {
+      "flag": "FINLAND",
+      "count": 20
+    },
+    {
+      "flag": "SWEDEN",
+      "count": 20
+    },
+    {
+      "flag": "IRELAND",
+      "count": 18
+    },
+    {
+      "flag": "CHINA",
+      "count": 13
+    },
+    {
+      "flag": "UNITED STATES",
+      "count": 13
+    },
+    {
+      "flag": "LUXEMBOURG",
+      "count": 13
+    }
+  ],
+  "by_gt_band": {
+    "<500GT": 3963,
+    "500-3000GT": 822,
+    "3000-10000GT": 801,
+    "10000-50000GT": 1194,
+    "50000GT+": 1238
+  },
+  "commercial_vs_recreational": {
+    "Commercial": 0,
+    "Recreational": 0,
+    "Unknown": 8018
+  },
+  "incidents_with_vessel_loss": 0
+}
