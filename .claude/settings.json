@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m json.tool)",
+      "Bash(python3)",
+      "Bash(ls -lh /c/Users/Chris/MarineInvestigation/*.json)",
+      "Bash(python3 -c ':*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git worktree:*)",
+      "Bash(python -m pytest tests/ -v)",
+      "Bash(python -m pytest tests/test_weather_enrichment.py -v)",
+      "Bash(python -m pip install astral)",
+      "Bash(python -m pytest tests/test_ai_extraction.py -v)",
+      "Bash(python -c ':*)",
+      "Bash(python marine_async_processor_v2.py)",
+      "Bash(python -c \"import hdbscan; print\\('hdbscan ok'\\)\")",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(python -c \"import hdbscan\")",
+      "Bash(C:/Users/Chris/AppData/Local/Programs/Python/Python311/python.exe -c \"import hdbscan; print\\('ok'\\)\")",
+      "Bash(C:/Users/Chris/AppData/Local/Programs/Python/Python313/python.exe -m pip install hdbscan)",
+      "Bash(python -m pytest tests/test_clustering.py -v)",
+      "Bash(npm run:*)",
+      "Bash(python -m pytest tests/test_export.py -v)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d['by_flag_state'][:3], indent=2\\)\\)\")",
+      "Bash(python -m pytest tests/ -v --tb=short)",
+      "Bash(gh auth:*)",
+      "Bash(gh api:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh run:*)",
+      "Skill(commit-commands:commit)",
+      "Skill(commit-commands:commit:*)"
+    ]
+  }
+}
