@@ -13,7 +13,10 @@ function severityScore(t) {
 }
 
 const sorted = [...themes].sort((a,b) => b.incident_count - a.incident_count);
-const top30 = sorted.slice(0, 30);
+const top30 = sorted.slice(0, 30).map(d => ({
+  ...d,
+  label: d.title.length > 48 ? d.title.slice(0, 48) + "…" : d.title
+}));
 ```
 
 # Incident Themes
@@ -24,21 +27,22 @@ AI-identified clusters of similar incidents. **${themes.length} themes** across 
 
 ```js
 Plot.plot({
-  height: Math.max(200, top30.length * 26),
-  marginLeft: 300,
-  marginRight: 40,
+  height: Math.max(200, top30.length * 28),
+  marginLeft: 330,
+  marginRight: 50,
   x: {label: "Incidents"},
   marks: [
     Plot.barX(top30, {
       x: "incident_count",
-      y: "title",
+      y: "label",
       fill: d => severityScore(d) > 0.2 ? "#dc2626" : severityScore(d) > 0.05 ? "#d97706" : "#1e40af",
+      title: d => d.title,
       tip: true,
       sort: {y: "-x"}
     }),
     Plot.text(top30, {
       x: "incident_count",
-      y: "title",
+      y: "label",
       text: d => d.incident_count.toLocaleString(),
       dx: 5, fontSize: 10, fill: "#64748b",
       sort: {y: "-x"}
