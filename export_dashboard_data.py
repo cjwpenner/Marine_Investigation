@@ -47,9 +47,11 @@ def build_incidents_map(incidents: list) -> list:
             "incident_category": a.get("incident_category", "other"),
             "vessel_activity": a.get("vessel_activity", "other"),
             "natural_light": natural_light,
-            "weather_was_factor": we.get("weather_was_factor") or a.get("weather_was_factor"),
-            "wave_height_m": we.get("wave_height_m"),
-            "wind_kph": we.get("wind_kph"),
+            "sea_state": we.get("sea_state_reported") or None,
+            "weather_type": we.get("weather_type") or None,
+            "wind_force": we.get("wind_force") or None,
+            "visibility": we.get("visibility_reported") or None,
+            "weather_was_factor": a.get("weather_was_factor"),
             "short_description": desc[:200],
             "pattern_summary": a.get("pattern_discovery_summary", ""),
         })
@@ -108,39 +110,32 @@ def kph_to_beaufort(kph: float) -> int:
 
 
 def build_weather_stats(incidents: list) -> dict:
-    """Aggregated weather and lighting distributions."""
+    """Aggregated weather and lighting distributions using source CSV fields."""
     natural_light = defaultdict(int)
-    wave_bands = defaultdict(int)
-    beaufort_counts = defaultdict(int)
     sea_state_counts = defaultdict(int)
+    wind_force_counts = defaultdict(int)
+    weather_type_counts = defaultdict(int)
+    visibility_counts = defaultdict(int)
     monthly_weather = defaultdict(lambda: {"count": 0, "factor": 0})
-
-    def wave_band(h):
-        if h is None: return None
-        if h < 0.5: return "0-0.5m"
-        if h < 1.5: return "0.5-1.5m"
-        if h < 2.5: return "1.5-2.5m"
-        if h < 4.0: return "2.5-4m"
-        return "4m+"
 
     for r in incidents:
         we = r.get("Weather_Enrichment") or {}
         a = r.get("Analysis") or {}
         nl = we.get("natural_light_reported") or "Unknown"
         natural_light[nl] += 1
-        band = wave_band(we.get("wave_height_m"))
-        if band: wave_bands[band] += 1
-        wind_kph = we.get("wind_kph")
-        if wind_kph is not None:
-            beaufort_counts[str(kph_to_beaufort(wind_kph))] += 1
         sea_state = we.get("sea_state_reported")
-        if sea_state:
-            sea_state_counts[sea_state] += 1
+        if sea_state: sea_state_counts[sea_state] += 1
+        wind = we.get("wind_force")
+        if wind: wind_force_counts[wind] += 1
+        wx = we.get("weather_type")
+        if wx: weather_type_counts[wx] += 1
+        vis = we.get("visibility_reported")
+        if vis: visibility_counts[vis] += 1
         month_str = (r.get("Local_Date_Main_Event") or "")[:7]
         if len(month_str) == 7:
             month = int(month_str[5:7])
             monthly_weather[month]["count"] += 1
-            if we.get("weather_was_factor") or a.get("weather_was_factor"):
+            if a.get("weather_was_factor"):
                 monthly_weather[month]["factor"] += 1
 
     weather_by_month = [
@@ -151,9 +146,10 @@ def build_weather_stats(incidents: list) -> dict:
 
     return {
         "by_natural_light": dict(natural_light),
-        "by_wave_height_band": dict(wave_bands),
-        "by_wind_force_beaufort": dict(sorted(beaufort_counts.items(), key=lambda x: int(x[0]))),
-        "by_sea_state_reported": dict(sea_state_counts),
+        "by_sea_state": dict(sea_state_counts),
+        "by_wind_force": dict(wind_force_counts),
+        "by_weather_type": dict(weather_type_counts),
+        "by_visibility": dict(visibility_counts),
         "weather_factor_by_month": weather_by_month,
     }
 
