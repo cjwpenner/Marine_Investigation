@@ -1,1 +1,742 @@
-[{"year_month":"2021-01","total":95,"very_serious":2,"serious":12,"less_serious":81,"night_pct":0.31,"weather_factor_pct":0.25,"avg_wave_height_m":1.9},{"year_month":"2021-02","total":88,"very_serious":1,"serious":10,"less_serious":77,"night_pct":0.28,"weather_factor_pct":0.22,"avg_wave_height_m":1.7},{"year_month":"2021-03","total":112,"very_serious":3,"serious":15,"less_serious":94,"night_pct":0.27,"weather_factor_pct":0.21,"avg_wave_height_m":1.4},{"year_month":"2021-04","total":128,"very_serious":2,"serious":18,"less_serious":108,"night_pct":0.25,"weather_factor_pct":0.19,"avg_wave_height_m":1.1},{"year_month":"2021-05","total":142,"very_serious":3,"serious":20,"less_serious":119,"night_pct":0.24,"weather_factor_pct":0.17,"avg_wave_height_m":0.9},{"year_month":"2021-06","total":155,"very_serious":4,"serious":22,"less_serious":129,"night_pct":0.22,"weather_factor_pct":0.15,"avg_wave_height_m":0.8},{"year_month":"2021-07","total":161,"very_serious":2,"serious":19,"less_serious":140,"night_pct":0.21,"weather_factor_pct":0.14,"avg_wave_height_m":0.7},{"year_month":"2021-08","total":158,"very_serious":3,"serious":21,"less_serious":134,"night_pct":0.22,"weather_factor_pct":0.16,"avg_wave_height_m":0.8},{"year_month":"2021-09","total":143,"very_serious":3,"serious":18,"less_serious":122,"night_pct":0.27,"weather_factor_pct":0.21,"avg_wave_height_m":1.2},{"year_month":"2021-10","total":125,"very_serious":4,"serious":17,"less_serious":104,"night_pct":0.32,"weather_factor_pct":0.27,"avg_wave_height_m":1.6},{"year_month":"2021-11","total":108,"very_serious":3,"serious":14,"less_serious":91,"night_pct":0.36,"weather_factor_pct":0.31,"avg_wave_height_m":2.0},{"year_month":"2021-12","total":98,"very_serious":2,"serious":13,"less_serious":83,"night_pct":0.38,"weather_factor_pct":0.33,"avg_wave_height_m":2.2},{"year_month":"2022-01","total":101,"very_serious":3,"serious":14,"less_serious":84,"night_pct":0.33,"weather_factor_pct":0.28,"avg_wave_height_m":2.0},{"year_month":"2022-02","total":92,"very_serious":2,"serious":11,"less_serious":79,"night_pct":0.30,"weather_factor_pct":0.24,"avg_wave_height_m":1.8},{"year_month":"2022-03","total":119,"very_serious":4,"serious":16,"less_serious":99,"night_pct":0.26,"weather_factor_pct":0.20,"avg_wave_height_m":1.5},{"year_month":"2022-04","total":134,"very_serious":2,"serious":19,"less_serious":113,"night_pct":0.24,"weather_factor_pct":0.18,"avg_wave_height_m":1.0},{"year_month":"2022-05","total":149,"very_serious":3,"serious":21,"less_serious":125,"night_pct":0.23,"weather_factor_pct":0.16,"avg_wave_height_m":0.8},{"year_month":"2022-06","total":163,"very_serious":5,"serious":24,"less_serious":134,"night_pct":0.20,"weather_factor_pct":0.14,"avg_wave_height_m":0.7},{"year_month":"2022-07","total":168,"very_serious":3,"serious":22,"less_serious":143,"night_pct":0.20,"weather_factor_pct":0.13,"avg_wave_height_m":0.6},{"year_month":"2022-08","total":162,"very_serious":4,"serious":20,"less_serious":138,"night_pct":0.21,"weather_factor_pct":0.15,"avg_wave_height_m":0.7},{"year_month":"2022-09","total":148,"very_serious":3,"serious":19,"less_serious":126,"night_pct":0.26,"weather_factor_pct":0.20,"avg_wave_height_m":1.1},{"year_month":"2022-10","total":130,"very_serious":4,"serious":18,"less_serious":108,"night_pct":0.31,"weather_factor_pct":0.26,"avg_wave_height_m":1.5},{"year_month":"2022-11","total":112,"very_serious":3,"serious":15,"less_serious":94,"night_pct":0.35,"weather_factor_pct":0.30,"avg_wave_height_m":1.9},{"year_month":"2022-12","total":104,"very_serious":3,"serious":14,"less_serious":87,"night_pct":0.37,"weather_factor_pct":0.32,"avg_wave_height_m":2.1}]
+[
+  {
+    "year_month": "2018-03",
+    "total": 1,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 1.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2018-12",
+    "total": 1,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2019-01",
+    "total": 1,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2019-06",
+    "total": 1,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2019-07",
+    "total": 1,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2019-08",
+    "total": 1,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2019-09",
+    "total": 1,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 1,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2020-05",
+    "total": 1,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 1.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2020-07",
+    "total": 5,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.0,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2020-08",
+    "total": 4,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 1,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.25,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2020-09",
+    "total": 3,
+    "very_serious": 0,
+    "serious": 1,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.333,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2020-10",
+    "total": 5,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 0,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.4,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2020-11",
+    "total": 3,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 1,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.667,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2020-12",
+    "total": 9,
+    "very_serious": 0,
+    "serious": 0,
+    "less_serious": 3,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.556,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-01",
+    "total": 80,
+    "very_serious": 1,
+    "serious": 5,
+    "less_serious": 24,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.25,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-02",
+    "total": 109,
+    "very_serious": 2,
+    "serious": 3,
+    "less_serious": 19,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.349,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-03",
+    "total": 108,
+    "very_serious": 1,
+    "serious": 4,
+    "less_serious": 30,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.194,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-04",
+    "total": 113,
+    "very_serious": 3,
+    "serious": 5,
+    "less_serious": 34,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.221,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-05",
+    "total": 155,
+    "very_serious": 4,
+    "serious": 7,
+    "less_serious": 45,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.2,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-06",
+    "total": 175,
+    "very_serious": 9,
+    "serious": 5,
+    "less_serious": 55,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.143,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-07",
+    "total": 167,
+    "very_serious": 8,
+    "serious": 12,
+    "less_serious": 46,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.132,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-08",
+    "total": 155,
+    "very_serious": 10,
+    "serious": 16,
+    "less_serious": 54,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.232,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-09",
+    "total": 132,
+    "very_serious": 0,
+    "serious": 6,
+    "less_serious": 39,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.28,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-10",
+    "total": 135,
+    "very_serious": 5,
+    "serious": 9,
+    "less_serious": 42,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.319,
+    "avg_wave_height_m": null
+  },
+  {
+    "year_month": "2021-11",
+    "total": 89,
+    "very_serious": 3,
+    "serious": 2,
+    "less_serious": 25,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.551,
+    "avg_wave_height_m": 1.7
+  },
+  {
+    "year_month": "2021-12",
+    "total": 75,
+    "very_serious": 2,
+    "serious": 2,
+    "less_serious": 18,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.56,
+    "avg_wave_height_m": 1.59
+  },
+  {
+    "year_month": "2022-01",
+    "total": 82,
+    "very_serious": 1,
+    "serious": 4,
+    "less_serious": 16,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.598,
+    "avg_wave_height_m": 1.34
+  },
+  {
+    "year_month": "2022-02",
+    "total": 74,
+    "very_serious": 2,
+    "serious": 1,
+    "less_serious": 22,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.703,
+    "avg_wave_height_m": 1.13
+  },
+  {
+    "year_month": "2022-03",
+    "total": 80,
+    "very_serious": 4,
+    "serious": 3,
+    "less_serious": 21,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.562,
+    "avg_wave_height_m": 1.18
+  },
+  {
+    "year_month": "2022-04",
+    "total": 90,
+    "very_serious": 3,
+    "serious": 5,
+    "less_serious": 27,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.633,
+    "avg_wave_height_m": 1.2
+  },
+  {
+    "year_month": "2022-05",
+    "total": 98,
+    "very_serious": 3,
+    "serious": 5,
+    "less_serious": 32,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.255,
+    "avg_wave_height_m": 0.52
+  },
+  {
+    "year_month": "2022-06",
+    "total": 130,
+    "very_serious": 6,
+    "serious": 11,
+    "less_serious": 37,
+    "night_pct": 0.992,
+    "weather_factor_pct": 0.215,
+    "avg_wave_height_m": 0.45
+  },
+  {
+    "year_month": "2022-07",
+    "total": 125,
+    "very_serious": 8,
+    "serious": 13,
+    "less_serious": 29,
+    "night_pct": 0.992,
+    "weather_factor_pct": 0.296,
+    "avg_wave_height_m": 0.56
+  },
+  {
+    "year_month": "2022-08",
+    "total": 124,
+    "very_serious": 8,
+    "serious": 5,
+    "less_serious": 49,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.226,
+    "avg_wave_height_m": 0.47
+  },
+  {
+    "year_month": "2022-09",
+    "total": 115,
+    "very_serious": 4,
+    "serious": 6,
+    "less_serious": 40,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.443,
+    "avg_wave_height_m": 0.71
+  },
+  {
+    "year_month": "2022-10",
+    "total": 134,
+    "very_serious": 6,
+    "serious": 7,
+    "less_serious": 38,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.597,
+    "avg_wave_height_m": 1.33
+  },
+  {
+    "year_month": "2022-11",
+    "total": 108,
+    "very_serious": 3,
+    "serious": 8,
+    "less_serious": 37,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.676,
+    "avg_wave_height_m": 1.6
+  },
+  {
+    "year_month": "2022-12",
+    "total": 87,
+    "very_serious": 4,
+    "serious": 3,
+    "less_serious": 27,
+    "night_pct": 0.989,
+    "weather_factor_pct": 0.368,
+    "avg_wave_height_m": 1.08
+  },
+  {
+    "year_month": "2023-01",
+    "total": 110,
+    "very_serious": 1,
+    "serious": 0,
+    "less_serious": 41,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.609,
+    "avg_wave_height_m": 1.51
+  },
+  {
+    "year_month": "2023-02",
+    "total": 113,
+    "very_serious": 5,
+    "serious": 4,
+    "less_serious": 41,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.593,
+    "avg_wave_height_m": 1.34
+  },
+  {
+    "year_month": "2023-03",
+    "total": 123,
+    "very_serious": 2,
+    "serious": 5,
+    "less_serious": 39,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.439,
+    "avg_wave_height_m": 0.85
+  },
+  {
+    "year_month": "2023-04",
+    "total": 129,
+    "very_serious": 1,
+    "serious": 9,
+    "less_serious": 52,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.566,
+    "avg_wave_height_m": 1.55
+  },
+  {
+    "year_month": "2023-05",
+    "total": 164,
+    "very_serious": 15,
+    "serious": 4,
+    "less_serious": 59,
+    "night_pct": 0.994,
+    "weather_factor_pct": 0.256,
+    "avg_wave_height_m": 0.56
+  },
+  {
+    "year_month": "2023-06",
+    "total": 151,
+    "very_serious": 1,
+    "serious": 2,
+    "less_serious": 62,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.338,
+    "avg_wave_height_m": 0.68
+  },
+  {
+    "year_month": "2023-07",
+    "total": 169,
+    "very_serious": 7,
+    "serious": 7,
+    "less_serious": 58,
+    "night_pct": 0.988,
+    "weather_factor_pct": 0.556,
+    "avg_wave_height_m": 1.05
+  },
+  {
+    "year_month": "2023-08",
+    "total": 147,
+    "very_serious": 5,
+    "serious": 3,
+    "less_serious": 56,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.497,
+    "avg_wave_height_m": 0.86
+  },
+  {
+    "year_month": "2023-09",
+    "total": 119,
+    "very_serious": 7,
+    "serious": 6,
+    "less_serious": 48,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.336,
+    "avg_wave_height_m": 0.62
+  },
+  {
+    "year_month": "2023-10",
+    "total": 143,
+    "very_serious": 7,
+    "serious": 1,
+    "less_serious": 56,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.441,
+    "avg_wave_height_m": 0.88
+  },
+  {
+    "year_month": "2023-11",
+    "total": 101,
+    "very_serious": 5,
+    "serious": 2,
+    "less_serious": 31,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.535,
+    "avg_wave_height_m": 1.39
+  },
+  {
+    "year_month": "2023-12",
+    "total": 103,
+    "very_serious": 5,
+    "serious": 4,
+    "less_serious": 31,
+    "night_pct": 0.99,
+    "weather_factor_pct": 0.427,
+    "avg_wave_height_m": 0.86
+  },
+  {
+    "year_month": "2024-01",
+    "total": 119,
+    "very_serious": 1,
+    "serious": 3,
+    "less_serious": 46,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.555,
+    "avg_wave_height_m": 2.06
+  },
+  {
+    "year_month": "2024-02",
+    "total": 96,
+    "very_serious": 1,
+    "serious": 5,
+    "less_serious": 29,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.469,
+    "avg_wave_height_m": 1.37
+  },
+  {
+    "year_month": "2024-03",
+    "total": 115,
+    "very_serious": 3,
+    "serious": 7,
+    "less_serious": 36,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.435,
+    "avg_wave_height_m": 0.98
+  },
+  {
+    "year_month": "2024-04",
+    "total": 118,
+    "very_serious": 8,
+    "serious": 6,
+    "less_serious": 39,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.288,
+    "avg_wave_height_m": 0.71
+  },
+  {
+    "year_month": "2024-05",
+    "total": 122,
+    "very_serious": 3,
+    "serious": 8,
+    "less_serious": 45,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.32,
+    "avg_wave_height_m": 0.82
+  },
+  {
+    "year_month": "2024-06",
+    "total": 119,
+    "very_serious": 6,
+    "serious": 7,
+    "less_serious": 39,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.311,
+    "avg_wave_height_m": 0.75
+  },
+  {
+    "year_month": "2024-07",
+    "total": 145,
+    "very_serious": 7,
+    "serious": 13,
+    "less_serious": 47,
+    "night_pct": 0.993,
+    "weather_factor_pct": 0.214,
+    "avg_wave_height_m": 0.44
+  },
+  {
+    "year_month": "2024-08",
+    "total": 140,
+    "very_serious": 8,
+    "serious": 16,
+    "less_serious": 56,
+    "night_pct": 0.993,
+    "weather_factor_pct": 0.3,
+    "avg_wave_height_m": 0.38
+  },
+  {
+    "year_month": "2024-09",
+    "total": 166,
+    "very_serious": 9,
+    "serious": 9,
+    "less_serious": 76,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.343,
+    "avg_wave_height_m": 0.65
+  },
+  {
+    "year_month": "2024-10",
+    "total": 155,
+    "very_serious": 7,
+    "serious": 5,
+    "less_serious": 42,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.452,
+    "avg_wave_height_m": 1.21
+  },
+  {
+    "year_month": "2024-11",
+    "total": 119,
+    "very_serious": 3,
+    "serious": 4,
+    "less_serious": 48,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.311,
+    "avg_wave_height_m": 0.62
+  },
+  {
+    "year_month": "2024-12",
+    "total": 95,
+    "very_serious": 3,
+    "serious": 4,
+    "less_serious": 36,
+    "night_pct": 0.989,
+    "weather_factor_pct": 0.537,
+    "avg_wave_height_m": 1.12
+  },
+  {
+    "year_month": "2025-01",
+    "total": 126,
+    "very_serious": 3,
+    "serious": 6,
+    "less_serious": 41,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.73,
+    "avg_wave_height_m": 1.67
+  },
+  {
+    "year_month": "2025-02",
+    "total": 109,
+    "very_serious": 0,
+    "serious": 6,
+    "less_serious": 36,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.321,
+    "avg_wave_height_m": 0.71
+  },
+  {
+    "year_month": "2025-03",
+    "total": 116,
+    "very_serious": 4,
+    "serious": 6,
+    "less_serious": 38,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.293,
+    "avg_wave_height_m": 0.62
+  },
+  {
+    "year_month": "2025-04",
+    "total": 129,
+    "very_serious": 3,
+    "serious": 7,
+    "less_serious": 43,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.349,
+    "avg_wave_height_m": 0.61
+  },
+  {
+    "year_month": "2025-05",
+    "total": 155,
+    "very_serious": 3,
+    "serious": 8,
+    "less_serious": 58,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.219,
+    "avg_wave_height_m": 0.4
+  },
+  {
+    "year_month": "2025-06",
+    "total": 149,
+    "very_serious": 6,
+    "serious": 2,
+    "less_serious": 36,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.389,
+    "avg_wave_height_m": 0.67
+  },
+  {
+    "year_month": "2025-07",
+    "total": 161,
+    "very_serious": 5,
+    "serious": 6,
+    "less_serious": 52,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.261,
+    "avg_wave_height_m": 0.51
+  },
+  {
+    "year_month": "2025-08",
+    "total": 168,
+    "very_serious": 8,
+    "serious": 4,
+    "less_serious": 52,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.423,
+    "avg_wave_height_m": 0.71
+  },
+  {
+    "year_month": "2025-09",
+    "total": 123,
+    "very_serious": 6,
+    "serious": 7,
+    "less_serious": 42,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.618,
+    "avg_wave_height_m": 1.25
+  },
+  {
+    "year_month": "2025-10",
+    "total": 89,
+    "very_serious": 1,
+    "serious": 3,
+    "less_serious": 31,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.315,
+    "avg_wave_height_m": 0.51
+  },
+  {
+    "year_month": "2025-11",
+    "total": 95,
+    "very_serious": 3,
+    "serious": 7,
+    "less_serious": 37,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.653,
+    "avg_wave_height_m": 1.5
+  },
+  {
+    "year_month": "2025-12",
+    "total": 72,
+    "very_serious": 2,
+    "serious": 2,
+    "less_serious": 27,
+    "night_pct": 1.0,
+    "weather_factor_pct": 0.639,
+    "avg_wave_height_m": 1.27
+  }
+]
