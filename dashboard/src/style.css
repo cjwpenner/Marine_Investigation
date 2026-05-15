@@ -15,6 +15,7 @@
   display: none !important;
 }
 
+/* Outer nav — fixed horizontal strip */
 #observablehq-sidebar {
   position: fixed !important;
   top: 0 !important;
@@ -25,46 +26,77 @@
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  padding: 0 20px !important;
-  gap: 2px;
+  padding: 0 16px !important;
   background: #1e293b !important;
   border-right: none !important;
   border-bottom: 2px solid #334155;
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   overflow: visible !important;
   z-index: 999 !important;
+  box-sizing: border-box !important;
 }
 
-/* Site title — first link becomes the brand */
-#observablehq-sidebar .observablehq-link:first-of-type {
-  margin-right: 16px;
-  padding-right: 16px;
-  border-right: 1px solid #475569;
+/* Inner contents wrapper — must also be flex row */
+#observablehq-sidebar-contents {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex: 1 !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  gap: 0 !important;
 }
 
-#observablehq-sidebar .observablehq-link:first-of-type a {
+/* Each <ol>/<ul> group of links — flatten to row */
+#observablehq-sidebar ol,
+#observablehq-sidebar ul {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 0 !important;
+  height: 100% !important;
+}
+
+/* First <ol> holds the site title — add a right divider */
+#observablehq-sidebar ol:first-of-type {
+  margin-right: 12px !important;
+  padding-right: 12px !important;
+  border-right: 1px solid #475569 !important;
+}
+
+/* Site title link */
+#observablehq-sidebar ol:first-of-type .observablehq-link a {
   font-size: 13px !important;
   font-weight: 700 !important;
   color: #f1f5f9 !important;
-  letter-spacing: 0.2px;
-  padding: 6px 4px !important;
+  letter-spacing: 0.2px !important;
 }
 
+/* Individual list items */
 #observablehq-sidebar .observablehq-link {
   list-style: none !important;
   display: flex !important;
-  align-items: center;
+  align-items: center !important;
+  height: 100% !important;
+  flex-shrink: 0 !important;
 }
 
+/* Nav links */
 #observablehq-sidebar .observablehq-link a {
   color: #94a3b8 !important;
   text-decoration: none !important;
   padding: 6px 12px !important;
-  border-radius: 5px;
-  font-size: 13px;
-  font-weight: 500;
+  border-radius: 5px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
   transition: background 0.15s, color 0.15s;
-  white-space: nowrap;
+  white-space: nowrap !important;
+  display: block !important;
 }
 
 #observablehq-sidebar .observablehq-link a:hover {
@@ -75,6 +107,28 @@
 #observablehq-sidebar .observablehq-link-active a {
   color: #ffffff !important;
   background: rgba(255,255,255,0.12) !important;
+}
+
+/* Download Report button — injected via config head script */
+#observablehq-sidebar .nav-download a {
+  color: #60a5fa !important;
+  border: 1px solid #334155 !important;
+  padding: 5px 11px !important;
+  border-radius: 5px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  margin-left: 8px !important;
+}
+
+#observablehq-sidebar .nav-download a:hover {
+  background: rgba(96,165,250,0.12) !important;
+  color: #93c5fd !important;
+  border-color: #60a5fa !important;
+}
+
+/* Push download link to the far right */
+#observablehq-sidebar .nav-download {
+  margin-left: auto !important;
 }
 
 /* Offset main content for top nav height */
