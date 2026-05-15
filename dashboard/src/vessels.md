@@ -7,16 +7,18 @@ import * as Plot from "npm:@observablehq/plot";
 const vessels = await FileAttachment("data/vessels.json").json();
 const casualties = await FileAttachment("data/casualties.json").json();
 
+const truncate = (s, n=38) => s.length > n ? s.slice(0, n) + "…" : s;
+
 const vesselCatData = Object.entries(vessels.by_category)
-  .map(([k,v]) => ({category:k, count:v}))
+  .map(([k,v]) => ({category: truncate(k, 35), count:v}))
   .sort((a,b) => b.count - a.count);
 
 const injuryData = Object.entries(casualties.by_injury_type)
-  .map(([k,v]) => ({type:k, count:v}))
+  .map(([k,v]) => ({type: truncate(k), count:v}))
   .sort((a,b) => b.count - a.count).slice(0,12);
 
 const bodyPartData = Object.entries(casualties.by_body_part)
-  .map(([k,v]) => ({part:k, count:v}))
+  .map(([k,v]) => ({part: truncate(k), count:v}))
   .sort((a,b) => b.count - a.count).slice(0,12);
 
 const AGE_ORDER = ["<25","25-34","35-44","45-54","55-64","65+"];
@@ -70,7 +72,7 @@ const typeData = Object.entries(casualties.by_type)
 
 ```js
 Plot.plot({
-  height: 220, marginLeft: 110,
+  height: 220, marginLeft: 220,
   x: {label: "Incidents"},
   marks: [Plot.barX(vesselCatData, {x:"count", y:"category", fill:"#1e40af", tip:true, sort:{y:"-x"}})]
 })
@@ -110,7 +112,7 @@ Plot.plot({
 
 ```js
 Plot.plot({
-  height: 180, marginLeft: 110,
+  height: 220, marginLeft: 260,
   x: {label: "Count"},
   marks: [Plot.barX(injuryData, {x:"count", y:"type", fill:"#3b82f6", tip:true, sort:{y:"-x"}})]
 })
@@ -122,7 +124,7 @@ Plot.plot({
 
 ```js
 Plot.plot({
-  height: 200, marginLeft: 130,
+  height: 200, marginLeft: 260,
   x: {label: "Count"},
   marks: [Plot.barX(bodyPartData, {x:"count", y:"part", fill:"#60a5fa", tip:true, sort:{y:"-x"}})]
 })

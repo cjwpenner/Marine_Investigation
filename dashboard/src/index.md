@@ -16,7 +16,7 @@ const totalIncidents = incidents.length;
 const casualties = await FileAttachment("data/casualties.json").json();
 const totalCasualties = Number(casualties.total_affected);
 const nightPct = Math.round(
-  incidents.filter(d => d.natural_light === "Night" || d.natural_light === "Dusk").length
+  incidents.filter(d => d.natural_light === "Night" || d.natural_light === "Twilight").length
   / totalIncidents * 100
 );
 const weatherPct = Math.round(
@@ -31,7 +31,7 @@ const themeCount = themes.length;
   <p style="opacity:0.85;max-width:580px;margin:0 0 24px;line-height:1.6;">AI-assisted analysis of reported marine incidents. Explore where accidents happen, what causes them, and how weather, lighting and human factors contribute.</p>
 
 ```js
-const labels = ["Incidents","Casualties","Night / Dusk","Weather Factor","Themes"];
+const labels = ["Incidents","Casualties","Night / Twilight","Weather Factor","Themes"];
 const values = [
   totalIncidents.toLocaleString(),
   totalCasualties.toLocaleString(),

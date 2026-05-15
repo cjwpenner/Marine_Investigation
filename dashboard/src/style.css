@@ -1,3 +1,4 @@
+/* ── Design tokens ──────────────────────────────────── */
 :root {
   --theme-foreground: #1e293b;
   --theme-background: #f8f9fc;
@@ -6,6 +7,87 @@
   --theme-border: #e2e8f0;
   --accent-blue: #1e40af;
 }
+
+/* ── Horizontal top navigation bar ─────────────────── */
+#observablehq-sidebar-toggle,
+#observablehq-sidebar-backdrop,
+#observablehq-sidebar-close {
+  display: none !important;
+}
+
+#observablehq-sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 50px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 0 20px !important;
+  gap: 2px;
+  background: #1e293b !important;
+  border-right: none !important;
+  border-bottom: 2px solid #334155;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  overflow: visible !important;
+  z-index: 999 !important;
+}
+
+/* Site title — first link becomes the brand */
+#observablehq-sidebar .observablehq-link:first-of-type {
+  margin-right: 16px;
+  padding-right: 16px;
+  border-right: 1px solid #475569;
+}
+
+#observablehq-sidebar .observablehq-link:first-of-type a {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #f1f5f9 !important;
+  letter-spacing: 0.2px;
+  padding: 6px 4px !important;
+}
+
+#observablehq-sidebar .observablehq-link {
+  list-style: none !important;
+  display: flex !important;
+  align-items: center;
+}
+
+#observablehq-sidebar .observablehq-link a {
+  color: #94a3b8 !important;
+  text-decoration: none !important;
+  padding: 6px 12px !important;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+#observablehq-sidebar .observablehq-link a:hover {
+  background: rgba(255,255,255,0.08) !important;
+  color: #e2e8f0 !important;
+}
+
+#observablehq-sidebar .observablehq-link-active a {
+  color: #ffffff !important;
+  background: rgba(255,255,255,0.12) !important;
+}
+
+/* Offset main content for top nav height */
+#observablehq-center {
+  padding-top: 50px !important;
+}
+
+/* Hide TOC (right-hand table of contents) — not useful with top nav */
+#observablehq-toc {
+  display: none !important;
+}
+
+/* ── Component styles ───────────────────────────────── */
 .stat-card {
   background: var(--theme-background-alt);
   border: 1px solid var(--theme-border);
@@ -15,6 +97,7 @@
 }
 .stat-card .value { font-size: 2rem; font-weight: 800; color: var(--theme-foreground); }
 .stat-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--theme-foreground-muted); }
+
 .theme-card {
   background: var(--theme-background-alt);
   border: 1px solid var(--theme-border);
