@@ -33,8 +33,9 @@ def build_incidents_map(incidents: list) -> list:
             continue
         we = r.get("Weather_Enrichment") or {}
         a = r.get("Analysis") or {}
-        natural_light = (we.get("natural_light_calculated") or
-                         we.get("natural_light_reported") or "Unknown")
+        # All incidents have date-only (no time), so calculated light is always
+        # midnight — meaningless. Use reported light as the authoritative source.
+        natural_light = (we.get("natural_light_reported") or "Unknown")
         desc = r.get("Original_Description", "")
         result.append({
             "id": r["Occurrence_Id"],
@@ -73,8 +74,8 @@ def build_time_series(incidents: list) -> list:
         # else: unknown severity — not counted in named buckets, still in total
         we = r.get("Weather_Enrichment") or {}
         a = r.get("Analysis") or {}
-        nl = we.get("natural_light_calculated") or we.get("natural_light_reported", "")
-        if nl in ("Night", "Dusk"): m["night_count"] += 1
+        nl = we.get("natural_light_reported") or ""
+        if nl in ("Night", "Twilight"): m["night_count"] += 1
         if we.get("weather_was_factor") or a.get("weather_was_factor"): m["weather_factor_count"] += 1
         wh = we.get("wave_height_m")
         if wh is not None: m["wave_heights"].append(wh)
@@ -125,7 +126,7 @@ def build_weather_stats(incidents: list) -> dict:
     for r in incidents:
         we = r.get("Weather_Enrichment") or {}
         a = r.get("Analysis") or {}
-        nl = we.get("natural_light_calculated") or we.get("natural_light_reported") or "Unknown"
+        nl = we.get("natural_light_reported") or "Unknown"
         natural_light[nl] += 1
         band = wave_band(we.get("wave_height_m"))
         if band: wave_bands[band] += 1

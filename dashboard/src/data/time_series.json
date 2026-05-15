@@ -5,7 +5,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.0,
     "weather_factor_pct": 1.0,
     "avg_wave_height_m": null
   },
@@ -15,7 +15,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.0,
     "weather_factor_pct": 0.0,
     "avg_wave_height_m": null
   },
@@ -25,7 +25,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.0,
     "weather_factor_pct": 0.0,
     "avg_wave_height_m": null
   },
@@ -35,7 +35,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.0,
     "weather_factor_pct": 0.0,
     "avg_wave_height_m": null
   },
@@ -45,7 +45,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.0,
     "weather_factor_pct": 0.0,
     "avg_wave_height_m": null
   },
@@ -65,7 +65,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 1,
-    "night_pct": 1.0,
+    "night_pct": 0.0,
     "weather_factor_pct": 0.0,
     "avg_wave_height_m": null
   },
@@ -75,7 +75,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.0,
     "weather_factor_pct": 1.0,
     "avg_wave_height_m": null
   },
@@ -85,7 +85,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.6,
     "weather_factor_pct": 0.0,
     "avg_wave_height_m": null
   },
@@ -95,7 +95,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 1,
-    "night_pct": 1.0,
+    "night_pct": 0.75,
     "weather_factor_pct": 0.25,
     "avg_wave_height_m": null
   },
@@ -105,7 +105,7 @@
     "very_serious": 0,
     "serious": 1,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.333,
     "weather_factor_pct": 0.333,
     "avg_wave_height_m": null
   },
@@ -115,7 +115,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 0,
-    "night_pct": 1.0,
+    "night_pct": 0.4,
     "weather_factor_pct": 0.4,
     "avg_wave_height_m": null
   },
@@ -125,7 +125,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 1,
-    "night_pct": 1.0,
+    "night_pct": 0.333,
     "weather_factor_pct": 0.667,
     "avg_wave_height_m": null
   },
@@ -135,7 +135,7 @@
     "very_serious": 0,
     "serious": 0,
     "less_serious": 3,
-    "night_pct": 1.0,
+    "night_pct": 0.444,
     "weather_factor_pct": 0.556,
     "avg_wave_height_m": null
   },
@@ -145,7 +145,7 @@
     "very_serious": 1,
     "serious": 5,
     "less_serious": 24,
-    "night_pct": 1.0,
+    "night_pct": 0.375,
     "weather_factor_pct": 0.25,
     "avg_wave_height_m": null
   },
@@ -155,7 +155,7 @@
     "very_serious": 2,
     "serious": 3,
     "less_serious": 19,
-    "night_pct": 1.0,
+    "night_pct": 0.294,
     "weather_factor_pct": 0.349,
     "avg_wave_height_m": null
   },
@@ -165,7 +165,7 @@
     "very_serious": 1,
     "serious": 4,
     "less_serious": 30,
-    "night_pct": 1.0,
+    "night_pct": 0.25,
     "weather_factor_pct": 0.194,
     "avg_wave_height_m": null
   },
@@ -175,7 +175,7 @@
     "very_serious": 3,
     "serious": 5,
     "less_serious": 34,
-    "night_pct": 1.0,
+    "night_pct": 0.177,
     "weather_factor_pct": 0.221,
     "avg_wave_height_m": null
   },
@@ -185,7 +185,7 @@
     "very_serious": 4,
     "serious": 7,
     "less_serious": 45,
-    "night_pct": 1.0,
+    "night_pct": 0.135,
     "weather_factor_pct": 0.2,
     "avg_wave_height_m": null
   },
@@ -195,7 +195,7 @@
     "very_serious": 9,
     "serious": 5,
     "less_serious": 55,
-    "night_pct": 1.0,
+    "night_pct": 0.143,
     "weather_factor_pct": 0.143,
     "avg_wave_height_m": null
   },
@@ -205,7 +205,7 @@
     "very_serious": 8,
     "serious": 12,
     "less_serious": 46,
-    "night_pct": 1.0,
+    "night_pct": 0.114,
     "weather_factor_pct": 0.132,
     "avg_wave_height_m": null
   },
@@ -215,7 +215,7 @@
     "very_serious": 10,
     "serious": 16,
     "less_serious": 54,
-    "night_pct": 1.0,
+    "night_pct": 0.09,
     "weather_factor_pct": 0.232,
     "avg_wave_height_m": null
   },
@@ -225,7 +225,7 @@
     "very_serious": 0,
     "serious": 6,
     "less_serious": 39,
-    "night_pct": 1.0,
+    "night_pct": 0.189,
     "weather_factor_pct": 0.28,
     "avg_wave_height_m": null
   },
@@ -235,7 +235,7 @@
     "very_serious": 5,
     "serious": 9,
     "less_serious": 42,
-    "night_pct": 1.0,
+    "night_pct": 0.274,
     "weather_factor_pct": 0.319,
     "avg_wave_height_m": null
   },
@@ -245,7 +245,7 @@
     "very_serious": 3,
     "serious": 2,
     "less_serious": 25,
-    "night_pct": 1.0,
+    "night_pct": 0.404,
     "weather_factor_pct": 0.551,
     "avg_wave_height_m": 1.7
   },
@@ -255,7 +255,7 @@
     "very_serious": 2,
     "serious": 2,
     "less_serious": 18,
-    "night_pct": 1.0,
+    "night_pct": 0.347,
     "weather_factor_pct": 0.56,
     "avg_wave_height_m": 1.59
   },
@@ -265,7 +265,7 @@
     "very_serious": 1,
     "serious": 4,
     "less_serious": 16,
-    "night_pct": 1.0,
+    "night_pct": 0.341,
     "weather_factor_pct": 0.598,
     "avg_wave_height_m": 1.34
   },
@@ -275,7 +275,7 @@
     "very_serious": 2,
     "serious": 1,
     "less_serious": 22,
-    "night_pct": 1.0,
+    "night_pct": 0.27,
     "weather_factor_pct": 0.703,
     "avg_wave_height_m": 1.13
   },
@@ -285,7 +285,7 @@
     "very_serious": 4,
     "serious": 3,
     "less_serious": 21,
-    "night_pct": 1.0,
+    "night_pct": 0.225,
     "weather_factor_pct": 0.562,
     "avg_wave_height_m": 1.18
   },
@@ -295,7 +295,7 @@
     "very_serious": 3,
     "serious": 5,
     "less_serious": 27,
-    "night_pct": 1.0,
+    "night_pct": 0.167,
     "weather_factor_pct": 0.633,
     "avg_wave_height_m": 1.2
   },
@@ -305,7 +305,7 @@
     "very_serious": 3,
     "serious": 5,
     "less_serious": 32,
-    "night_pct": 1.0,
+    "night_pct": 0.163,
     "weather_factor_pct": 0.255,
     "avg_wave_height_m": 0.52
   },
@@ -315,7 +315,7 @@
     "very_serious": 6,
     "serious": 11,
     "less_serious": 37,
-    "night_pct": 0.992,
+    "night_pct": 0.115,
     "weather_factor_pct": 0.215,
     "avg_wave_height_m": 0.45
   },
@@ -325,7 +325,7 @@
     "very_serious": 8,
     "serious": 13,
     "less_serious": 29,
-    "night_pct": 0.992,
+    "night_pct": 0.152,
     "weather_factor_pct": 0.296,
     "avg_wave_height_m": 0.56
   },
@@ -335,7 +335,7 @@
     "very_serious": 8,
     "serious": 5,
     "less_serious": 49,
-    "night_pct": 1.0,
+    "night_pct": 0.242,
     "weather_factor_pct": 0.226,
     "avg_wave_height_m": 0.47
   },
@@ -345,7 +345,7 @@
     "very_serious": 4,
     "serious": 6,
     "less_serious": 40,
-    "night_pct": 1.0,
+    "night_pct": 0.304,
     "weather_factor_pct": 0.443,
     "avg_wave_height_m": 0.71
   },
@@ -355,7 +355,7 @@
     "very_serious": 6,
     "serious": 7,
     "less_serious": 38,
-    "night_pct": 1.0,
+    "night_pct": 0.284,
     "weather_factor_pct": 0.597,
     "avg_wave_height_m": 1.33
   },
@@ -365,7 +365,7 @@
     "very_serious": 3,
     "serious": 8,
     "less_serious": 37,
-    "night_pct": 1.0,
+    "night_pct": 0.463,
     "weather_factor_pct": 0.676,
     "avg_wave_height_m": 1.6
   },
@@ -375,7 +375,7 @@
     "very_serious": 4,
     "serious": 3,
     "less_serious": 27,
-    "night_pct": 0.989,
+    "night_pct": 0.391,
     "weather_factor_pct": 0.368,
     "avg_wave_height_m": 1.08
   },
@@ -385,7 +385,7 @@
     "very_serious": 1,
     "serious": 0,
     "less_serious": 41,
-    "night_pct": 1.0,
+    "night_pct": 0.382,
     "weather_factor_pct": 0.609,
     "avg_wave_height_m": 1.51
   },
@@ -395,7 +395,7 @@
     "very_serious": 5,
     "serious": 4,
     "less_serious": 41,
-    "night_pct": 1.0,
+    "night_pct": 0.274,
     "weather_factor_pct": 0.593,
     "avg_wave_height_m": 1.34
   },
@@ -405,7 +405,7 @@
     "very_serious": 2,
     "serious": 5,
     "less_serious": 39,
-    "night_pct": 1.0,
+    "night_pct": 0.211,
     "weather_factor_pct": 0.439,
     "avg_wave_height_m": 0.85
   },
@@ -415,7 +415,7 @@
     "very_serious": 1,
     "serious": 9,
     "less_serious": 52,
-    "night_pct": 1.0,
+    "night_pct": 0.271,
     "weather_factor_pct": 0.566,
     "avg_wave_height_m": 1.55
   },
@@ -425,7 +425,7 @@
     "very_serious": 15,
     "serious": 4,
     "less_serious": 59,
-    "night_pct": 0.994,
+    "night_pct": 0.195,
     "weather_factor_pct": 0.256,
     "avg_wave_height_m": 0.56
   },
@@ -435,7 +435,7 @@
     "very_serious": 1,
     "serious": 2,
     "less_serious": 62,
-    "night_pct": 1.0,
+    "night_pct": 0.199,
     "weather_factor_pct": 0.338,
     "avg_wave_height_m": 0.68
   },
@@ -445,7 +445,7 @@
     "very_serious": 7,
     "serious": 7,
     "less_serious": 58,
-    "night_pct": 0.988,
+    "night_pct": 0.154,
     "weather_factor_pct": 0.556,
     "avg_wave_height_m": 1.05
   },
@@ -455,7 +455,7 @@
     "very_serious": 5,
     "serious": 3,
     "less_serious": 56,
-    "night_pct": 1.0,
+    "night_pct": 0.156,
     "weather_factor_pct": 0.497,
     "avg_wave_height_m": 0.86
   },
@@ -465,7 +465,7 @@
     "very_serious": 7,
     "serious": 6,
     "less_serious": 48,
-    "night_pct": 1.0,
+    "night_pct": 0.277,
     "weather_factor_pct": 0.336,
     "avg_wave_height_m": 0.62
   },
@@ -475,7 +475,7 @@
     "very_serious": 7,
     "serious": 1,
     "less_serious": 56,
-    "night_pct": 1.0,
+    "night_pct": 0.238,
     "weather_factor_pct": 0.441,
     "avg_wave_height_m": 0.88
   },
@@ -485,7 +485,7 @@
     "very_serious": 5,
     "serious": 2,
     "less_serious": 31,
-    "night_pct": 1.0,
+    "night_pct": 0.277,
     "weather_factor_pct": 0.535,
     "avg_wave_height_m": 1.39
   },
@@ -495,7 +495,7 @@
     "very_serious": 5,
     "serious": 4,
     "less_serious": 31,
-    "night_pct": 0.99,
+    "night_pct": 0.34,
     "weather_factor_pct": 0.427,
     "avg_wave_height_m": 0.86
   },
@@ -505,7 +505,7 @@
     "very_serious": 1,
     "serious": 3,
     "less_serious": 46,
-    "night_pct": 1.0,
+    "night_pct": 0.42,
     "weather_factor_pct": 0.555,
     "avg_wave_height_m": 2.06
   },
@@ -515,7 +515,7 @@
     "very_serious": 1,
     "serious": 5,
     "less_serious": 29,
-    "night_pct": 1.0,
+    "night_pct": 0.292,
     "weather_factor_pct": 0.469,
     "avg_wave_height_m": 1.37
   },
@@ -525,7 +525,7 @@
     "very_serious": 3,
     "serious": 7,
     "less_serious": 36,
-    "night_pct": 1.0,
+    "night_pct": 0.226,
     "weather_factor_pct": 0.435,
     "avg_wave_height_m": 0.98
   },
@@ -535,7 +535,7 @@
     "very_serious": 8,
     "serious": 6,
     "less_serious": 39,
-    "night_pct": 1.0,
+    "night_pct": 0.161,
     "weather_factor_pct": 0.288,
     "avg_wave_height_m": 0.71
   },
@@ -545,7 +545,7 @@
     "very_serious": 3,
     "serious": 8,
     "less_serious": 45,
-    "night_pct": 1.0,
+    "night_pct": 0.131,
     "weather_factor_pct": 0.32,
     "avg_wave_height_m": 0.82
   },
@@ -555,7 +555,7 @@
     "very_serious": 6,
     "serious": 7,
     "less_serious": 39,
-    "night_pct": 1.0,
+    "night_pct": 0.134,
     "weather_factor_pct": 0.311,
     "avg_wave_height_m": 0.75
   },
@@ -565,7 +565,7 @@
     "very_serious": 7,
     "serious": 13,
     "less_serious": 47,
-    "night_pct": 0.993,
+    "night_pct": 0.11,
     "weather_factor_pct": 0.214,
     "avg_wave_height_m": 0.44
   },
@@ -575,7 +575,7 @@
     "very_serious": 8,
     "serious": 16,
     "less_serious": 56,
-    "night_pct": 0.993,
+    "night_pct": 0.193,
     "weather_factor_pct": 0.3,
     "avg_wave_height_m": 0.38
   },
@@ -585,7 +585,7 @@
     "very_serious": 9,
     "serious": 9,
     "less_serious": 76,
-    "night_pct": 1.0,
+    "night_pct": 0.241,
     "weather_factor_pct": 0.343,
     "avg_wave_height_m": 0.65
   },
@@ -595,7 +595,7 @@
     "very_serious": 7,
     "serious": 5,
     "less_serious": 42,
-    "night_pct": 1.0,
+    "night_pct": 0.303,
     "weather_factor_pct": 0.452,
     "avg_wave_height_m": 1.21
   },
@@ -605,7 +605,7 @@
     "very_serious": 3,
     "serious": 4,
     "less_serious": 48,
-    "night_pct": 1.0,
+    "night_pct": 0.286,
     "weather_factor_pct": 0.311,
     "avg_wave_height_m": 0.62
   },
@@ -615,7 +615,7 @@
     "very_serious": 3,
     "serious": 4,
     "less_serious": 36,
-    "night_pct": 0.989,
+    "night_pct": 0.358,
     "weather_factor_pct": 0.537,
     "avg_wave_height_m": 1.12
   },
@@ -625,7 +625,7 @@
     "very_serious": 3,
     "serious": 6,
     "less_serious": 41,
-    "night_pct": 1.0,
+    "night_pct": 0.31,
     "weather_factor_pct": 0.73,
     "avg_wave_height_m": 1.67
   },
@@ -635,7 +635,7 @@
     "very_serious": 0,
     "serious": 6,
     "less_serious": 36,
-    "night_pct": 1.0,
+    "night_pct": 0.284,
     "weather_factor_pct": 0.321,
     "avg_wave_height_m": 0.71
   },
@@ -645,7 +645,7 @@
     "very_serious": 4,
     "serious": 6,
     "less_serious": 38,
-    "night_pct": 1.0,
+    "night_pct": 0.259,
     "weather_factor_pct": 0.293,
     "avg_wave_height_m": 0.62
   },
@@ -655,7 +655,7 @@
     "very_serious": 3,
     "serious": 7,
     "less_serious": 43,
-    "night_pct": 1.0,
+    "night_pct": 0.155,
     "weather_factor_pct": 0.349,
     "avg_wave_height_m": 0.61
   },
@@ -665,7 +665,7 @@
     "very_serious": 3,
     "serious": 8,
     "less_serious": 58,
-    "night_pct": 1.0,
+    "night_pct": 0.142,
     "weather_factor_pct": 0.219,
     "avg_wave_height_m": 0.4
   },
@@ -675,7 +675,7 @@
     "very_serious": 6,
     "serious": 2,
     "less_serious": 36,
-    "night_pct": 1.0,
+    "night_pct": 0.148,
     "weather_factor_pct": 0.389,
     "avg_wave_height_m": 0.67
   },
@@ -685,7 +685,7 @@
     "very_serious": 5,
     "serious": 6,
     "less_serious": 52,
-    "night_pct": 1.0,
+    "night_pct": 0.161,
     "weather_factor_pct": 0.261,
     "avg_wave_height_m": 0.51
   },
@@ -695,7 +695,7 @@
     "very_serious": 8,
     "serious": 4,
     "less_serious": 52,
-    "night_pct": 1.0,
+    "night_pct": 0.143,
     "weather_factor_pct": 0.423,
     "avg_wave_height_m": 0.71
   },
@@ -705,7 +705,7 @@
     "very_serious": 6,
     "serious": 7,
     "less_serious": 42,
-    "night_pct": 1.0,
+    "night_pct": 0.236,
     "weather_factor_pct": 0.618,
     "avg_wave_height_m": 1.25
   },
@@ -715,7 +715,7 @@
     "very_serious": 1,
     "serious": 3,
     "less_serious": 31,
-    "night_pct": 1.0,
+    "night_pct": 0.382,
     "weather_factor_pct": 0.315,
     "avg_wave_height_m": 0.51
   },
@@ -725,7 +725,7 @@
     "very_serious": 3,
     "serious": 7,
     "less_serious": 37,
-    "night_pct": 1.0,
+    "night_pct": 0.379,
     "weather_factor_pct": 0.653,
     "avg_wave_height_m": 1.5
   },
@@ -735,7 +735,7 @@
     "very_serious": 2,
     "serious": 2,
     "less_serious": 27,
-    "night_pct": 1.0,
+    "night_pct": 0.403,
     "weather_factor_pct": 0.639,
     "avg_wave_height_m": 1.27
   }
