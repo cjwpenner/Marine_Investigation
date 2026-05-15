@@ -7,10 +7,10 @@
 <title>Trends | Marine Safety Observatory</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_import/style.3fa8c0cb.css">
+<link rel="preload" as="style" href="./_import/style.db85ef9b.css">
 <link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_import/style.3fa8c0cb.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.db85ef9b.css">
 <link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
 <link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
 <link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
@@ -55,14 +55,28 @@
 <link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
 <link rel="modulepreload" href="./_npm/delaunator@5.1.0/d4ec0aa1.js">
 <link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/42820bfa.js">
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var sidebar = document.getElementById("observablehq-sidebar");
+  if (!sidebar) return;
+  var li = document.createElement("li");
+  li.className = "observablehq-link nav-download";
+  var a = document.createElement("a");
+  a.href = "/Marine_Investigation/marine_safety_analysis_report_2025.docx";
+  a.download = "Marine_Safety_Analysis_Report_2025.docx";
+  a.textContent = "⬇ Download Report";
+  li.appendChild(a);
+  sidebar.appendChild(li);
+});
+</script>
 <script type="module">
 
 import {define} from "./_observablehq/client.86d48a53.js";
 import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
 
-registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.614d635d.json","lastModified":1778838255397,"size":9314056});
-registerFile("./data/time_series.json", {"name":"./data/time_series.json","mimeType":"application/json","path":"./_file/data/time_series.b7e71da3.json","lastModified":1778838255402,"size":15283});
-registerFile("./data/weather_stats.json", {"name":"./data/weather_stats.json","mimeType":"application/json","path":"./_file/data/weather_stats.7cef6d3c.json","lastModified":1778838255402,"size":2349});
+registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.614d635d.json","lastModified":1778840083204,"size":9314056});
+registerFile("./data/time_series.json", {"name":"./data/time_series.json","mimeType":"application/json","path":"./_file/data/time_series.b7e71da3.json","lastModified":1778840083210,"size":15283});
+registerFile("./data/weather_stats.json", {"name":"./data/weather_stats.json","mimeType":"application/json","path":"./_file/data/weather_stats.7cef6d3c.json","lastModified":1778840083210,"size":2349});
 
 define({id: "6bd74340", inputs: ["FileAttachment"], outputs: ["Plot","timeSeries","weatherStats","incidentsMap","lightData","SEA_STATE_ORDER","seaStateData","windForceData","weatherTypeData","VIS_ORDER","visibilityData","catNight","catTotal","overallNightPct","nightByCat","years","minYear","maxYear"], body: async (FileAttachment) => {
 const Plot = await import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js");
@@ -297,7 +311,7 @@ Plot.plot({
     <li class="observablehq-link"><a href="./">Marine Safety Observatory</a></li>
   </ol>
   <ol>
-    <li class="observablehq-link"><a href="./map">Map</a></li>
+    <li class="observablehq-link"><a href="./map">Incident Map</a></li>
     <li class="observablehq-link"><a href="./themes">Themes</a></li>
     <li class="observablehq-link observablehq-link-active"><a href="./trends">Trends</a></li>
     <li class="observablehq-link"><a href="./vessels">Vessels &amp; People</a></li>
@@ -356,7 +370,7 @@ Plot.plot({
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./themes"><span>Themes</span></a><a rel="next" href="./vessels"><span>Vessels &amp; People</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T09:44:20">May 15, 2026</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T10:14:48">May 15, 2026</a>.</div>
 </footer>
 </div>
 </body>

@@ -7,21 +7,35 @@
 <title>Incident Map | Marine Safety Observatory</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_import/style.3fa8c0cb.css">
+<link rel="preload" as="style" href="./_import/style.db85ef9b.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_import/style.3fa8c0cb.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.db85ef9b.css">
 <link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
 <link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
 <link rel="modulepreload" href="./_import/components/map-component.82358b5d.js">
 <link rel="modulepreload" href="./_import/components/dom-utils.2ca39570.js">
 <link rel="modulepreload" href="./_import/components/colors.858cb1af.js">
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var sidebar = document.getElementById("observablehq-sidebar");
+  if (!sidebar) return;
+  var li = document.createElement("li");
+  li.className = "observablehq-link nav-download";
+  var a = document.createElement("a");
+  a.href = "/Marine_Investigation/marine_safety_analysis_report_2025.docx";
+  a.download = "Marine_Safety_Analysis_Report_2025.docx";
+  a.textContent = "⬇ Download Report";
+  li.appendChild(a);
+  sidebar.appendChild(li);
+});
+</script>
 <script type="module">
 
 import {define} from "./_observablehq/client.86d48a53.js";
 import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
 
-registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.614d635d.json","lastModified":1778838255397,"size":9314056});
+registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.614d635d.json","lastModified":1778840083204,"size":9314056});
 
 define({id: "fa2911f9", inputs: ["FileAttachment"], outputs: ["createMap","incidents"], body: async (FileAttachment) => {
 const {createMap} = await import("./_import/components/map-component.82358b5d.js");
@@ -64,7 +78,7 @@ return {loadScript,mcCss,host};
     <li class="observablehq-link"><a href="./">Marine Safety Observatory</a></li>
   </ol>
   <ol>
-    <li class="observablehq-link observablehq-link-active"><a href="./map">Map</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./map">Incident Map</a></li>
     <li class="observablehq-link"><a href="./themes">Themes</a></li>
     <li class="observablehq-link"><a href="./trends">Trends</a></li>
     <li class="observablehq-link"><a href="./vessels">Vessels &amp; People</a></li>
@@ -91,7 +105,7 @@ return {loadScript,mcCss,host};
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./"><span>Marine Safety Observatory</span></a><a rel="next" href="./themes"><span>Themes</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T09:44:20">May 15, 2026</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T10:14:48">May 15, 2026</a>.</div>
 </footer>
 </div>
 </body>
