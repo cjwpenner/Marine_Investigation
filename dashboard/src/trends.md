@@ -8,31 +8,69 @@ const timeSeries = await FileAttachment("data/time_series.json").json();
 const weatherStats = await FileAttachment("data/weather_stats.json").json();
 const incidentsMap = await FileAttachment("data/incidents_map.json").json();
 
+// Lighting conditions (exclude Unknown)
 const lightData = Object.entries(weatherStats.by_natural_light)
   .map(([k,v]) => ({light: k, count: v}))
-  .filter(d => d.light !== "Unknown")
+  .filter(d => d.light !== "Unknown" && d.light !== "Unknown NL")
   .sort((a,b) => b.count - a.count);
 
-const waveData = Object.entries(weatherStats.by_wave_height_band)
-  .map(([k,v]) => ({band: k, count: v}));
-const WAVE_ORDER = ["0-0.5m","0.5-1.5m","1.5-2.5m","2.5-4m","4m+"];
-waveData.sort((a,b) => WAVE_ORDER.indexOf(a.band) - WAVE_ORDER.indexOf(b.band));
+// Sea state — sort by Douglas scale order
+const SEA_STATE_ORDER = [
+  "0 - Calm glassy - (0 m)",
+  "1 - Calm rippled - (0 - 0.1 m)",
+  "2 - Smooth - (0.1 - 0.5 m)",
+  "3 - Slight - (0.5 - 1.25 m)",
+  "4 - Moderate - (1.25 - 2.5 m)",
+  "5 - Rough - (2.5 - 4 m)",
+  "6 - Very rough - (4.0 - 6.0 m)",
+  "7 - High - (6.0 - 9.0 m)",
+  "8 - Very high - (9.0 - 14.0 m)",
+  "9 - Phenomenal - (> 14.0 m)"
+];
+const seaStateData = Object.entries(weatherStats.by_sea_state ?? {})
+  .map(([k,v]) => ({state: k, count: v}))
+  .sort((a,b) => SEA_STATE_ORDER.indexOf(a.state) - SEA_STATE_ORDER.indexOf(b.state));
 
-const beaufortData = Object.entries(weatherStats.by_wind_force_beaufort ?? {})
-  .map(([k, v]) => ({force: "F" + k, n: k, count: v}))
-  .sort((a, b) => +a.n - +b.n);
+// Wind force — strip long label to just "F0"–"F12"
+const windForceData = Object.entries(weatherStats.by_wind_force ?? {})
+  .filter(([k]) => k !== "Beaufort scale: Unknown")
+  .map(([k,v]) => {
+    const match = k.match(/^(\d+)/);
+    return {label: match ? "F" + match[1] : k, force: match ? +match[1] : 99, count: v};
+  })
+  .sort((a,b) => a.force - b.force);
 
-// Night incidents by category
+// Weather type (exclude Unknown variants)
+const weatherTypeData = Object.entries(weatherStats.by_weather_type ?? {})
+  .map(([k,v]) => ({type: k, count: v}))
+  .filter(d => !d.type.startsWith("Unknown"))
+  .sort((a,b) => b.count - a.count);
+
+// Visibility
+const VIS_ORDER = [
+  "Calm glassy - (0 m)",
+  "Very good - Vis >= 25.0 nm",
+  "Good - 5.0 <= Vis < 25.0 nm",
+  "Moderate - 2.0 <=Vis < 5.0 nm",
+  "Poor - 0.5 <=Vis < 2.0 nm",
+  "Very poor - Vis < 0.5 nm"
+];
+const visibilityData = Object.entries(weatherStats.by_visibility ?? {})
+  .map(([k,v]) => ({vis: k, count: v}))
+  .filter(d => !d.vis.startsWith("Unknown"))
+  .sort((a,b) => VIS_ORDER.indexOf(a.vis) - VIS_ORDER.indexOf(b.vis));
+
+// Night incidents by category (Night + Twilight)
 const catNight = {};
 const catTotal = {};
 for (const inc of incidentsMap) {
   const cat = inc.incident_category ?? "other";
   catTotal[cat] = (catTotal[cat] ?? 0) + 1;
-  if (inc.natural_light === "Night" || inc.natural_light === "Dusk") {
+  if (inc.natural_light === "Night" || inc.natural_light === "Twilight") {
     catNight[cat] = (catNight[cat] ?? 0) + 1;
   }
 }
-const overallNightPct = incidentsMap.filter(d => d.natural_light === "Night" || d.natural_light === "Dusk").length / Math.max(incidentsMap.length, 1);
+const overallNightPct = incidentsMap.filter(d => d.natural_light === "Night" || d.natural_light === "Twilight").length / Math.max(incidentsMap.length, 1);
 const nightByCat = Object.entries(catTotal)
   .map(([cat, total]) => ({
     cat,
@@ -58,7 +96,6 @@ const toYear = view(Inputs.select(years, {label: "To year", value: maxYear}));
 
 ```js
 const filtered = timeSeries.filter(d => d.year_month >= fromYear && d.year_month <= toYear + "-99");
-// Reshape to long form so Plot.stackY stacks correctly (three barY without stackY would overlap)
 const stackData = filtered.flatMap(d => [
   {year_month: d.year_month, count: d.less_serious,  severity: "Less Serious"},
   {year_month: d.year_month, count: d.serious,        severity: "Serious"},
@@ -83,14 +120,13 @@ Plot.plot({
 ## Lighting Conditions
 
 ```js
-const LIGHT_COLORS = {Day: "#60a5fa", Night: "#1e293b", Dusk: "#d97706", Dawn: "#f59e0b"};
 Plot.plot({
   height: 80, marginLeft: 10,
-  x: {label: "Incidents", percent: false},
-  color: {domain: ["Day","Night","Dusk","Dawn"], range: ["#60a5fa","#1e293b","#d97706","#f59e0b"], legend: true},
+  x: {label: "Incidents"},
+  color: {domain: ["Daylight","Night","Twilight"], range: ["#60a5fa","#1e293b","#d97706"], legend: true},
   marks: [
     Plot.barX(lightData, Plot.stackX({x: "count", fill: "light", tip: true,
-      order: ["Day","Dusk","Dawn","Night"]}))
+      order: ["Daylight","Twilight","Night"]}))
   ]
 })
 ```
@@ -99,21 +135,26 @@ Plot.plot({
 
 <div>
 
-## Wave Height at Incident
+## Sea State at Incident
 
 ```js
 Plot.plot({
-  height: 200, marginLeft: 80,
+  height: 220, marginLeft: 200,
   x: {label: "Incidents"},
   marks: [
-    Plot.barX(waveData, {x: "count", y: "band", fill: "#1e40af", tip: true})
+    Plot.barX(seaStateData, {x: "count", y: "state", fill: "#1e40af", tip: true,
+      sort: {y: null}})
   ]
 })
 ```
 
 </div></div>
 
-## Wind Force Distribution (Beaufort)
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
+
+<div>
+
+## Wind Force (Beaufort)
 
 ```js
 Plot.plot({
@@ -121,7 +162,39 @@ Plot.plot({
   x: {label: "Beaufort force"},
   y: {label: "Incidents"},
   marks: [
-    Plot.barY(beaufortData, {x: "force", y: "count", fill: "#1e40af", tip: true})
+    Plot.barY(windForceData, {x: "label", y: "count", fill: "#1e40af", tip: true})
+  ]
+})
+```
+
+</div>
+
+<div>
+
+## Weather Conditions
+
+```js
+Plot.plot({
+  height: 200, marginLeft: 80,
+  x: {label: "Incidents"},
+  marks: [
+    Plot.barX(weatherTypeData, {x: "count", y: "type", fill: "#1e40af", tip: true,
+      sort: {y: "-x"}})
+  ]
+})
+```
+
+</div></div>
+
+## Visibility at Incident
+
+```js
+Plot.plot({
+  height: 180, marginLeft: 220,
+  x: {label: "Incidents"},
+  marks: [
+    Plot.barX(visibilityData, {x: "count", y: "vis", fill: "#1e40af", tip: true,
+      sort: {y: null}})
   ]
 })
 ```
@@ -150,7 +223,7 @@ Plot.plot({
   y: {label: "Night %", percent: true},
   marks: [
     Plot.lineY(timeSeries, {x: "year_month", y: "night_pct", stroke: "#1e293b", strokeWidth: 2}),
-    Plot.dot(timeSeries, {x: "year_month", y: "night_pct", fill: "#1e293b", tip: true})
+    Plot.dot(timeSeries, {x: "year_month", y: "night_pct", fill: "#1e293b", r: 2, tip: true})
   ]
 })
 ```
@@ -160,7 +233,7 @@ Plot.plot({
 ```js
 Plot.plot({
   height: 250, marginLeft: 120,
-  x: {label: "Night / dusk %", percent: true},
+  x: {label: "Night / twilight %", percent: true},
   marks: [
     Plot.barX(nightByCat, {
       x: "night_pct", y: "cat", fill: d => d.night_pct > overallNightPct ? "#1e293b" : "#60a5fa",
