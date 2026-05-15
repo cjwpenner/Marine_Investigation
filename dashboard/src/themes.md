@@ -13,10 +13,8 @@ function severityScore(t) {
 }
 
 const sorted = [...themes].sort((a,b) => b.incident_count - a.incident_count);
-const top30 = sorted.slice(0, 30).map(d => ({
-  ...d,
-  label: d.title.length > 48 ? d.title.slice(0, 48) + "…" : d.title
-}));
+const top30 = sorted.slice(0, 30);
+const maxCount = top30[0]?.incident_count || 1;
 ```
 
 # Incident Themes
@@ -26,37 +24,65 @@ AI-identified clusters of similar incidents. **${themes.length} themes** across 
 ## Top 30 Themes by Volume
 
 ```js
-Plot.plot({
-  height: Math.max(200, top30.length * 28),
-  marginLeft: 330,
-  marginRight: 50,
-  x: {label: "Incidents"},
-  marks: [
-    Plot.barX(top30, {
-      x: "incident_count",
-      y: "label",
-      fill: d => severityScore(d) > 0.2 ? "#dc2626" : severityScore(d) > 0.05 ? "#d97706" : "#1e40af",
-      title: d => d.title,
-      tip: true,
-      sort: {y: "-x"}
-    }),
-    Plot.text(top30, {
-      x: "incident_count",
-      y: "label",
-      text: d => d.incident_count.toLocaleString(),
-      dx: 5, fontSize: 10, fill: "#64748b",
-      sort: {y: "-x"}
-    })
-  ]
-})
-```
+{
+  const SEVERITY_COLOR = d => severityScore(d) > 0.2 ? "#dc2626" : severityScore(d) > 0.05 ? "#d97706" : "#1e40af";
 
-<div style="font-size:11px;color:#94a3b8;margin-top:4px;">
-  Colour: <span style="color:#dc2626;">■</span> High severity &nbsp;
-  <span style="color:#d97706;">■</span> Medium &nbsp;
-  <span style="color:#1e40af;">■</span> Low &nbsp;·&nbsp;
-  Showing top 30 of ${themes.length} themes. Use search below to find any theme.
-</div>
+  const table = document.createElement("div");
+  table.style.cssText = "font-size:13px;";
+
+  // Header
+  const hdr = document.createElement("div");
+  hdr.style.cssText = "display:grid;grid-template-columns:28px 1fr 140px 70px;gap:8px;align-items:center;padding:6px 8px;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #e2e8f0;";
+  ["#","Theme","Incidents","Severity"].forEach(t => {
+    const c = document.createElement("div"); c.textContent = t; hdr.appendChild(c);
+  });
+  table.appendChild(hdr);
+
+  top30.forEach((d, i) => {
+    const color = SEVERITY_COLOR(d);
+    const pct = d.incident_count / maxCount;
+    const row = document.createElement("div");
+    row.style.cssText = `display:grid;grid-template-columns:28px 1fr 140px 70px;gap:8px;align-items:center;padding:7px 8px;border-bottom:1px solid #f1f5f9;${i % 2 === 1 ? "background:#fafafa;" : ""}`;
+
+    const rank = document.createElement("div");
+    rank.style.cssText = "color:#94a3b8;font-size:11px;font-weight:600;";
+    rank.textContent = i + 1;
+
+    const title = document.createElement("div");
+    title.style.cssText = "color:#1e293b;font-weight:500;line-height:1.4;";
+    title.textContent = d.title;
+
+    const barWrap = document.createElement("div");
+    barWrap.style.cssText = "display:flex;align-items:center;gap:6px;";
+    const bar = document.createElement("div");
+    bar.style.cssText = `height:8px;background:${color};border-radius:3px;width:${Math.round(pct * 100)}%;min-width:2px;flex-shrink:0;`;
+    const cnt = document.createElement("span");
+    cnt.style.cssText = "font-size:11px;color:#64748b;white-space:nowrap;";
+    cnt.textContent = d.incident_count.toLocaleString();
+    barWrap.append(bar, cnt);
+
+    const sevDot = document.createElement("div");
+    sevDot.style.cssText = `width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;margin-right:5px;`;
+    const sevLabel = document.createElement("span");
+    sevLabel.style.cssText = `font-size:11px;color:${color};font-weight:600;`;
+    sevLabel.textContent = severityScore(d) > 0.2 ? "High" : severityScore(d) > 0.05 ? "Med" : "Low";
+    const sevCell = document.createElement("div");
+    sevCell.style.display = "flex";
+    sevCell.style.alignItems = "center";
+    sevCell.append(sevDot, sevLabel);
+
+    row.append(rank, title, barWrap, sevCell);
+    table.appendChild(row);
+  });
+
+  const footer = document.createElement("div");
+  footer.style.cssText = "font-size:11px;color:#94a3b8;padding:8px;";
+  footer.textContent = `Showing top 30 of ${themes.length} themes. Use the search below to find any theme.`;
+  table.appendChild(footer);
+
+  display(table);
+}
+```
 
 ---
 
