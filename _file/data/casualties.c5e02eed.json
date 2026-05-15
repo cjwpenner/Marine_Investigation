@@ -59,7 +59,7 @@
     "Head -> Eye(s)": 28,
     "Back, including spine and vertebra in the back -> Back, other parts not mentioned above": 25
   },
-  "ppe_used_pct": 0.0,
-  "ppe_deficient_pct": 0.0,
-  "on_duty_pct": 0.0
+  "ppe_used_pct": 1.0,
+  "ppe_deficient_pct": 0.919,
+  "on_duty_pct": 0.94
 }

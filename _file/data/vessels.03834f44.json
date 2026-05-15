@@ -136,9 +136,9 @@
     "50000GT+": 1238
   },
   "commercial_vs_recreational": {
-    "Commercial": 0,
-    "Recreational": 0,
-    "Unknown": 8018
+    "Commercial": 6641,
+    "Recreational": 1377,
+    "Unknown": 0
   },
-  "incidents_with_vessel_loss": 0
+  "incidents_with_vessel_loss": 179
 }
