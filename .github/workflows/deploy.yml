@@ -34,6 +34,10 @@ jobs:
         working-directory: dashboard
         run: npm run build
 
+      - name: Copy static assets into build output
+        run: |
+          cp dashboard/src/marine_safety_analysis_report_2025.docx dashboard/dist/marine_safety_analysis_report_2025.docx
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
