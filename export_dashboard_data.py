@@ -1,5 +1,6 @@
 # export_dashboard_data.py
 import json
+import math
 import os
 import csv
 from pathlib import Path
@@ -25,6 +26,10 @@ def build_incidents_map(incidents: list) -> list:
         lat = r.get("Latitude")
         lon = r.get("Longitude")
         if lat is None or lon is None:
+            continue
+        if isinstance(lat, float) and math.isnan(lat):
+            continue
+        if isinstance(lon, float) and math.isnan(lon):
             continue
         we = r.get("Weather_Enrichment") or {}
         a = r.get("Analysis") or {}
@@ -311,8 +316,12 @@ def main():
 
     for filename, data in outputs.items():
         path = OUTPUT_DIR / filename
+        # Serialise via string replacement: Python's json.dump writes NaN/Infinity
+        # as bare tokens which are invalid JSON. Convert them to null first.
+        raw = json.dumps(data, indent=2)
+        raw = raw.replace(": NaN", ": null").replace(": Infinity", ": null").replace(": -Infinity", ": null")
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+            f.write(raw)
         size_kb = path.stat().st_size // 1024
         print(f"  Written {path} ({size_kb} KB)")
 
