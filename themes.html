@@ -7,15 +7,19 @@
 <title>Incident Themes | Marine Safety Observatory</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_import/style.f64546e2.css">
+<link rel="preload" as="style" href="./_import/style.3fa8c0cb.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_import/style.f64546e2.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.3fa8c0cb.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
 <link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
 <link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/a96a6bbb.js">
-<link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.31cd1366.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
 <link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
 <link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
 <link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
 <link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
@@ -56,43 +60,55 @@
 import {define} from "./_observablehq/client.86d48a53.js";
 import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
 
-registerFile("./data/themes.json", {"name":"./data/themes.json","mimeType":"application/json","path":"./_file/data/themes.045fe470.json","lastModified":1778831479739,"size":1380507});
+registerFile("./data/themes.json", {"name":"./data/themes.json","mimeType":"application/json","path":"./_file/data/themes.045fe470.json","lastModified":1778837377263,"size":1380507});
 
-define({id: "329a2a0c", inputs: ["FileAttachment"], outputs: ["Plot","themes","escapeHtml","severityScore"], body: async (FileAttachment) => {
+define({id: "00cfd57c", inputs: ["FileAttachment"], outputs: ["Plot","themes","severityScore","sorted","top30"], body: async (FileAttachment) => {
 const Plot = await import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js");
 const themes = await FileAttachment("./data/themes.json").json();
-
-// escapeHtml for safely rendering external data in html templates
-const escapeHtml = str => str == null ? "" : String(str)
-  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 
 function severityScore(t) {
   const sb = t.severity_breakdown || {};
   const total = Object.values(sb).reduce((a,b) => a+b, 0) || 1;
   return ((sb["Very Serious"] || 0) * 1.0 + (sb["Serious"] || 0) * 0.5) / total;
 }
-return {Plot,themes,escapeHtml,severityScore};
+
+const sorted = [...themes].sort((a,b) => b.incident_count - a.incident_count);
+const top30 = sorted.slice(0, 30);
+return {Plot,themes,severityScore,sorted,top30};
 }});
 
-define({id: "12b9d9fa", inputs: ["Plot","themes","severityScore","display"], body: async (Plot,themes,severityScore,display) => {
+define({id: "e1c8f812", mode: "inline", inputs: ["themes","display"], body: async (themes,display) => {
 display(await(
-// Theme sizes as horizontal bar chart (safe fallback for treemap)
+themes.length
+))
+}});
+
+define({id: "5ca80652", mode: "inline", inputs: ["themes","display"], body: async (themes,display) => {
+display(await(
+themes.reduce((s,t) => s + (t.incident_count||0), 0).toLocaleString()
+))
+}});
+
+define({id: "1dc56adf", inputs: ["Plot","top30","severityScore","display"], body: async (Plot,top30,severityScore,display) => {
+display(await(
 Plot.plot({
-  height: Math.max(200, themes.length * 36),
-  marginLeft: 220,
+  height: Math.max(200, top30.length * 26),
+  marginLeft: 300,
+  marginRight: 40,
   x: {label: "Incidents"},
   marks: [
-    Plot.barX(themes, {
+    Plot.barX(top30, {
       x: "incident_count",
       y: "title",
-      fill: d => {
-        const s = severityScore(d);
-        if (s > 0.2) return "#dc2626";      // high severity — red
-        if (s > 0.05) return "#d97706";     // medium — amber
-        return "#1e40af";                    // low — blue
-      },
+      fill: d => severityScore(d) > 0.2 ? "#dc2626" : severityScore(d) > 0.05 ? "#d97706" : "#1e40af",
       tip: true,
+      sort: {y: "-x"}
+    }),
+    Plot.text(top30, {
+      x: "incident_count",
+      y: "title",
+      text: d => d.incident_count.toLocaleString(),
+      dx: 5, fontSize: 10, fill: "#64748b",
       sort: {y: "-x"}
     })
   ]
@@ -100,189 +116,180 @@ Plot.plot({
 ))
 }});
 
-define({id: "a1109973", inputs: ["themes"], outputs: ["container","expandedId","renderCards"], body: (themes) => {
-// expandable theme cards — all dynamic data via textContent
-const container = document.createElement("div");
-let expandedId = null;
+define({id: "e1c8f812-1", mode: "inline", inputs: ["themes","display"], body: async (themes,display) => {
+display(await(
+themes.length
+))
+}});
 
-function renderCards(searchQuery = "") {
-  while (container.firstChild) container.removeChild(container.firstChild);
-  themes.forEach(t => {
-    const card = document.createElement("div");
-    card.style.cssText = "background:#fff;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:12px;overflow:hidden;";
+define({id: "62c3e968", inputs: ["view","Inputs","sorted"], outputs: ["search"], body: (view,Inputs,sorted) => {
+// `view()` makes `search` a reactive variable — the card cell below re-runs on change
+const search = view(Inputs.search(sorted, {
+  placeholder: "Search all ${themes.length} themes by title or description…",
+  columns: ["title", "description"],
+  label: null,
+  width: "100%"
+}));
+return {search};
+}});
 
-    const COLORS = ["#1e40af","#2563eb","#3b82f6","#60a5fa","#93c5fd","#bfdbfe","#1d4ed8"];
-    const color = COLORS[t.theme_id % COLORS.length] ?? "#1e40af";
+define({id: "d57e907d", inputs: ["search","display"], body: (search,display) => {
+// This cell re-runs reactively whenever search changes
+{
+  const COLORS = ["#1e40af","#2563eb","#3b82f6","#1d4ed8","#0284c7","#0369a1","#1e3a8a"];
+  let expandedId = null;
+  const container = document.createElement("div");
+  container.style.marginTop = "12px";
 
-    // Header
-    const hdr = document.createElement("div");
-    hdr.style.cssText = `padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-top:3px solid ${color};`;
-    hdr.addEventListener("click", () => {
-      expandedId = expandedId === t.theme_id ? null : t.theme_id;
-      renderCards();
-    });
+  function renderCards(themesToShow) {
+    while (container.firstChild) container.removeChild(container.firstChild);
 
-    const titleWrap = document.createElement("div");
-    const titleEl = document.createElement("div");
-    titleEl.style.cssText = "font-weight:700;font-size:14px;color:#1e293b;";
-    titleEl.textContent = t.title;
-    const countEl = document.createElement("div");
-    countEl.style.cssText = "font-size:11px;color:#64748b;margin-top:2px;";
-    countEl.textContent = (t.incident_count ?? 0).toLocaleString() + " incidents";
-    titleWrap.append(titleEl, countEl);
+    if (themesToShow.length === 0) {
+      const empty = document.createElement("p");
+      empty.style.cssText = "color:#94a3b8;font-size:13px;padding:20px 0;";
+      empty.textContent = "No themes match your search.";
+      container.appendChild(empty);
+      return;
+    }
 
-    const chevron = document.createElement("span");
-    chevron.style.color = "#94a3b8";
-    chevron.textContent = expandedId === t.theme_id ? "▲" : "▼";
-    hdr.append(titleWrap, chevron);
-    card.appendChild(hdr);
+    themesToShow.forEach(t => {
+      const color = COLORS[Math.abs(t.theme_id ?? 0) % COLORS.length];
+      const card = document.createElement("div");
+      card.style.cssText = "background:#fff;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:10px;overflow:hidden;";
 
-    if (expandedId === t.theme_id) {
-      const body = document.createElement("div");
-      body.style.cssText = "padding:14px 16px;border-top:1px solid #f1f5f9;background:#fafafa;";
+      // Header
+      const hdr = document.createElement("div");
+      hdr.style.cssText = `padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-left:4px solid ${color};`;
+      hdr.addEventListener("click", () => {
+        expandedId = expandedId === t.theme_id ? null : t.theme_id;
+        renderCards(themesToShow);
+      });
 
-      // Description
-      const descEl = document.createElement("p");
-      descEl.style.cssText = "color:#475569;font-size:13px;line-height:1.6;margin-bottom:14px;";
-      descEl.textContent = t.description;
-      body.appendChild(descEl);
+      const titleWrap = document.createElement("div");
+      const titleEl = document.createElement("div");
+      titleEl.style.cssText = "font-weight:600;font-size:14px;color:#1e293b;";
+      titleEl.textContent = t.title;
+      const metaEl = document.createElement("div");
+      metaEl.style.cssText = "font-size:11px;color:#64748b;margin-top:3px;display:flex;gap:12px;";
+      const countSpan = document.createElement("span");
+      countSpan.textContent = (t.incident_count ?? 0).toLocaleString() + " incidents";
+      metaEl.appendChild(countSpan);
+      const vs = (t.severity_breakdown || {})["Very Serious"] || 0;
+      if (vs > 0) {
+        const sevSpan = document.createElement("span");
+        sevSpan.style.color = "#dc2626";
+        sevSpan.textContent = vs + " very serious";
+        metaEl.appendChild(sevSpan);
+      }
+      titleWrap.append(titleEl, metaEl);
+      const chevron = document.createElement("span");
+      chevron.style.cssText = "color:#94a3b8;font-size:12px;margin-left:12px;flex-shrink:0;";
+      chevron.textContent = expandedId === t.theme_id ? "▲" : "▼";
+      hdr.append(titleWrap, chevron);
+      card.appendChild(hdr);
 
-      // Factor grid
-      const grid = document.createElement("div");
-      grid.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;";
+      // Expanded body
+      if (expandedId === t.theme_id) {
+        const body = document.createElement("div");
+        body.style.cssText = "padding:16px;border-top:1px solid #f1f5f9;background:#fafafa;";
 
-      // Contributing factor types
-      const factorCol = document.createElement("div");
-      const factorLabel = document.createElement("div");
-      factorLabel.style.cssText = "font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
-      factorLabel.textContent = "Contributing Factor Types";
-      factorCol.appendChild(factorLabel);
-      Object.entries(t.top_contributing_factor_types || {})
-        .sort((a,b) => b[1]-a[1])
-        .forEach(([type, pct]) => {
+        // Description
+        const descEl = document.createElement("p");
+        descEl.style.cssText = "color:#475569;font-size:13px;line-height:1.65;margin:0 0 16px;";
+        descEl.textContent = t.description;
+        body.appendChild(descEl);
+
+        // Factor grid
+        const grid = document.createElement("div");
+        grid.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:14px;";
+
+        const factorCol = document.createElement("div");
+        const factorLabel = document.createElement("div");
+        factorLabel.style.cssText = "font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
+        factorLabel.textContent = "Contributing Factor Types";
+        factorCol.appendChild(factorLabel);
+        Object.entries(t.top_contributing_factor_types || {}).sort((a,b) => b[1]-a[1]).forEach(([type, pct]) => {
           const row = document.createElement("div");
-          row.style.marginBottom = "5px";
+          row.style.marginBottom = "6px";
           const rowLabel = document.createElement("div");
           rowLabel.style.cssText = "display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;";
-          const typeSpan = document.createElement("span");
-          typeSpan.style.cssText = "color:#475569;text-transform:capitalize;";
-          typeSpan.textContent = type;
-          const pctSpan = document.createElement("span");
-          pctSpan.style.cssText = "font-weight:600;color:#1e293b;";
-          pctSpan.textContent = Math.round(pct * 100) + "%";
-          rowLabel.append(typeSpan, pctSpan);
-          const barWrap = document.createElement("div");
-          barWrap.style.cssText = "height:4px;background:#f1f5f9;border-radius:2px;";
-          const bar = document.createElement("div");
-          bar.style.cssText = `height:100%;background:${color};border-radius:2px;width:${Math.round(pct * 100)}%;`;
-          barWrap.appendChild(bar);
-          row.append(rowLabel, barWrap);
+          const ts = document.createElement("span"); ts.style.cssText = "color:#475569;text-transform:capitalize;"; ts.textContent = type;
+          const ps = document.createElement("span"); ps.style.cssText = "font-weight:600;color:#1e293b;"; ps.textContent = Math.round(pct*100)+"%";
+          rowLabel.append(ts, ps);
+          const bw = document.createElement("div"); bw.style.cssText = "height:4px;background:#f1f5f9;border-radius:2px;";
+          const b = document.createElement("div"); b.style.cssText = `height:100%;background:${color};border-radius:2px;width:${Math.round(pct*100)}%;`;
+          bw.appendChild(b);
+          row.append(rowLabel, bw);
           factorCol.appendChild(row);
         });
 
-      // Human factor flags
-      const flagCol = document.createElement("div");
-      const flagLabel = document.createElement("div");
-      flagLabel.style.cssText = "font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
-      flagLabel.textContent = "Human Factor Flags";
-      flagCol.appendChild(flagLabel);
-      [
-        {label: "Fatigue", pct: t.fatigue_factor_pct},
-        {label: "Training gap", pct: t.training_factor_pct},
-        {label: "PPE issue", pct: t.ppe_factor_pct},
-        {label: "Communication", pct: t.communication_factor_pct},
-      ].forEach(f => {
-        const row = document.createElement("div");
-        row.style.cssText = "display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;";
-        const lbl = document.createElement("span");
-        lbl.style.color = "#475569";
-        lbl.textContent = f.label;
-        const val = document.createElement("span");
-        val.style.cssText = "font-weight:600;color:" + ((f.pct ?? 0) > 0.3 ? "#dc2626" : "#1e293b") + ";";
-        val.textContent = Math.round((f.pct ?? 0) * 100) + "%";
-        row.append(lbl, val);
-        flagCol.appendChild(row);
-      });
-
-      // SOLAS
-      if (t.solas_chapters?.length) {
-        const solasEl = document.createElement("div");
-        solasEl.style.cssText = "margin-top:10px;font-size:11px;color:#64748b;";
-        const solasStrong = document.createElement("strong");
-        solasStrong.textContent = "SOLAS: ";
-        solasEl.appendChild(solasStrong);
-        solasEl.appendChild(document.createTextNode(t.solas_chapters.join(", ")));
-        flagCol.appendChild(solasEl);
-      }
-
-      grid.append(factorCol, flagCol);
-      body.appendChild(grid);
-
-      // Preventable by
-      if (t.preventable_by?.length) {
-        const prevBox = document.createElement("div");
-        prevBox.style.cssText = "background:#f0fdf4;border-radius:4px;padding:10px;margin-bottom:12px;";
-        const prevLabel = document.createElement("div");
-        prevLabel.style.cssText = "font-size:10px;font-weight:700;color:#166534;text-transform:uppercase;margin-bottom:4px;";
-        prevLabel.textContent = "Preventable by";
-        const prevList = document.createElement("ul");
-        prevList.style.cssText = "margin:0;padding-left:16px;font-size:11px;color:#475569;";
-        t.preventable_by.forEach(p => {
-          const li = document.createElement("li");
-          li.textContent = p;
-          prevList.appendChild(li);
+        const flagCol = document.createElement("div");
+        const flagLabel = document.createElement("div");
+        flagLabel.style.cssText = "font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
+        flagLabel.textContent = "Human Factor Flags";
+        flagCol.appendChild(flagLabel);
+        [
+          {label: "Fatigue",        pct: t.fatigue_factor_pct},
+          {label: "Training gap",   pct: t.training_factor_pct},
+          {label: "PPE issue",      pct: t.ppe_factor_pct},
+          {label: "Communication",  pct: t.communication_factor_pct},
+          {label: "Weather factor", pct: t.weather_factor_pct},
+          {label: "Night lighting", pct: t.lighting_factor_pct},
+        ].filter(f => (f.pct ?? 0) > 0).forEach(f => {
+          const row = document.createElement("div");
+          row.style.cssText = "display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;";
+          const lbl = document.createElement("span"); lbl.style.color = "#475569"; lbl.textContent = f.label;
+          const val = document.createElement("span");
+          const p = f.pct ?? 0;
+          val.style.cssText = "font-weight:600;color:" + (p > 0.3 ? "#dc2626" : p > 0.15 ? "#d97706" : "#1e293b") + ";";
+          val.textContent = Math.round(p * 100) + "%";
+          row.append(lbl, val);
+          flagCol.appendChild(row);
         });
-        prevBox.append(prevLabel, prevList);
-        body.appendChild(prevBox);
+
+        grid.append(factorCol, flagCol);
+        body.appendChild(grid);
+
+        if (t.solas_chapters?.length) {
+          const solasBox = document.createElement("div");
+          solasBox.style.cssText = "background:#eff6ff;border-radius:4px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#1e40af;line-height:1.5;";
+          const sl = document.createElement("span"); sl.style.cssText = "font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;margin-right:6px;"; sl.textContent = "SOLAS:";
+          solasBox.appendChild(sl);
+          solasBox.appendChild(document.createTextNode(t.solas_chapters.join(" · ")));
+          body.appendChild(solasBox);
+        }
+
+        if (t.preventable_by?.length) {
+          const prevBox = document.createElement("div");
+          prevBox.style.cssText = "background:#f0fdf4;border-radius:4px;padding:10px 12px;margin-bottom:12px;";
+          const pl = document.createElement("div"); pl.style.cssText = "font-size:10px;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;"; pl.textContent = "Preventable by";
+          const pul = document.createElement("ul"); pul.style.cssText = "margin:0;padding-left:16px;font-size:12px;color:#475569;line-height:1.6;";
+          t.preventable_by.forEach(p => { const li = document.createElement("li"); li.textContent = p; pul.appendChild(li); });
+          prevBox.append(pl, pul);
+          body.appendChild(prevBox);
+        }
+
+        if ((t.representative_cases ?? []).length > 0) {
+          const cl = document.createElement("div"); cl.style.cssText = "font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;"; cl.textContent = "Representative Cases";
+          body.appendChild(cl);
+          t.representative_cases.slice(0,5).forEach(c => {
+            const cb = document.createElement("div"); cb.style.cssText = "border:1px solid #e2e8f0;border-radius:4px;padding:8px 10px;margin-bottom:6px;background:#fff;";
+            const cm = document.createElement("div"); cm.style.cssText = "font-size:10px;color:#94a3b8;margin-bottom:3px;"; cm.textContent = (c.severity ?? "Unknown") + " · " + (c.id ?? "").slice(0,8);
+            const cd = document.createElement("div"); cd.style.cssText = "font-size:11px;color:#475569;line-height:1.5;"; cd.textContent = (c.description ?? "").slice(0,300);
+            cb.append(cm, cd);
+            body.appendChild(cb);
+          });
+        }
+
+        card.appendChild(body);
       }
+      container.appendChild(card);
+    });
+  }
 
-      // Search input for representative cases
-      const searchWrap = document.createElement("div");
-      searchWrap.style.cssText = "margin-bottom:8px;";
-      const searchInput = document.createElement("input");
-      searchInput.type = "text";
-      searchInput.placeholder = "Search cases...";
-      searchInput.style.cssText = "width:100%;padding:5px 8px;font-size:11px;border:1px solid #e2e8f0;border-radius:4px;box-sizing:border-box;";
-      searchWrap.appendChild(searchInput);
-      searchInput.addEventListener("input", () => {
-        const val = searchInput.value;
-        renderCards(val);   // pass current value so filter doesn't lag a keystroke
-        const newInput = container.querySelector("input[type=text]");
-        if (newInput) { newInput.value = val; newInput.focus(); }
-      });
-      body.appendChild(searchWrap);
-
-      // Representative cases
-      const caseLabel = document.createElement("div");
-      caseLabel.style.cssText = "font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;";
-      caseLabel.textContent = "Representative Cases";
-      body.appendChild(caseLabel);
-      const query = searchQuery.trim().toLowerCase();
-      const filteredCases = (t.representative_cases ?? [])
-        .filter(c => !query || (c.description ?? "").toLowerCase().includes(query))
-        .slice(0, 10);
-      filteredCases.forEach(c => {
-        const caseBox = document.createElement("div");
-        caseBox.style.cssText = "border:1px solid #e2e8f0;border-radius:4px;padding:8px;margin-bottom:6px;background:#fff;";
-        const caseMeta = document.createElement("div");
-        caseMeta.style.cssText = "font-size:10px;color:#94a3b8;margin-bottom:3px;";
-        caseMeta.textContent = (c.severity ?? "") + " · " + (c.id ?? "").slice(0, 8) + "...";
-        const caseDesc = document.createElement("div");
-        caseDesc.style.cssText = "font-size:11px;color:#475569;line-height:1.4;";
-        caseDesc.textContent = (c.description ?? "").slice(0, 250);
-        caseBox.append(caseMeta, caseDesc);
-        body.appendChild(caseBox);
-      });
-
-      card.appendChild(body);
-    }
-    container.appendChild(card);
-  });
-  return container;
+  renderCards(search);
+  display(container);
 }
-
-renderCards()
-return {container,expandedId,renderCards};
 }});
 
 </script>
@@ -308,23 +315,31 @@ return {container,expandedId,renderCards};
 <nav>
 <div>Contents</div>
 <ol>
-<li class="observablehq-secondary-link"><a href="#theme-overview">Theme Overview</a></li>
+<li class="observablehq-secondary-link"><a href="#top-30-themes-by-volume">Top 30 Themes by Volume</a></li>
 <li class="observablehq-secondary-link"><a href="#theme-details">Theme Details</a></li>
 </ol>
 </nav>
 </aside>
 <main id="observablehq-main" class="observablehq">
-<div class="observablehq observablehq--block"><!--:329a2a0c:--></div>
+<div class="observablehq observablehq--block"><!--:00cfd57c:--></div>
 <h1 id="incident-themes" tabindex="-1"><a class="observablehq-header-anchor" href="#incident-themes">Incident Themes</a></h1>
-<p>AI-identified clusters of incidents with shared latent causes. Click any theme to expand.</p>
-<h2 id="theme-overview" tabindex="-1"><a class="observablehq-header-anchor" href="#theme-overview">Theme Overview</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:12b9d9fa:--></div>
+<p>AI-identified clusters of similar incidents. <strong><observablehq-loading></observablehq-loading><!--:e1c8f812:--> themes</strong> across <strong><observablehq-loading></observablehq-loading><!--:5ca80652:--> incidents</strong>.</p>
+<h2 id="top-30-themes-by-volume" tabindex="-1"><a class="observablehq-header-anchor" href="#top-30-themes-by-volume">Top 30 Themes by Volume</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:1dc56adf:--></div>
+<div style="font-size:11px;color:#94a3b8;margin-top:4px;">
+  Colour: <span style="color:#dc2626;">■</span> High severity &nbsp;
+  <span style="color:#d97706;">■</span> Medium &nbsp;
+  <span style="color:#1e40af;">■</span> Low &nbsp;·&nbsp;
+  Showing top 30 of <observablehq-loading></observablehq-loading><!--:e1c8f812-1:--> themes. Use search below to find any theme.
+</div>
+<hr>
 <h2 id="theme-details" tabindex="-1"><a class="observablehq-header-anchor" href="#theme-details">Theme Details</a></h2>
-<div class="observablehq observablehq--block"><!--:a1109973:--></div>
+<div class="observablehq observablehq--block"><!--:62c3e968:--></div>
+<div class="observablehq observablehq--block"><!--:d57e907d:--></div>
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./map"><span>Map</span></a><a rel="next" href="./trends"><span>Trends</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T07:51:30">May 15, 2026</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T09:29:42">May 15, 2026</a>.</div>
 </footer>
 </div>
 </body>
