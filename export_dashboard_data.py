@@ -192,18 +192,30 @@ def build_casualties_json(affected_csv_path: str) -> dict:
             if inj: by_injury[inj] += 1
             body = row.get("Parts_of_Body_Injured", "")
             if body: by_body_part[body] += 1
-            ppe_used_val = row.get("PPE_Used", "").lower()
-            if ppe_used_val in ("yes", "no"):
+            # PPE_Used contains descriptive text e.g. "life jacket", "hand and foot protection"
+            # or empty/PCF-restricted. Any non-empty, non-PCF value counts as PPE worn.
+            ppe_used_val = row.get("PPE_Used", "").strip().lower()
+            if ppe_used_val and "not available" not in ppe_used_val and "unknown" not in ppe_used_val:
                 ppe_denominator += 1
-                if ppe_used_val == "yes": ppe_used += 1
-            ppe_def_val = row.get("PPE_Deficient", "").lower()
-            if ppe_def_val in ("yes", "no"):
+                ppe_used += 1
+            elif ppe_used_val in ("none", "no ppe"):
+                ppe_denominator += 1
+
+            # PPE_Deficient: contains entries like "life jacket -> not used", "life jacket -> non-existent"
+            # Count as deficient if any "-> not used" or "-> non-existent" present
+            ppe_def_val = row.get("PPE_Deficient", "").strip().lower()
+            if ppe_def_val and "not available" not in ppe_def_val and "unknown" not in ppe_def_val:
                 ppe_deficient_denominator += 1
-                if ppe_def_val == "yes": ppe_deficient += 1
-            on_duty_val = row.get("On_Duty", "").lower()
-            if on_duty_val in ("yes", "no"):
+                if "not used" in ppe_def_val or "non-existent" in ppe_def_val or "deficient" in ppe_def_val:
+                    ppe_deficient += 1
+
+            # On_Duty: "yes - on duty prior to casualty", "no", "unknown", empty
+            on_duty_val = row.get("On_Duty", "").strip().lower()
+            if on_duty_val.startswith("yes"):
                 on_duty_denominator += 1
-                if on_duty_val == "yes": on_duty += 1
+                on_duty += 1
+            elif on_duty_val == "no":
+                on_duty_denominator += 1
 
     return {
         "total_affected": total,
@@ -250,10 +262,11 @@ def build_vessels_json(vessels_csv_path: str) -> dict:
             if flag: by_flag[flag] += 1
             by_gt[gt_band(row.get("GT_Gross_Tonnage", ""))] += 1
             is_comm = row.get("Is_Commercial_Vessel", "").lower()
-            if is_comm == "yes": commercial += 1
-            elif is_comm == "no": recreational += 1
+            if is_comm in ("yes", "true"): commercial += 1
+            elif is_comm in ("no", "false"): recreational += 1
             else: commercial_unknown += 1
-            if row.get("Loss_Of_Vessel_Damage", "").lower() in ("total loss", "constructive total loss"):
+            loss_val = row.get("Loss_Of_Vessel_Damage", "").lower()
+            if "loss of ship" in loss_val or "actual loss" in loss_val or "constructive loss" in loss_val:
                 vessel_loss += 1
 
     return {
