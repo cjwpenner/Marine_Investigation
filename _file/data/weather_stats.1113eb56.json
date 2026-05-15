@@ -1,0 +1,89 @@
+{
+  "by_natural_light": {
+    "Night": 7340,
+    "Daylight": 7,
+    "Twilight": 1,
+    "Unknown": 2
+  },
+  "by_wave_height_band": {
+    "0-0.5m": 1596,
+    "2.5-4m": 211,
+    "1.5-2.5m": 526,
+    "0.5-1.5m": 1852,
+    "4m+": 52
+  },
+  "by_wind_force_beaufort": {
+    "0": 5,
+    "1": 468,
+    "2": 1477,
+    "3": 1598,
+    "4": 1044,
+    "5": 510,
+    "6": 218,
+    "7": 58,
+    "8": 8
+  },
+  "by_sea_state_reported": {
+    "3 - Slight - (0.5 - 1.25 m)": 1122,
+    "2 - Smooth - (0.1 - 0.5 m)": 927,
+    "0 - Calm glassy - (0 m)": 419,
+    "4 - Moderate - (1.25 - 2.5 m)": 659,
+    "1 - Calm rippled - (0 - 0.1 m)": 771,
+    "Unknown": 3179,
+    "6 - Very rough - (4.0 - 6.0 m)": 50,
+    "5 - Rough - (2.5 - 4 m)": 202,
+    "7 - High - (6.0 - 9.0 m)": 14,
+    "8 - Very High - (9.0 - 14.0 m)": 5,
+    "Unknown SS": 2
+  },
+  "weather_factor_by_month": [
+    {
+      "month": 1,
+      "pct": 0.568
+    },
+    {
+      "month": 2,
+      "pct": 0.473
+    },
+    {
+      "month": 3,
+      "pct": 0.378
+    },
+    {
+      "month": 4,
+      "pct": 0.404
+    },
+    {
+      "month": 5,
+      "pct": 0.247
+    },
+    {
+      "month": 6,
+      "pct": 0.274
+    },
+    {
+      "month": 7,
+      "pct": 0.292
+    },
+    {
+      "month": 8,
+      "pct": 0.34
+    },
+    {
+      "month": 9,
+      "pct": 0.398
+    },
+    {
+      "month": 10,
+      "pct": 0.433
+    },
+    {
+      "month": 11,
+      "pct": 0.538
+    },
+    {
+      "month": 12,
+      "pct": 0.498
+    }
+  ]
+}
