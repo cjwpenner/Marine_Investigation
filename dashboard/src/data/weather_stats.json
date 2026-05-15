@@ -1,9 +1,10 @@
 {
   "by_natural_light": {
-    "Night": 7340,
-    "Daylight": 7,
-    "Twilight": 1,
-    "Unknown": 2
+    "Night": 1404,
+    "Daylight": 4122,
+    "Unknown": 1512,
+    "Twilight": 311,
+    "Unknown NL": 1
   },
   "by_wave_height_band": {
     "0-0.5m": 1596,
