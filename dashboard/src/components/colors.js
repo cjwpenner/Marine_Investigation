@@ -1,22 +1,30 @@
 // dashboard/src/components/colors.js
+// Validated palette (dataviz six-checks, light surface #f7f4ee).
 export const SEVERITY_COLORS = {
-  "Very Serious": "#dc2626",
-  "Serious": "#d97706",
-  "Less Serious": "#16a34a",
-  "Marine Incident": "#2563eb",
-  "Unknown": "#94a3b8",
+  "Very Serious": "#bb1e2d",
+  "Serious": "#b45309",
+  "Less Serious": "#3e6fb0",
+  "Marine Incident": "#64748b",
+  "Unknown": "#8d99a6",
 };
 
+export const SEVERITY_ORDER = ["Less Serious", "Serious", "Very Serious"];
+
 export function severityColor(severity) {
-  return SEVERITY_COLORS[severity] ?? "#94a3b8";
+  return SEVERITY_COLORS[severity] ?? "#8d99a6";
 }
 
-export const THEME_COLORS = [
-  "#1e40af","#2563eb","#3b82f6","#60a5fa",
-  "#93c5fd","#1d4ed8","#1e3a8a","#172554"
-];
+export const LIGHT_COLORS = {
+  "Daylight": "#3d7fc1",
+  "Twilight": "#c26100",
+  "Dawn": "#c26100",
+  "Night": "#4b56a8",
+};
 
-export function themeColor(themeId) {
-  if (themeId < 0) return "#94a3b8";
-  return THEME_COLORS[themeId % THEME_COLORS.length];
+export function lightColor(light) {
+  return LIGHT_COLORS[light] ?? "#8d99a6";
 }
+
+// single-hue navy for magnitude bars
+export const BAR_COLOR = "#3e6fb0";
+export const BAR_COLOR_DARK = "#1c3b63";

@@ -4,132 +4,129 @@ title: Marine Safety Observatory
 
 ```js
 import * as Plot from "npm:@observablehq/plot";
-const escapeHtml = str => str == null ? "" : String(str)
-  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-const incidents = await FileAttachment("data/incidents_map.json").json();
+import {SEVERITY_COLORS, SEVERITY_ORDER, LIGHT_COLORS, severityColor} from "./components/colors.js";
+
+const summary = await FileAttachment("data/summary.json").json();
 const themes = await FileAttachment("data/themes.json").json();
 const timeSeries = await FileAttachment("data/time_series.json").json();
 const weatherStats = await FileAttachment("data/weather_stats.json").json();
-
-const totalIncidents = incidents.length;
 const casualties = await FileAttachment("data/casualties.json").json();
+
+const totalIncidents = summary.total_incidents;
 const totalCasualties = Number(casualties.total_affected);
-const nightPct = Math.round(
-  incidents.filter(d => d.natural_light === "Night" || d.natural_light === "Twilight").length
-  / totalIncidents * 100
-);
-const weatherPct = Math.round(
-  incidents.filter(d => d.weather_was_factor).length / totalIncidents * 100
-);
+const nightPct = Math.round(summary.night_twilight_count / totalIncidents * 100);
+const weatherPct = Math.round(summary.weather_factor_count / totalIncidents * 100);
 const themeCount = themes.length;
+const sortedThemes = [...themes].sort((a, b) => b.incident_count - a.incident_count);
+
+const yearRange = summary.year_min ? `${summary.year_min}–${summary.year_max}` : "";
+
+function themeSeverity(t) {
+  const sb = t.severity_breakdown || {};
+  const total = Object.values(sb).reduce((a, b) => a + b, 0) || 1;
+  const score = ((sb["Very Serious"] || 0) + (sb["Serious"] || 0) * 0.5) / total;
+  return score > 0.2 ? {label: "High severity", color: SEVERITY_COLORS["Very Serious"]}
+       : score > 0.05 ? {label: "Med severity", color: SEVERITY_COLORS["Serious"]}
+       : {label: "Low severity", color: SEVERITY_COLORS["Less Serious"]};
+}
+
+// monthly stacked severity series, with real dates for a proper time axis
+const stackData = timeSeries.flatMap(d => {
+  const date = new Date(d.year_month + "-01T00:00:00Z");
+  return [
+    {date, count: d.less_serious, severity: "Less Serious"},
+    {date, count: d.serious, severity: "Serious"},
+    {date, count: d.very_serious, severity: "Very Serious"},
+  ];
+});
 ```
 
-<div style="background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 60%,#2563eb 100%);padding:32px 24px;margin:-1rem -1rem 2rem;color:#fff;">
-  <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.7;margin-bottom:8px;">UK Waters &amp; Beyond · 2010–2025 · MAIB Open Data</div>
-  <h1 style="font-size:2rem;font-weight:800;margin:0 0 8px;color:#fff;">Marine Incident Analysis</h1>
-  <p style="opacity:0.85;max-width:580px;margin:0 0 24px;line-height:1.6;">AI-assisted analysis of reported marine incidents. Explore where accidents happen, what causes them, and how weather, lighting and human factors contribute.</p>
-
-```js
-const labels = ["Incidents","Casualties","Night / Twilight","Weather Factor","Themes"];
-const values = [
-  totalIncidents.toLocaleString(),
-  totalCasualties.toLocaleString(),
-  nightPct + "%",
-  weatherPct + "%",
-  String(themeCount)
-];
-html`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:700px;">
-  ${labels.map((label, i) => html`<div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.15);">
-    <div style="font-size:1.6rem;font-weight:800;">${values[i]}</div>
-    <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.65;margin-top:2px;">${label}</div>
-  </div>`)}
-</div>`
-```
-
+<div class="mio-hero">
+  <p class="mio-hero-kicker">UK Waters &amp; Beyond · ${yearRange} · MAIB Open Data</p>
+  <h1>Marine Incident Analysis</h1>
+  <p>AI-assisted analysis of reported marine incidents. Explore where accidents happen, what causes them, and how weather, lighting and human factors contribute.</p>
+  <div class="mio-kpis">
+    <div class="mio-kpi"><div class="value">${totalIncidents.toLocaleString()}</div><div class="label">Incidents</div></div>
+    <div class="mio-kpi"><div class="value">${totalCasualties.toLocaleString()}</div><div class="label">Casualties</div></div>
+    <div class="mio-kpi"><div class="value">${nightPct}%</div><div class="label">Night / Twilight</div></div>
+    <div class="mio-kpi"><div class="value">${weatherPct}%</div><div class="label">Weather Factor</div></div>
+    <div class="mio-kpi"><div class="value">${themeCount}</div><div class="label">Themes</div></div>
+  </div>
 </div>
 
-<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:2rem;">
-
+<div class="mio-grid mio-grid-2-1">
 <div>
 
-<p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;margin:0 0 12px;">Top Incident Themes</p>
+<p class="mio-kicker">Top Incident Themes</p>
 
 ```js
-const icons = ["⚓","🚨","⚠️","🔧","🗺️","👥","🛟"];
-const colors = ["#1e40af","#2563eb","#3b82f6","#60a5fa","#93c5fd","#1d4ed8","#1e3a8a"];
-const sortedThemes = [...themes].sort((a,b) => b.incident_count - a.incident_count);
 html`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-  ${sortedThemes.slice(0,4).map((t, i) => html`<a href="./themes" style="text-decoration:none;">
-    <div class="theme-card" style="border-top-color:${colors[i % colors.length]};">
-      <div style="font-size:1.2rem;margin-bottom:4px;">${icons[i % icons.length]}</div>
-      <div style="font-weight:700;color:#1e293b;font-size:12px;margin-bottom:3px;line-height:1.3;">${escapeHtml(t.title)}</div>
-      <div style="font-size:11px;color:#64748b;">${escapeHtml(String(t.incident_count.toLocaleString()))} incidents</div>
-    </div>
-  </a>`)}
+  ${sortedThemes.slice(0, 4).map((t, i) => {
+    const sev = themeSeverity(t);
+    return html`<a href="./themes" style="text-decoration:none;">
+      <div class="mio-theme-card">
+        <div class="rank">${i + 1}</div>
+        <div>
+          <div class="title">${t.title}</div>
+          <div class="meta">${(t.incident_count ?? 0).toLocaleString()} incidents ·
+            <span class="mio-chip"><span class="dot" style="background:${sev.color}"></span>${sev.label}</span>
+          </div>
+        </div>
+      </div>
+    </a>`;
+  })}
 </div>`
 ```
 
-<div style="text-align:center;margin-top:12px;">
-  <a href="./themes" style="display:inline-block;background:#1e40af;color:#fff;padding:8px 20px;border-radius:6px;text-decoration:none;font-weight:600;font-size:12px;">View all ${themeCount} themes →</a>
+<div style="text-align:center;margin-top:14px;">
+  <a href="./themes" class="mio-btn">View all ${themeCount} themes →</a>
 </div>
 
 </div>
-
 <div>
 
-<p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;margin:0 0 12px;">Lighting at Time of Incident</p>
+<p class="mio-kicker">Lighting at Time of Incident</p>
 
 ```js
-const LIGHT_COLORS = {
-  "Daylight": "#60a5fa",
-  "Twilight": "#d97706",
-  "Night": "#1e293b",
-  "Dawn": "#f59e0b",
-};
-const lightData = Object.entries(weatherStats.by_natural_light)
-  .map(([k,v]) => ({light: k, count: v}))
-  .filter(d => d.light !== "Unknown" && d.light !== "Unknown NL" && d.count > 0)
-  .sort((a,b) => b.count - a.count);
-
-const totalLight = lightData.reduce((s,d) => s + d.count, 0);
-
-// Donut-style breakdown as a horizontal stacked bar with labels
 {
+  const lightData = Object.entries(weatherStats.by_natural_light)
+    .map(([k, v]) => ({light: k, count: v}))
+    .filter(d => d.light !== "Unknown" && d.light !== "Unknown NL" && d.count > 0)
+    .sort((a, b) => b.count - a.count);
+  const totalLight = lightData.reduce((s, d) => s + d.count, 0);
+
   const container = document.createElement("div");
 
-  // Stacked bar
   const bar = document.createElement("div");
-  bar.style.cssText = "display:flex;height:28px;border-radius:6px;overflow:hidden;margin-bottom:14px;";
+  bar.className = "mio-distbar";
   lightData.forEach(d => {
     const seg = document.createElement("div");
     const pct = d.count / totalLight * 100;
-    seg.style.cssText = `width:${pct}%;background:${LIGHT_COLORS[d.light] ?? "#94a3b8"};`;
+    seg.style.cssText = `width:${pct}%;background:${LIGHT_COLORS[d.light] ?? "#8d99a6"};`;
     seg.title = `${d.light}: ${d.count.toLocaleString()} (${Math.round(pct)}%)`;
     bar.appendChild(seg);
   });
   container.appendChild(bar);
 
-  // Legend rows
   lightData.forEach(d => {
     const pct = Math.round(d.count / totalLight * 100);
     const row = document.createElement("div");
-    row.style.cssText = "display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:13px;";
+    row.className = "mio-legend-row";
     const left = document.createElement("div");
     left.style.cssText = "display:flex;align-items:center;gap:8px;";
     const dot = document.createElement("div");
-    dot.style.cssText = `width:11px;height:11px;border-radius:50%;background:${LIGHT_COLORS[d.light] ?? "#94a3b8"};flex-shrink:0;`;
+    dot.className = "swatch";
+    dot.style.background = LIGHT_COLORS[d.light] ?? "#8d99a6";
     const lbl = document.createElement("span");
-    lbl.style.cssText = "color:#475569;";
+    lbl.className = "name";
     lbl.textContent = d.light;
     left.append(dot, lbl);
     const right = document.createElement("div");
-    right.style.cssText = "text-align:right;";
-    const cnt = document.createElement("div");
-    cnt.style.cssText = "font-weight:700;color:#1e293b;font-size:13px;";
+    const cnt = document.createElement("span");
+    cnt.className = "count";
     cnt.textContent = d.count.toLocaleString();
-    const pctEl = document.createElement("div");
-    pctEl.style.cssText = "font-size:10px;color:#94a3b8;";
+    const pctEl = document.createElement("span");
+    pctEl.className = "pct";
     pctEl.textContent = pct + "%";
     right.append(cnt, pctEl);
     row.append(left, right);
@@ -140,35 +137,34 @@ const totalLight = lightData.reduce((s,d) => s + d.count, 0);
 }
 ```
 
-</div></div>
+</div>
+</div>
 
-<p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;margin:0 0 12px;">Monthly Incidents by Severity</p>
+<p class="mio-kicker">Monthly Incidents by Severity</p>
 
 ```js
-const stackData = timeSeries.flatMap(d => [
-  {year_month: d.year_month, count: d.less_serious,  severity: "Less Serious"},
-  {year_month: d.year_month, count: d.serious,        severity: "Serious"},
-  {year_month: d.year_month, count: d.very_serious,   severity: "Very Serious"},
-]);
-Plot.plot({
-  height: 220,
+resize((width) => Plot.plot({
+  width,
+  height: 240,
   marginLeft: 40,
   x: {label: null},
   y: {label: "Incidents"},
   color: {
-    domain: ["Less Serious","Serious","Very Serious"],
-    range: ["#bfdbfe","#d97706","#dc2626"],
+    domain: SEVERITY_ORDER,
+    range: SEVERITY_ORDER.map(s => SEVERITY_COLORS[s]),
     legend: true
   },
   marks: [
-    Plot.barY(stackData, Plot.stackY({x: "year_month", y: "count", fill: "severity", tip: true,
-      order: ["Less Serious","Serious","Very Serious"]})),
+    Plot.rectY(stackData, {
+      x: "date", y: "count", fill: "severity", interval: "month", tip: true,
+      order: SEVERITY_ORDER
+    }),
     Plot.ruleY([0])
   ]
-})
+}))
 ```
 
-<div style="text-align:center;margin-top:1.5rem;">
-  <a href="./map" style="display:inline-block;background:#1e40af;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:600;font-size:13px;margin-right:10px;">🗺️ Explore the Incident Map</a>
-  <a href="./trends" style="display:inline-block;background:#fff;color:#1e40af;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid #1e40af;">📈 View Trends</a>
+<div style="text-align:center;margin-top:1.6rem;">
+  <a href="./map" class="mio-btn">Explore the Incident Map</a>
+  <a href="./trends" class="mio-btn secondary" style="margin-left:10px;">View Trends</a>
 </div>

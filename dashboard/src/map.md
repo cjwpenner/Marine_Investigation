@@ -11,8 +11,8 @@ const incidents = await FileAttachment("data/incidents_map.json").json();
 #map-host {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px);
-  margin: -1rem -1rem 0;
+  height: calc(100vh - 52px);
+  margin: -1.4rem -1rem 0;
 }
 </style>
 

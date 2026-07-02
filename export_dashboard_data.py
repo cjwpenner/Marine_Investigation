@@ -159,6 +159,32 @@ def build_themes_json(themes: list) -> list:
     return themes
 
 
+def build_summary(incidents_map: list) -> dict:
+    """Small pre-aggregated summary so light pages don't fetch the 9 MB map file."""
+    total = len(incidents_map)
+    night = sum(1 for d in incidents_map if d.get("natural_light") in ("Night", "Twilight"))
+    weather = sum(1 for d in incidents_map if d.get("weather_was_factor"))
+    years = sorted({(d.get("date") or "")[:4] for d in incidents_map if d.get("date")})
+    cat_total, cat_night = defaultdict(int), defaultdict(int)
+    for d in incidents_map:
+        c = d.get("incident_category") or "other"
+        cat_total[c] += 1
+        if d.get("natural_light") in ("Night", "Twilight"):
+            cat_night[c] += 1
+    return {
+        "total_incidents": total,
+        "night_twilight_count": night,
+        "weather_factor_count": weather,
+        "year_min": years[0] if years else None,
+        "year_max": years[-1] if years else None,
+        "overall_night_pct": round(night / max(total, 1), 4),
+        "night_by_category": [
+            {"cat": c, "total": cat_total[c], "night_pct": round(cat_night[c] / cat_total[c], 4)}
+            for c in sorted(cat_total, key=lambda k: -cat_total[k])
+        ],
+    }
+
+
 def build_casualties_json(affected_csv_path: str) -> dict:
     """Aggregate affected persons data from CSV."""
     by_type = defaultdict(int)
@@ -166,8 +192,8 @@ def build_casualties_json(affected_csv_path: str) -> dict:
     by_age_band = defaultdict(int)
     by_injury = defaultdict(int)
     by_body_part = defaultdict(int)
-    ppe_used = ppe_deficient = on_duty = total = 0
-    ppe_denominator = ppe_deficient_denominator = on_duty_denominator = 0
+    ppe_worn = ppe_deficient = on_duty = total = 0
+    on_duty_denominator = 0
 
     def age_band(age_str):
         try:
@@ -192,22 +218,19 @@ def build_casualties_json(affected_csv_path: str) -> dict:
             if inj: by_injury[inj] += 1
             body = row.get("Parts_of_Body_Injured", "")
             if body: by_body_part[body] += 1
-            # PPE_Used contains descriptive text e.g. "life jacket", "hand and foot protection"
-            # or empty/PCF-restricted. Any non-empty, non-PCF value counts as PPE worn.
+            # PPE fields are sparsely recorded (most rows are blank), so percentages
+            # of "records that mention PPE" are misleading. Export plain counts and
+            # let the dashboard present them with the coverage caveat.
             ppe_used_val = row.get("PPE_Used", "").strip().lower()
-            if ppe_used_val and "not available" not in ppe_used_val and "unknown" not in ppe_used_val:
-                ppe_denominator += 1
-                ppe_used += 1
-            elif ppe_used_val in ("none", "no ppe"):
-                ppe_denominator += 1
+            if ppe_used_val and "not available" not in ppe_used_val and "unknown" not in ppe_used_val \
+                    and ppe_used_val not in ("none", "no ppe"):
+                ppe_worn += 1
 
-            # PPE_Deficient: contains entries like "life jacket -> not used", "life jacket -> non-existent"
-            # Count as deficient if any "-> not used" or "-> non-existent" present
+            # PPE_Deficient entries look like "life jacket -> not used" / "-> non-existent"
+            # / "-> inadequate"; "-> unknown" rows are not evidence of a deficiency.
             ppe_def_val = row.get("PPE_Deficient", "").strip().lower()
-            if ppe_def_val and "not available" not in ppe_def_val and "unknown" not in ppe_def_val:
-                ppe_deficient_denominator += 1
-                if "not used" in ppe_def_val or "non-existent" in ppe_def_val or "deficient" in ppe_def_val:
-                    ppe_deficient += 1
+            if any(k in ppe_def_val for k in ("not used", "non-existent", "inadequate", "deficient")):
+                ppe_deficient += 1
 
             # On_Duty: "yes - on duty prior to casualty", "no", "unknown", empty
             on_duty_val = row.get("On_Duty", "").strip().lower()
@@ -224,8 +247,8 @@ def build_casualties_json(affected_csv_path: str) -> dict:
         "by_age_band": dict(by_age_band),
         "by_injury_type": dict(sorted(by_injury.items(), key=lambda x: -x[1])[:20]),
         "by_body_part": dict(sorted(by_body_part.items(), key=lambda x: -x[1])[:20]),
-        "ppe_used_pct": round(ppe_used / max(ppe_denominator, 1), 3),
-        "ppe_deficient_pct": round(ppe_deficient / max(ppe_deficient_denominator, 1), 3),
+        "ppe_recorded_worn": ppe_worn,
+        "ppe_deficiency_noted": ppe_deficient,
         "on_duty_pct": round(on_duty / max(on_duty_denominator, 1), 3),
     }
 
@@ -315,8 +338,10 @@ def main():
     print("Assigning theme IDs to incidents without them...")
     incidents = assign_theme_ids(incidents, themes)
 
+    incidents_map = build_incidents_map(incidents)
     outputs = {
-        "incidents_map.json": build_incidents_map(incidents),
+        "incidents_map.json": incidents_map,
+        "summary.json": build_summary(incidents_map),
         "themes.json": build_themes_json(themes),
         "time_series.json": build_time_series(incidents),
         "weather_stats.json": build_weather_stats(incidents),

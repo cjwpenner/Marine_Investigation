@@ -4,155 +4,183 @@ title: Vessels & People
 
 ```js
 import * as Plot from "npm:@observablehq/plot";
+import {BAR_COLOR, BAR_COLOR_DARK} from "./components/colors.js";
+
 const vessels = await FileAttachment("data/vessels.json").json();
 const casualties = await FileAttachment("data/casualties.json").json();
 
-const truncate = (s, n=38) => s.length > n ? s.slice(0, n) + "…" : s;
+const truncate = (s, n = 38) => s.length > n ? s.slice(0, n) + "…" : s;
 
 const vesselCatData = Object.entries(vessels.by_category)
-  .map(([k,v]) => ({category: truncate(k, 35), count:v}))
-  .sort((a,b) => b.count - a.count);
+  .map(([k, v]) => ({category: truncate(k, 35), count: v}))
+  .sort((a, b) => b.count - a.count);
 
 const injuryData = Object.entries(casualties.by_injury_type)
-  .map(([k,v]) => ({type: truncate(k), count:v}))
-  .sort((a,b) => b.count - a.count).slice(0,12);
+  .map(([k, v]) => ({type: truncate(k), count: v}))
+  .sort((a, b) => b.count - a.count).slice(0, 12);
 
 const bodyPartData = Object.entries(casualties.by_body_part)
-  .map(([k,v]) => ({part: truncate(k), count:v}))
-  .sort((a,b) => b.count - a.count).slice(0,12);
+  .map(([k, v]) => ({part: truncate(k.replace(/^.*-> /, ""), 34), count: v}))
+  .sort((a, b) => b.count - a.count).slice(0, 12);
 
-const AGE_ORDER = ["<25","25-34","35-44","45-54","55-64","65+"];
+const AGE_ORDER = ["<25", "25-34", "35-44", "45-54", "55-64", "65+"];
 const ageData = Object.entries(casualties.by_age_band)
-  .map(([k,v]) => ({age:k, count:v}))
-  .filter(d => d.age !== "Unknown")
-  .sort((a,b) => AGE_ORDER.indexOf(a.age) - AGE_ORDER.indexOf(b.age));
+  .map(([k, v]) => ({age: k, count: v}))
+  .filter(d => d.age !== "Unknown");
 
 const typeData = Object.entries(casualties.by_type)
-  .map(([k,v]) => ({type:k, count:v}));
+  .map(([k, v]) => ({type: k, count: v}));
+
+// PPE fields are sparsely recorded in the source data — present counts, not
+// percentages of the whole population, to stay honest about coverage.
+const ppeWorn = casualties.ppe_recorded_worn ?? null;
+const ppeDeficient = casualties.ppe_deficiency_noted ?? null;
+const onDutyPct = Math.round((casualties.on_duty_pct ?? 0) * 100);
 ```
 
-# Vessels & People
+# Vessels &amp; People
 
-```js
-{
-  const wrapper = document.createElement("div");
-  wrapper.style.cssText = "display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:2rem;";
+Who was involved: the vessels that had incidents, and the people injured aboard them.
 
-  const cards = [
-    {value: (casualties.total_affected ?? 0).toLocaleString(), label: "Total Affected", borderColor: "#1e40af"},
-    {value: Math.round((casualties.ppe_deficient_pct ?? 0)*100) + "%", label: "PPE Deficient", borderColor: "#dc2626"},
-    {value: Math.round((casualties.ppe_used_pct ?? 0)*100) + "%", label: "PPE Used", borderColor: "#16a34a"},
-    {value: Math.round((casualties.on_duty_pct ?? 0)*100) + "%", label: "On Duty", borderColor: "#1e40af"},
-    {value: (vessels.incidents_with_vessel_loss ?? 0).toLocaleString(), label: "Vessel Losses", borderColor: "#1e40af"},
-  ];
+<div class="mio-stats">
+  <div class="stat-card">
+    <div class="value">${(casualties.total_affected ?? 0).toLocaleString()}</div>
+    <div class="label">People Affected</div>
+  </div>
+  <div class="stat-card" style="border-top-color:var(--sev-very);">
+    <div class="value">${ppeDeficient == null ? "—" : ppeDeficient.toLocaleString()}</div>
+    <div class="label">PPE Deficiency Noted</div>
+    <div class="caveat">where investigators recorded PPE detail</div>
+  </div>
+  <div class="stat-card" style="border-top-color:#3a6c4a;">
+    <div class="value">${ppeWorn == null ? "—" : ppeWorn.toLocaleString()}</div>
+    <div class="label">PPE Recorded Worn</div>
+    <div class="caveat">where investigators recorded PPE detail</div>
+  </div>
+  <div class="stat-card">
+    <div class="value">${onDutyPct}%</div>
+    <div class="label">On Duty</div>
+    <div class="caveat">of records where duty status is known</div>
+  </div>
+  <div class="stat-card" style="border-top-color:var(--sev-serious);">
+    <div class="value">${(vessels.incidents_with_vessel_loss ?? 0).toLocaleString()}</div>
+    <div class="label">Vessel Losses</div>
+  </div>
+</div>
 
-  cards.forEach(c => {
-    const card = document.createElement("div");
-    card.className = "stat-card";
-    card.style.borderLeftColor = c.borderColor;
-    const valEl = document.createElement("div");
-    valEl.className = "value";
-    valEl.textContent = c.value;
-    const lblEl = document.createElement("div");
-    lblEl.className = "label";
-    lblEl.textContent = c.label;
-    card.append(valEl, lblEl);
-    wrapper.appendChild(card);
-  });
-
-  display(wrapper);
-}
-```
-
-<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
-
-<div>
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 
 ## By Vessel Type
 
 ```js
-Plot.plot({
-  height: 220, marginLeft: 220,
+resize((width) => Plot.plot({
+  width,
+  height: 220,
+  marginLeft: 190,
   x: {label: "Incidents"},
-  marks: [Plot.barX(vesselCatData, {x:"count", y:"category", fill:"#1e40af", tip:true, sort:{y:"-x"}})]
-})
+  y: {label: null},
+  marks: [Plot.barX(vesselCatData, {x: "count", y: "category", fill: BAR_COLOR, tip: true, sort: {y: "-x"}})]
+}))
 ```
 
-</div><div>
+</div>
+<div class="mio-panel">
 
 ## Casualties by Type
 
 ```js
-Plot.plot({
+resize((width) => Plot.plot({
+  width,
   height: 220,
-  marks: [Plot.barY(typeData, {x:"type", y:"count", fill:"#3b82f6", tip:true, sort:{x:"-y"}})]
-})
+  x: {label: null},
+  y: {label: "Persons"},
+  marks: [Plot.barY(typeData, {x: "type", y: "count", fill: BAR_COLOR, tip: true, sort: {x: "-y"}})]
+}))
 ```
 
-</div></div>
+</div>
+</div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
-
-<div>
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 
 ## Age Distribution
 
 ```js
-Plot.plot({
-  height: 180, marginLeft: 50,
-  x: {label: "Age band"},
+resize((width) => Plot.plot({
+  width,
+  height: 200,
+  marginLeft: 45,
+  x: {label: "Age band", domain: AGE_ORDER},
   y: {label: "Persons"},
-  marks: [Plot.barY(ageData, {x:"age", y:"count", fill:"#1e40af", tip:true})]
-})
+  marks: [Plot.barY(ageData, {x: "age", y: "count", fill: BAR_COLOR, tip: true})]
+}))
 ```
 
-</div><div>
+</div>
+<div class="mio-panel">
 
 ## Injury Types
 
 ```js
-Plot.plot({
-  height: 220, marginLeft: 260,
-  x: {label: "Count"},
-  marks: [Plot.barX(injuryData, {x:"count", y:"type", fill:"#3b82f6", tip:true, sort:{y:"-x"}})]
-})
+resize((width) => Plot.plot({
+  width,
+  height: 240,
+  marginLeft: 210,
+  x: {label: "Persons"},
+  y: {label: null},
+  marks: [Plot.barX(injuryData, {x: "count", y: "type", fill: BAR_COLOR, tip: true, sort: {y: "-x"}})]
+}))
 ```
 
-</div></div>
+</div>
+</div>
+
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 
 ## Body Parts Injured
 
 ```js
-Plot.plot({
-  height: 200, marginLeft: 260,
-  x: {label: "Count"},
-  marks: [Plot.barX(bodyPartData, {x:"count", y:"part", fill:"#60a5fa", tip:true, sort:{y:"-x"}})]
-})
+resize((width) => Plot.plot({
+  width,
+  height: 240,
+  marginLeft: 190,
+  x: {label: "Persons"},
+  y: {label: null},
+  marks: [Plot.barX(bodyPartData, {x: "count", y: "part", fill: BAR_COLOR, tip: true, sort: {y: "-x"}})]
+}))
 ```
+
+</div>
+<div class="mio-panel">
 
 ## Top Flag States
 
 ```js
 {
   const list = document.createElement("div");
-  list.style.cssText = "font-size:12px;";
+  list.className = "mio-flagtable";
   const header = document.createElement("div");
-  header.style.cssText = "display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid #e2e8f0;margin-bottom:4px;";
-  const hFlag = document.createElement("span"); hFlag.textContent = "Flag State";
-  const hCount = document.createElement("span"); hCount.textContent = "Incidents";
-  header.append(hFlag, hCount);
+  header.className = "hdr";
+  ["#", "Flag State", "Incidents"].forEach(t => {
+    const c = document.createElement("span");
+    c.textContent = t;
+    header.appendChild(c);
+  });
   list.appendChild(header);
-  vessels.by_flag_state.slice(0, 15).forEach((item, i) => {
+  vessels.by_flag_state.slice(0, 12).forEach((item, i) => {
     const row = document.createElement("div");
-    row.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f8fafc;";
+    row.className = "row";
     const rank = document.createElement("span");
-    rank.style.cssText = "color:#94a3b8;font-size:10px;min-width:18px;";
+    rank.className = "rank";
     rank.textContent = (i + 1) + ".";
     const flag = document.createElement("span");
-    flag.style.cssText = "flex:1;padding-left:4px;color:#1e293b;";
+    flag.className = "name";
     flag.textContent = item.flag;
     const count = document.createElement("span");
-    count.style.cssText = "font-weight:600;color:#1e40af;min-width:40px;text-align:right;";
+    count.className = "count";
     count.textContent = (item.count ?? 0).toLocaleString();
     row.append(rank, flag, count);
     list.appendChild(row);
@@ -160,3 +188,6 @@ Plot.plot({
   display(list);
 }
 ```
+
+</div>
+</div>

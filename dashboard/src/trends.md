@@ -4,17 +4,21 @@ title: Trends
 
 ```js
 import * as Plot from "npm:@observablehq/plot";
+import {SEVERITY_COLORS, SEVERITY_ORDER, LIGHT_COLORS, BAR_COLOR, BAR_COLOR_DARK} from "./components/colors.js";
+
 const timeSeries = await FileAttachment("data/time_series.json").json();
 const weatherStats = await FileAttachment("data/weather_stats.json").json();
-const incidentsMap = await FileAttachment("data/incidents_map.json").json();
+const summary = await FileAttachment("data/summary.json").json();
+
+const isUnknown = s => /^unknown/i.test(s ?? "");
 
 // Lighting conditions (exclude Unknown)
 const lightData = Object.entries(weatherStats.by_natural_light)
-  .map(([k,v]) => ({light: k, count: v}))
-  .filter(d => d.light !== "Unknown" && d.light !== "Unknown NL")
-  .sort((a,b) => b.count - a.count);
+  .map(([k, v]) => ({light: k, count: v}))
+  .filter(d => !isUnknown(d.light) && d.light !== "Unknown NL")
+  .sort((a, b) => b.count - a.count);
 
-// Sea state — sort by Douglas scale order
+// Sea state — Douglas scale order, short labels, Unknown excluded
 const SEA_STATE_ORDER = [
   "0 - Calm glassy - (0 m)",
   "1 - Calm rippled - (0 - 0.1 m)",
@@ -27,59 +31,54 @@ const SEA_STATE_ORDER = [
   "8 - Very high - (9.0 - 14.0 m)",
   "9 - Phenomenal - (> 14.0 m)"
 ];
-const seaStateData = Object.entries(weatherStats.by_sea_state ?? {})
-  .map(([k,v]) => ({state: k, count: v}))
-  .sort((a,b) => SEA_STATE_ORDER.indexOf(a.state) - SEA_STATE_ORDER.indexOf(b.state));
+const shortSeaState = s => {
+  const m = s.match(/^(\d+) - ([^-]+?) - \((.+)\)$/);
+  return m ? `${m[1]} ${m[2].trim()} (${m[3].trim()})` : s;
+};
+const seaStateData = SEA_STATE_ORDER
+  .filter(k => (weatherStats.by_sea_state ?? {})[k] > 0)
+  .map(k => ({state: shortSeaState(k), count: weatherStats.by_sea_state[k]}));
 
-// Wind force — strip long label to just "F0"–"F12"
+// Wind force — "F0"–"F12", numeric order
 const windForceData = Object.entries(weatherStats.by_wind_force ?? {})
-  .filter(([k]) => k !== "Beaufort scale: Unknown")
-  .map(([k,v]) => {
+  .filter(([k]) => !/unknown/i.test(k))
+  .map(([k, v]) => {
     const match = k.match(/^(\d+)/);
     return {label: match ? "F" + match[1] : k, force: match ? +match[1] : 99, count: v};
   })
-  .sort((a,b) => a.force - b.force);
+  .sort((a, b) => a.force - b.force);
+const windDomain = windForceData.map(d => d.label);
 
 // Weather type (exclude Unknown variants)
 const weatherTypeData = Object.entries(weatherStats.by_weather_type ?? {})
-  .map(([k,v]) => ({type: k, count: v}))
-  .filter(d => !d.type.startsWith("Unknown"))
-  .sort((a,b) => b.count - a.count);
+  .map(([k, v]) => ({type: k, count: v}))
+  .filter(d => !isUnknown(d.type))
+  .sort((a, b) => b.count - a.count);
 
-// Visibility
+// Visibility — short labels, best → worst
 const VIS_ORDER = [
-  "Calm glassy - (0 m)",
   "Very good - Vis >= 25.0 nm",
   "Good - 5.0 <= Vis < 25.0 nm",
   "Moderate - 2.0 <=Vis < 5.0 nm",
   "Poor - 0.5 <=Vis < 2.0 nm",
   "Very poor - Vis < 0.5 nm"
 ];
-const visibilityData = Object.entries(weatherStats.by_visibility ?? {})
-  .map(([k,v]) => ({vis: k, count: v}))
-  .filter(d => !d.vis.startsWith("Unknown"))
-  .sort((a,b) => VIS_ORDER.indexOf(a.vis) - VIS_ORDER.indexOf(b.vis));
+const shortVis = s => s.split(" - ")[0];
+const visibilityData = VIS_ORDER
+  .filter(k => (weatherStats.by_visibility ?? {})[k] > 0)
+  .map(k => ({vis: shortVis(k), count: weatherStats.by_visibility[k]}));
+const visDomain = visibilityData.map(d => d.vis);
 
-// Night incidents by category (Night + Twilight)
-const catNight = {};
-const catTotal = {};
-for (const inc of incidentsMap) {
-  const cat = inc.incident_category ?? "other";
-  catTotal[cat] = (catTotal[cat] ?? 0) + 1;
-  if (inc.natural_light === "Night" || inc.natural_light === "Twilight") {
-    catNight[cat] = (catNight[cat] ?? 0) + 1;
-  }
-}
-const overallNightPct = incidentsMap.filter(d => d.natural_light === "Night" || d.natural_light === "Twilight").length / Math.max(incidentsMap.length, 1);
-const nightByCat = Object.entries(catTotal)
-  .map(([cat, total]) => ({
-    cat,
-    total,
-    night_pct: (catNight[cat] ?? 0) / total
-  }))
+// Night incidents by category (Night + Twilight), pre-aggregated at export time
+const overallNightPct = summary.overall_night_pct;
+const prettyCat = c => (c[0].toUpperCase() + c.slice(1)).replace(/_/g, " ");
+const nightByCat = summary.night_by_category
   .filter(d => d.total >= 20)
+  .map(d => ({...d, cat: prettyCat(d.cat)}))
   .sort((a, b) => b.night_pct - a.night_pct);
 
+// time series with real dates
+const monthly = timeSeries.map(d => ({...d, date: new Date(d.year_month + "-01T00:00:00Z")}));
 const years = [...new Set(timeSeries.map(d => d.year_month.slice(0, 4)))].sort();
 const minYear = years[0] ?? "2010";
 const maxYear = years[years.length - 1] ?? "2024";
@@ -87,160 +86,206 @@ const maxYear = years[years.length - 1] ?? "2024";
 
 # Trends
 
+How incident volume, severity, lighting and weather conditions have shifted across fifteen years of MAIB reports.
+
+<div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;margin:1rem 0 0.4rem;">
+
 ```js
 const fromYear = view(Inputs.select(years, {label: "From year", value: minYear}));
+```
+
+```js
 const toYear = view(Inputs.select(years, {label: "To year", value: maxYear}));
 ```
+
+</div>
 
 ## Incidents per Month
 
 ```js
-const filtered = timeSeries.filter(d => d.year_month >= fromYear && d.year_month <= toYear + "-99");
-const stackData = filtered.flatMap(d => [
-  {year_month: d.year_month, count: d.less_serious,  severity: "Less Serious"},
-  {year_month: d.year_month, count: d.serious,        severity: "Serious"},
-  {year_month: d.year_month, count: d.very_serious,   severity: "Very Serious"},
-]);
-Plot.plot({
-  height: 240, marginLeft: 40,
-  x: {label: null},
-  y: {label: "Incidents"},
-  color: {domain: ["Less Serious","Serious","Very Serious"], range: ["#bfdbfe","#d97706","#dc2626"]},
-  marks: [
-    Plot.barY(stackData, Plot.stackY({x: "year_month", y: "count", fill: "severity", tip: true})),
-    Plot.ruleY([0])
-  ]
-})
+const stackData = monthly
+  .filter(d => d.year_month >= fromYear && d.year_month <= toYear + "-99")
+  .flatMap(d => [
+    {date: d.date, count: d.less_serious, severity: "Less Serious"},
+    {date: d.date, count: d.serious, severity: "Serious"},
+    {date: d.date, count: d.very_serious, severity: "Very Serious"},
+  ]);
 ```
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
+```js
+resize((width) => Plot.plot({
+  width,
+  height: 260,
+  marginLeft: 40,
+  x: {label: null},
+  y: {label: "Incidents"},
+  color: {domain: SEVERITY_ORDER, range: SEVERITY_ORDER.map(s => SEVERITY_COLORS[s]), legend: true},
+  marks: [
+    Plot.rectY(stackData, {x: "date", y: "count", fill: "severity", interval: "month", tip: true, order: SEVERITY_ORDER}),
+    Plot.ruleY([0])
+  ]
+}))
+```
 
-<div>
+<div class="mio-grid mio-grid-2" style="margin-top:2rem;">
+<div class="mio-panel">
 
 ## Lighting Conditions
 
 ```js
-Plot.plot({
-  height: 80, marginLeft: 10,
+resize((width) => Plot.plot({
+  width,
+  height: 96,
+  marginLeft: 10,
   x: {label: "Incidents"},
-  color: {domain: ["Daylight","Night","Twilight"], range: ["#60a5fa","#1e293b","#d97706"], legend: true},
+  color: {
+    domain: ["Daylight", "Twilight", "Night"],
+    range: [LIGHT_COLORS.Daylight, LIGHT_COLORS.Twilight, LIGHT_COLORS.Night],
+    legend: true
+  },
   marks: [
     Plot.barX(lightData, Plot.stackX({x: "count", fill: "light", tip: true,
-      order: ["Daylight","Twilight","Night"]}))
+      order: ["Daylight", "Twilight", "Night"], insetRight: 2}))
   ]
-})
+}))
 ```
 
 </div>
-
-<div>
+<div class="mio-panel">
 
 ## Sea State at Incident
 
 ```js
-Plot.plot({
-  height: 220, marginLeft: 200,
+resize((width) => Plot.plot({
+  width,
+  height: 230,
+  marginLeft: 150,
   x: {label: "Incidents"},
+  y: {label: null},
   marks: [
-    Plot.barX(seaStateData, {x: "count", y: "state", fill: "#1e40af", tip: true,
-      sort: {y: null}})
+    Plot.barX(seaStateData, {x: "count", y: "state", fill: BAR_COLOR, tip: true, sort: {y: null}})
   ]
-})
+}))
 ```
 
-</div></div>
+</div>
+</div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
-
-<div>
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 
 ## Wind Force (Beaufort)
 
 ```js
-Plot.plot({
-  height: 200, marginLeft: 40,
-  x: {label: "Beaufort force"},
+resize((width) => Plot.plot({
+  width,
+  height: 210,
+  marginLeft: 40,
+  x: {label: "Beaufort force", domain: windDomain},
   y: {label: "Incidents"},
   marks: [
-    Plot.barY(windForceData, {x: "label", y: "count", fill: "#1e40af", tip: true})
+    Plot.barY(windForceData, {x: "label", y: "count", fill: BAR_COLOR, tip: true})
   ]
-})
+}))
 ```
 
 </div>
-
-<div>
+<div class="mio-panel">
 
 ## Weather Conditions
 
 ```js
-Plot.plot({
-  height: 200, marginLeft: 80,
+resize((width) => Plot.plot({
+  width,
+  height: 210,
+  marginLeft: 70,
   x: {label: "Incidents"},
+  y: {label: null},
   marks: [
-    Plot.barX(weatherTypeData, {x: "count", y: "type", fill: "#1e40af", tip: true,
-      sort: {y: "-x"}})
+    Plot.barX(weatherTypeData, {x: "count", y: "type", fill: BAR_COLOR, tip: true, sort: {y: "-x"}})
   ]
-})
+}))
 ```
 
-</div></div>
+</div>
+</div>
+
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 
 ## Visibility at Incident
 
 ```js
-Plot.plot({
-  height: 180, marginLeft: 220,
+resize((width) => Plot.plot({
+  width,
+  height: 190,
+  marginLeft: 74,
   x: {label: "Incidents"},
+  y: {label: null, domain: visDomain},
   marks: [
-    Plot.barX(visibilityData, {x: "count", y: "vis", fill: "#1e40af", tip: true,
-      sort: {y: null}})
+    Plot.barX(visibilityData, {x: "count", y: "vis", fill: BAR_COLOR, tip: true})
   ]
-})
+}))
 ```
+
+</div>
+<div class="mio-panel">
 
 ## Weather Factor by Month
 
 ```js
-Plot.plot({
-  height: 180, marginLeft: 40,
-  x: {label: "Month", tickFormat: d => ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d]},
-  y: {label: "% incidents with weather factor", percent: true},
+resize((width) => Plot.plot({
+  width,
+  height: 190,
+  marginLeft: 40,
+  x: {label: null, tickFormat: d => ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][d], ticks: 12},
+  y: {label: "% with weather factor", percent: true},
   marks: [
-    Plot.areaY(weatherStats.weather_factor_by_month, {x: "month", y: "pct", fill: "#bfdbfe", fillOpacity: 0.5}),
-    Plot.lineY(weatherStats.weather_factor_by_month, {x: "month", y: "pct", stroke: "#1e40af", strokeWidth: 2}),
-    Plot.dot(weatherStats.weather_factor_by_month, {x: "month", y: "pct", fill: "#1e40af", tip: true})
+    Plot.areaY(weatherStats.weather_factor_by_month, {x: "month", y: "pct", fill: BAR_COLOR, fillOpacity: 0.14}),
+    Plot.lineY(weatherStats.weather_factor_by_month, {x: "month", y: "pct", stroke: BAR_COLOR_DARK, strokeWidth: 2}),
+    Plot.dot(weatherStats.weather_factor_by_month, {x: "month", y: "pct", fill: BAR_COLOR_DARK, r: 3, tip: true})
   ]
-})
+}))
 ```
 
-## Night Incident % by Month
+</div>
+</div>
+
+## Night Incident % over Time
 
 ```js
-Plot.plot({
-  height: 180, marginLeft: 40,
+resize((width) => Plot.plot({
+  width,
+  height: 200,
+  marginLeft: 40,
   x: {label: null},
-  y: {label: "Night %", percent: true},
+  y: {label: "Night / twilight %", percent: true},
   marks: [
-    Plot.lineY(timeSeries, {x: "year_month", y: "night_pct", stroke: "#1e293b", strokeWidth: 2}),
-    Plot.dot(timeSeries, {x: "year_month", y: "night_pct", fill: "#1e293b", r: 2, tip: true})
+    Plot.ruleY([overallNightPct], {stroke: "#8d99a6", strokeDasharray: "4,3"}),
+    Plot.lineY(monthly, {x: "date", y: "night_pct", stroke: BAR_COLOR_DARK, strokeWidth: 1.6, curve: "monotone-x", tip: true})
   ]
-})
+}))
 ```
 
 ## Night Incidents by Category
 
+Categories whose bar crosses the dashed line see more night-time incidents than the overall average (${Math.round(overallNightPct * 100)}%).
+
 ```js
-Plot.plot({
-  height: 250, marginLeft: 120,
+resize((width) => Plot.plot({
+  width,
+  height: 260,
+  marginLeft: 90,
   x: {label: "Night / twilight %", percent: true},
+  y: {label: null},
   marks: [
     Plot.barX(nightByCat, {
-      x: "night_pct", y: "cat", fill: d => d.night_pct > overallNightPct ? "#1e293b" : "#60a5fa",
+      x: "night_pct", y: "cat",
+      fill: d => d.night_pct > overallNightPct ? "#4b56a8" : "#3e6fb0",
+      fillOpacity: d => d.night_pct > overallNightPct ? 1 : 0.55,
       tip: true, sort: {y: "-x"}
     }),
-    Plot.ruleX([overallNightPct], {stroke: "#dc2626", strokeDasharray: "4,3",
-      title: "Overall average"})
+    Plot.ruleX([overallNightPct], {stroke: "#bb1e2d", strokeDasharray: "4,3"})
   ]
-})
+}))
 ```

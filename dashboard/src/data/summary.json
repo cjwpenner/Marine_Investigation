@@ -1,0 +1,55 @@
+{
+  "total_incidents": 7349,
+  "night_twilight_count": 1715,
+  "weather_factor_count": 2863,
+  "year_min": "2018",
+  "year_max": "2025",
+  "overall_night_pct": 0.2334,
+  "night_by_category": [
+    {
+      "cat": "other",
+      "total": 2154,
+      "night_pct": 0.1927
+    },
+    {
+      "cat": "crew_injury",
+      "total": 1518,
+      "night_pct": 0.2128
+    },
+    {
+      "cat": "contact",
+      "total": 1038,
+      "night_pct": 0.3006
+    },
+    {
+      "cat": "machinery",
+      "total": 933,
+      "night_pct": 0.2412
+    },
+    {
+      "cat": "navigation",
+      "total": 755,
+      "night_pct": 0.2623
+    },
+    {
+      "cat": "fire",
+      "total": 362,
+      "night_pct": 0.2514
+    },
+    {
+      "cat": "mooring",
+      "total": 315,
+      "night_pct": 0.3111
+    },
+    {
+      "cat": "flooding",
+      "total": 269,
+      "night_pct": 0.1933
+    },
+    {
+      "cat": "cargo_ops",
+      "total": 5,
+      "night_pct": 0.2
+    }
+  ]
+}

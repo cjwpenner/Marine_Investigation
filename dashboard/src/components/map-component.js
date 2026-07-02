@@ -18,14 +18,14 @@ export function createMap(container, allIncidents) {
   let clusterGroup = null;
 
   // ── Layout ───────────────────────────────────────────────────────────────
-  container.style.cssText = "display:flex;flex-direction:column;height:calc(100vh - 60px);";
+  container.style.cssText = "display:flex;flex-direction:column;height:calc(100vh - 52px);";
 
   const filterBar = document.createElement("div");
-  filterBar.style.cssText = "display:flex;gap:8px;padding:8px 12px;background:#1e293b;flex-wrap:wrap;align-items:center;border-bottom:1px solid #334155;";
+  filterBar.style.cssText = "display:flex;gap:10px;padding:8px 12px;background:#14243a;flex-wrap:wrap;align-items:center;border-bottom:1px solid #2a4468;font-family:'Public Sans','Segoe UI',system-ui,sans-serif;";
 
   // Severity select
   const severitySelect = document.createElement("select");
-  severitySelect.style.cssText = "background:#334155;color:#e2e8f0;border:none;padding:4px 8px;border-radius:4px;font-size:12px;";
+  severitySelect.style.cssText = "background:#24405f;color:#e9e2d4;border:none;padding:4px 8px;border-radius:4px;font-size:12px;";
   [["all","All severities"],["Very Serious","Very Serious"],["Serious","Serious"],["Less Serious","Less Serious"]].forEach(([val,text]) => {
     const opt = document.createElement("option");
     opt.value = val;
@@ -35,7 +35,7 @@ export function createMap(container, allIncidents) {
 
   // Year select
   const yearSelect = document.createElement("select");
-  yearSelect.style.cssText = "background:#334155;color:#e2e8f0;border:none;padding:4px 8px;border-radius:4px;font-size:12px;";
+  yearSelect.style.cssText = "background:#24405f;color:#e9e2d4;border:none;padding:4px 8px;border-radius:4px;font-size:12px;";
   const allYearOpt = document.createElement("option");
   allYearOpt.value = "all";
   allYearOpt.textContent = "All years";
@@ -50,7 +50,7 @@ export function createMap(container, allIncidents) {
 
   // Night toggle
   const nightLabel = document.createElement("label");
-  nightLabel.style.cssText = "color:#94a3b8;font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer;";
+  nightLabel.style.cssText = "color:#a8b8cc;font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer;";
   const nightCheck = document.createElement("input");
   nightCheck.type = "checkbox";
   nightLabel.appendChild(nightCheck);
@@ -58,7 +58,7 @@ export function createMap(container, allIncidents) {
 
   // Weather toggle
   const weatherLabel = document.createElement("label");
-  weatherLabel.style.cssText = "color:#94a3b8;font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer;";
+  weatherLabel.style.cssText = "color:#a8b8cc;font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer;";
   const weatherCheck = document.createElement("input");
   weatherCheck.type = "checkbox";
   weatherLabel.appendChild(weatherCheck);
@@ -69,10 +69,10 @@ export function createMap(container, allIncidents) {
   btnWrap.style.cssText = "margin-left:auto;display:flex;gap:4px;";
   const btnHeat = document.createElement("button");
   btnHeat.textContent = "Heatmap";
-  btnHeat.style.cssText = "background:#1e40af;color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;";
+  btnHeat.style.cssText = "background:#3e6fb0;color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;";
   const btnPins = document.createElement("button");
   btnPins.textContent = "Pins";
-  btnPins.style.cssText = "background:#334155;color:#94a3b8;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;";
+  btnPins.style.cssText = "background:#24405f;color:#a8b8cc;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;";
   btnWrap.append(btnHeat, btnPins);
 
   filterBar.append(severitySelect, yearSelect, nightLabel, weatherLabel, btnWrap);
@@ -86,13 +86,13 @@ export function createMap(container, allIncidents) {
   mapDiv.style.cssText = "flex:1;min-height:500px;";
 
   const panel = document.createElement("div");
-  panel.style.cssText = "width:0;overflow:hidden;background:#1e293b;transition:width 0.2s;border-left:1px solid #334155;font-size:12px;color:#e2e8f0;";
+  panel.style.cssText = "width:0;overflow:hidden;background:#14243a;transition:width 0.2s;border-left:1px solid #2a4468;font-size:12px;color:#e9e2d4;font-family:'Public Sans','Segoe UI',system-ui,sans-serif;";
 
   row.append(mapDiv, panel);
   container.append(filterBar, row);
 
   // ── Leaflet init ─────────────────────────────────────────────────────────
-  const map = L.map(mapDiv.id, { center: [54, 5], zoom: 5, maxZoom: 14 });
+  const map = L.map(mapDiv.id, { center: [54.8, -3.2], zoom: 6, maxZoom: 14 });
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "\u00a9 OpenStreetMap contributors"
   }).addTo(map);
@@ -102,7 +102,7 @@ export function createMap(container, allIncidents) {
     return allIncidents.filter(d => {
       if (filters.severity !== "all" && d.severity !== filters.severity) return false;
       if (filters.year !== "all" && d.date?.slice(0,4) !== filters.year) return false;
-      if (filters.nightOnly && d.natural_light !== "Night" && d.natural_light !== "Dusk") return false;
+      if (filters.nightOnly && d.natural_light !== "Night" && d.natural_light !== "Twilight") return false;
       if (filters.weatherFactor && !d.weather_was_factor) return false;
       return true;
     });
@@ -121,7 +121,7 @@ export function createMap(container, allIncidents) {
       });
     heatLayer = L.heatLayer(pts, {
       radius: 18, blur: 15, maxZoom: 10,
-      gradient: { 0.2: "#3b82f6", 0.5: "#f97316", 1.0: "#dc2626" }
+      gradient: { 0.2: "#3e6fb0", 0.5: "#c26100", 1.0: "#bb1e2d" }
     }).addTo(map);
   }
 
@@ -135,7 +135,7 @@ export function createMap(container, allIncidents) {
         const size = n > 100 ? 44 : n > 20 ? 36 : 28;
         const label = n > 999 ? "1k+" : String(n);
         const div = document.createElement("div");
-        div.style.cssText = `width:${size}px;height:${size}px;border-radius:50%;background:#1e40af;border:2px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:${size > 36 ? 12 : 10}px;box-shadow:0 2px 6px rgba(0,0,0,0.3);`;
+        div.style.cssText = `width:${size}px;height:${size}px;border-radius:50%;background:#1c3b63;border:2px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:${size > 36 ? 12 : 10}px;box-shadow:0 2px 6px rgba(0,0,0,0.3);`;
         div.textContent = label;
         return L.divIcon({ html: div, className: "", iconSize: [size, size] });
       }
@@ -215,9 +215,9 @@ export function createMap(container, allIncidents) {
     // AI analysis panel
     if (incident.pattern_summary) {
       const aiBox = document.createElement("div");
-      aiBox.style.cssText = "margin-top:10px;padding:8px;background:#0f172a;border-radius:4px;font-size:11px;color:#94a3b8;line-height:1.5;border-left:2px solid #1e40af;";
+      aiBox.style.cssText = "margin-top:10px;padding:8px;background:#0d1a2d;border-radius:4px;font-size:11px;color:#a8b8cc;line-height:1.5;border-left:2px solid #3e6fb0;";
       const aiLabel = document.createElement("div");
-      aiLabel.style.cssText = "color:#60a5fa;font-size:9px;font-weight:700;margin-bottom:3px;";
+      aiLabel.style.cssText = "color:#e8c07a;font-size:9px;font-weight:700;margin-bottom:3px;letter-spacing:0.08em;";
       aiLabel.textContent = "AI ANALYSIS";
       const aiText = document.createElement("div");
       aiText.textContent = incident.pattern_summary;
@@ -232,11 +232,11 @@ export function createMap(container, allIncidents) {
   function setMode(newMode) {
     mode = newMode;
     if (mode === "heatmap") {
-      btnHeat.style.background = "#1e40af"; btnHeat.style.color = "#fff";
-      btnPins.style.background = "#334155"; btnPins.style.color = "#94a3b8";
+      btnHeat.style.background = "#3e6fb0"; btnHeat.style.color = "#fff";
+      btnPins.style.background = "#24405f"; btnPins.style.color = "#a8b8cc";
     } else {
-      btnPins.style.background = "#1e40af"; btnPins.style.color = "#fff";
-      btnHeat.style.background = "#334155"; btnHeat.style.color = "#94a3b8";
+      btnPins.style.background = "#3e6fb0"; btnPins.style.color = "#fff";
+      btnHeat.style.background = "#24405f"; btnHeat.style.color = "#a8b8cc";
     }
     render();
   }
