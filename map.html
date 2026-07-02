@@ -7,38 +7,45 @@
 <title>Incident Map | Marine Safety Observatory</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_import/style.db85ef9b.css">
+<link rel="preload" as="style" href="./_import/style.98f1df7b.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_import/style.db85ef9b.css">
-<link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
+<link rel="stylesheet" type="text/css" href="./_import/style.98f1df7b.css">
+<link rel="modulepreload" href="./_observablehq/client.88bf8894.js">
 <link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
-<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
-<link rel="modulepreload" href="./_import/components/map-component.82358b5d.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.5c9dc7a6.js">
+<link rel="modulepreload" href="./_import/components/map-component.4d79f0de.js">
 <link rel="modulepreload" href="./_import/components/dom-utils.2ca39570.js">
-<link rel="modulepreload" href="./_import/components/colors.858cb1af.js">
+<link rel="modulepreload" href="./_import/components/colors.38102ef8.js">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%220.9em%22%20font-size=%2290%22%3E%E2%9A%93%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap">
 <script>
+// Inject the report download link into the nav bar after the DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
   var sidebar = document.getElementById("observablehq-sidebar");
   if (!sidebar) return;
+  var base = location.pathname.indexOf("/Marine_Investigation") === 0 ? "/Marine_Investigation" : "";
   var li = document.createElement("li");
   li.className = "observablehq-link nav-download";
   var a = document.createElement("a");
-  a.href = "/Marine_Investigation/marine_safety_analysis_report_2025.docx";
+  a.href = base + "/marine_safety_analysis_report_2025.docx";
   a.download = "Marine_Safety_Analysis_Report_2025.docx";
-  a.textContent = "⬇ Download Report";
+  a.textContent = "Download Report";
   li.appendChild(a);
   sidebar.appendChild(li);
 });
 </script>
 <script type="module">
 
-import {define} from "./_observablehq/client.86d48a53.js";
-import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
+import {define} from "./_observablehq/client.88bf8894.js";
+import {registerFile} from "./_observablehq/stdlib.5c9dc7a6.js";
 
-registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.614d635d.json","lastModified":1778847678899,"size":9314056});
+registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.614d635d.json","lastModified":1782977918274,"size":9314056});
 
 define({id: "fa2911f9", inputs: ["FileAttachment"], outputs: ["createMap","incidents"], body: async (FileAttachment) => {
-const {createMap} = await import("./_import/components/map-component.82358b5d.js");
+const {createMap} = await import("./_import/components/map-component.4d79f0de.js");
 const incidents = await FileAttachment("./data/incidents_map.json").json();
 return {createMap,incidents};
 }});
@@ -96,8 +103,8 @@ return {loadScript,mcCss,host};
 #map-host {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px);
-  margin: -1rem -1rem 0;
+  height: calc(100vh - 52px);
+  margin: -1.4rem -1rem 0;
 }
 </style>
 <div id="map-host"></div>
@@ -105,7 +112,7 @@ return {loadScript,mcCss,host};
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./"><span>Marine Safety Observatory</span></a><a rel="next" href="./themes"><span>Themes</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T12:21:23">May 15, 2026</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-07-02T07:38:47">Jul 2, 2026</a>.</div>
 </footer>
 </div>
 </body>

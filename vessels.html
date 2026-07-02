@@ -7,13 +7,14 @@
 <title>Vessels &amp; People | Marine Safety Observatory</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_import/style.db85ef9b.css">
+<link rel="preload" as="style" href="./_import/style.98f1df7b.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_import/style.db85ef9b.css">
-<link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
+<link rel="stylesheet" type="text/css" href="./_import/style.98f1df7b.css">
+<link rel="modulepreload" href="./_observablehq/client.88bf8894.js">
 <link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
-<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.5c9dc7a6.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/a96a6bbb.js">
+<link rel="modulepreload" href="./_import/components/colors.38102ef8.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
 <link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
 <link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
@@ -51,160 +52,188 @@
 <link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
 <link rel="modulepreload" href="./_npm/delaunator@5.1.0/d4ec0aa1.js">
 <link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/42820bfa.js">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%220.9em%22%20font-size=%2290%22%3E%E2%9A%93%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap">
 <script>
+// Inject the report download link into the nav bar after the DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
   var sidebar = document.getElementById("observablehq-sidebar");
   if (!sidebar) return;
+  var base = location.pathname.indexOf("/Marine_Investigation") === 0 ? "/Marine_Investigation" : "";
   var li = document.createElement("li");
   li.className = "observablehq-link nav-download";
   var a = document.createElement("a");
-  a.href = "/Marine_Investigation/marine_safety_analysis_report_2025.docx";
+  a.href = base + "/marine_safety_analysis_report_2025.docx";
   a.download = "Marine_Safety_Analysis_Report_2025.docx";
-  a.textContent = "⬇ Download Report";
+  a.textContent = "Download Report";
   li.appendChild(a);
   sidebar.appendChild(li);
 });
 </script>
 <script type="module">
 
-import {define} from "./_observablehq/client.86d48a53.js";
-import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
+import {define} from "./_observablehq/client.88bf8894.js";
+import {registerFile} from "./_observablehq/stdlib.5c9dc7a6.js";
 
-registerFile("./data/casualties.json", {"name":"./data/casualties.json","mimeType":"application/json","path":"./_file/data/casualties.c5e02eed.json","lastModified":1778847678870,"size":2283});
-registerFile("./data/vessels.json", {"name":"./data/vessels.json","mimeType":"application/json","path":"./_file/data/vessels.03834f44.json","lastModified":1778847678904,"size":2269});
+registerFile("./data/casualties.json", {"name":"./data/casualties.json","mimeType":"application/json","path":"./_file/data/casualties.85aa5577.json","lastModified":1782977918247,"size":2289});
+registerFile("./data/vessels.json", {"name":"./data/vessels.json","mimeType":"application/json","path":"./_file/data/vessels.03834f44.json","lastModified":1782977918279,"size":2269});
 
-define({id: "270973a7", inputs: ["FileAttachment"], outputs: ["Plot","vessels","casualties","truncate","vesselCatData","injuryData","bodyPartData","AGE_ORDER","ageData","typeData"], body: async (FileAttachment) => {
-const Plot = await import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js");
+define({id: "3df99ac2", inputs: ["FileAttachment"], outputs: ["Plot","BAR_COLOR","BAR_COLOR_DARK","vessels","casualties","truncate","vesselCatData","injuryData","bodyPartData","AGE_ORDER","ageData","typeData","ppeWorn","ppeDeficient","onDutyPct"], body: async (FileAttachment) => {
+const [Plot, {BAR_COLOR, BAR_COLOR_DARK}] = await Promise.all([import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js"), import("./_import/components/colors.38102ef8.js")]);
+
 const vessels = await FileAttachment("./data/vessels.json").json();
 const casualties = await FileAttachment("./data/casualties.json").json();
 
-const truncate = (s, n=38) => s.length > n ? s.slice(0, n) + "…" : s;
+const truncate = (s, n = 38) => s.length > n ? s.slice(0, n) + "…" : s;
 
 const vesselCatData = Object.entries(vessels.by_category)
-  .map(([k,v]) => ({category: truncate(k, 35), count:v}))
-  .sort((a,b) => b.count - a.count);
+  .map(([k, v]) => ({category: truncate(k, 35), count: v}))
+  .sort((a, b) => b.count - a.count);
 
 const injuryData = Object.entries(casualties.by_injury_type)
-  .map(([k,v]) => ({type: truncate(k), count:v}))
-  .sort((a,b) => b.count - a.count).slice(0,12);
+  .map(([k, v]) => ({type: truncate(k), count: v}))
+  .sort((a, b) => b.count - a.count).slice(0, 12);
 
 const bodyPartData = Object.entries(casualties.by_body_part)
-  .map(([k,v]) => ({part: truncate(k), count:v}))
-  .sort((a,b) => b.count - a.count).slice(0,12);
+  .map(([k, v]) => ({part: truncate(k.replace(/^.*-> /, ""), 34), count: v}))
+  .sort((a, b) => b.count - a.count).slice(0, 12);
 
-const AGE_ORDER = ["<25","25-34","35-44","45-54","55-64","65+"];
+const AGE_ORDER = ["<25", "25-34", "35-44", "45-54", "55-64", "65+"];
 const ageData = Object.entries(casualties.by_age_band)
-  .map(([k,v]) => ({age:k, count:v}))
-  .filter(d => d.age !== "Unknown")
-  .sort((a,b) => AGE_ORDER.indexOf(a.age) - AGE_ORDER.indexOf(b.age));
+  .map(([k, v]) => ({age: k, count: v}))
+  .filter(d => d.age !== "Unknown");
 
 const typeData = Object.entries(casualties.by_type)
-  .map(([k,v]) => ({type:k, count:v}));
-return {Plot,vessels,casualties,truncate,vesselCatData,injuryData,bodyPartData,AGE_ORDER,ageData,typeData};
+  .map(([k, v]) => ({type: k, count: v}));
+
+// PPE fields are sparsely recorded in the source data — present counts, not
+// percentages of the whole population, to stay honest about coverage.
+const ppeWorn = casualties.ppe_recorded_worn ?? null;
+const ppeDeficient = casualties.ppe_deficiency_noted ?? null;
+const onDutyPct = Math.round((casualties.on_duty_pct ?? 0) * 100);
+return {Plot,BAR_COLOR,BAR_COLOR_DARK,vessels,casualties,truncate,vesselCatData,injuryData,bodyPartData,AGE_ORDER,ageData,typeData,ppeWorn,ppeDeficient,onDutyPct};
 }});
 
-define({id: "5a01d6cc", inputs: ["casualties","vessels","display"], body: (casualties,vessels,display) => {
-{
-  const wrapper = document.createElement("div");
-  wrapper.style.cssText = "display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:2rem;";
-
-  const cards = [
-    {value: (casualties.total_affected ?? 0).toLocaleString(), label: "Total Affected", borderColor: "#1e40af"},
-    {value: Math.round((casualties.ppe_deficient_pct ?? 0)*100) + "%", label: "PPE Deficient", borderColor: "#dc2626"},
-    {value: Math.round((casualties.ppe_used_pct ?? 0)*100) + "%", label: "PPE Used", borderColor: "#16a34a"},
-    {value: Math.round((casualties.on_duty_pct ?? 0)*100) + "%", label: "On Duty", borderColor: "#1e40af"},
-    {value: (vessels.incidents_with_vessel_loss ?? 0).toLocaleString(), label: "Vessel Losses", borderColor: "#1e40af"},
-  ];
-
-  cards.forEach(c => {
-    const card = document.createElement("div");
-    card.className = "stat-card";
-    card.style.borderLeftColor = c.borderColor;
-    const valEl = document.createElement("div");
-    valEl.className = "value";
-    valEl.textContent = c.value;
-    const lblEl = document.createElement("div");
-    lblEl.className = "label";
-    lblEl.textContent = c.label;
-    card.append(valEl, lblEl);
-    wrapper.appendChild(card);
-  });
-
-  display(wrapper);
-}
-}});
-
-define({id: "3bcf45b0", inputs: ["Plot","vesselCatData","display"], body: async (Plot,vesselCatData,display) => {
+define({id: "94ce0408", mode: "inline", inputs: ["casualties","display"], body: async (casualties,display) => {
 display(await(
-Plot.plot({
-  height: 220, marginLeft: 220,
-  x: {label: "Incidents"},
-  marks: [Plot.barX(vesselCatData, {x:"count", y:"category", fill:"#1e40af", tip:true, sort:{y:"-x"}})]
-})
+(casualties.total_affected ?? 0).toLocaleString()
 ))
 }});
 
-define({id: "99003d2a", inputs: ["Plot","typeData","display"], body: async (Plot,typeData,display) => {
+define({id: "d4c78db2", mode: "inline", inputs: ["ppeDeficient","display"], body: async (ppeDeficient,display) => {
 display(await(
-Plot.plot({
+ppeDeficient == null ? "—" : ppeDeficient.toLocaleString()
+))
+}});
+
+define({id: "3d1ac450", mode: "inline", inputs: ["ppeWorn","display"], body: async (ppeWorn,display) => {
+display(await(
+ppeWorn == null ? "—" : ppeWorn.toLocaleString()
+))
+}});
+
+define({id: "2d571042", mode: "inline", inputs: ["onDutyPct","display"], body: async (onDutyPct,display) => {
+display(await(
+onDutyPct
+))
+}});
+
+define({id: "e4ea07ee", mode: "inline", inputs: ["vessels","display"], body: async (vessels,display) => {
+display(await(
+(vessels.incidents_with_vessel_loss ?? 0).toLocaleString()
+))
+}});
+
+define({id: "6d146a04", inputs: ["resize","Plot","vesselCatData","BAR_COLOR","display"], body: async (resize,Plot,vesselCatData,BAR_COLOR,display) => {
+display(await(
+resize((width) => Plot.plot({
+  width,
   height: 220,
-  marks: [Plot.barY(typeData, {x:"type", y:"count", fill:"#3b82f6", tip:true, sort:{x:"-y"}})]
-})
+  marginLeft: 190,
+  x: {label: "Incidents"},
+  y: {label: null},
+  marks: [Plot.barX(vesselCatData, {x: "count", y: "category", fill: BAR_COLOR, tip: true, sort: {y: "-x"}})]
+}))
 ))
 }});
 
-define({id: "addee5c4", inputs: ["Plot","ageData","display"], body: async (Plot,ageData,display) => {
+define({id: "91e12f7e", inputs: ["resize","Plot","typeData","BAR_COLOR","display"], body: async (resize,Plot,typeData,BAR_COLOR,display) => {
 display(await(
-Plot.plot({
-  height: 180, marginLeft: 50,
-  x: {label: "Age band"},
+resize((width) => Plot.plot({
+  width,
+  height: 220,
+  x: {label: null},
   y: {label: "Persons"},
-  marks: [Plot.barY(ageData, {x:"age", y:"count", fill:"#1e40af", tip:true})]
-})
+  marks: [Plot.barY(typeData, {x: "type", y: "count", fill: BAR_COLOR, tip: true, sort: {x: "-y"}})]
+}))
 ))
 }});
 
-define({id: "2375f5e0", inputs: ["Plot","injuryData","display"], body: async (Plot,injuryData,display) => {
+define({id: "d04fd743", inputs: ["resize","Plot","AGE_ORDER","ageData","BAR_COLOR","display"], body: async (resize,Plot,AGE_ORDER,ageData,BAR_COLOR,display) => {
 display(await(
-Plot.plot({
-  height: 220, marginLeft: 260,
-  x: {label: "Count"},
-  marks: [Plot.barX(injuryData, {x:"count", y:"type", fill:"#3b82f6", tip:true, sort:{y:"-x"}})]
-})
+resize((width) => Plot.plot({
+  width,
+  height: 200,
+  marginLeft: 45,
+  x: {label: "Age band", domain: AGE_ORDER},
+  y: {label: "Persons"},
+  marks: [Plot.barY(ageData, {x: "age", y: "count", fill: BAR_COLOR, tip: true})]
+}))
 ))
 }});
 
-define({id: "ffc3cd2a", inputs: ["Plot","bodyPartData","display"], body: async (Plot,bodyPartData,display) => {
+define({id: "0e505fb0", inputs: ["resize","Plot","injuryData","BAR_COLOR","display"], body: async (resize,Plot,injuryData,BAR_COLOR,display) => {
 display(await(
-Plot.plot({
-  height: 200, marginLeft: 260,
-  x: {label: "Count"},
-  marks: [Plot.barX(bodyPartData, {x:"count", y:"part", fill:"#60a5fa", tip:true, sort:{y:"-x"}})]
-})
+resize((width) => Plot.plot({
+  width,
+  height: 240,
+  marginLeft: 210,
+  x: {label: "Persons"},
+  y: {label: null},
+  marks: [Plot.barX(injuryData, {x: "count", y: "type", fill: BAR_COLOR, tip: true, sort: {y: "-x"}})]
+}))
 ))
 }});
 
-define({id: "489f9fe4", inputs: ["vessels","display"], body: (vessels,display) => {
+define({id: "0cde77ff", inputs: ["resize","Plot","bodyPartData","BAR_COLOR","display"], body: async (resize,Plot,bodyPartData,BAR_COLOR,display) => {
+display(await(
+resize((width) => Plot.plot({
+  width,
+  height: 240,
+  marginLeft: 190,
+  x: {label: "Persons"},
+  y: {label: null},
+  marks: [Plot.barX(bodyPartData, {x: "count", y: "part", fill: BAR_COLOR, tip: true, sort: {y: "-x"}})]
+}))
+))
+}});
+
+define({id: "8a171e7a", inputs: ["vessels","display"], body: (vessels,display) => {
 {
   const list = document.createElement("div");
-  list.style.cssText = "font-size:12px;";
+  list.className = "mio-flagtable";
   const header = document.createElement("div");
-  header.style.cssText = "display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid #e2e8f0;margin-bottom:4px;";
-  const hFlag = document.createElement("span"); hFlag.textContent = "Flag State";
-  const hCount = document.createElement("span"); hCount.textContent = "Incidents";
-  header.append(hFlag, hCount);
+  header.className = "hdr";
+  ["#", "Flag State", "Incidents"].forEach(t => {
+    const c = document.createElement("span");
+    c.textContent = t;
+    header.appendChild(c);
+  });
   list.appendChild(header);
-  vessels.by_flag_state.slice(0, 15).forEach((item, i) => {
+  vessels.by_flag_state.slice(0, 12).forEach((item, i) => {
     const row = document.createElement("div");
-    row.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f8fafc;";
+    row.className = "row";
     const rank = document.createElement("span");
-    rank.style.cssText = "color:#94a3b8;font-size:10px;min-width:18px;";
+    rank.className = "rank";
     rank.textContent = (i + 1) + ".";
     const flag = document.createElement("span");
-    flag.style.cssText = "flex:1;padding-left:4px;color:#1e293b;";
+    flag.className = "name";
     flag.textContent = item.flag;
     const count = document.createElement("span");
-    count.style.cssText = "font-weight:600;color:#1e40af;min-width:40px;text-align:right;";
+    count.className = "count";
     count.textContent = (item.count ?? 0).toLocaleString();
     row.append(rank, flag, count);
     list.appendChild(row);
@@ -246,33 +275,68 @@ define({id: "489f9fe4", inputs: ["vessels","display"], body: (vessels,display) =
 </nav>
 </aside>
 <main id="observablehq-main" class="observablehq">
-<div class="observablehq observablehq--block"><!--:270973a7:--></div>
+<div class="observablehq observablehq--block"><!--:3df99ac2:--></div>
 <h1 id="vessels-and-people" tabindex="-1"><a class="observablehq-header-anchor" href="#vessels-and-people">Vessels &amp; People</a></h1>
-<div class="observablehq observablehq--block"><!--:5a01d6cc:--></div>
-<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
-<div>
+<p>Who was involved: the vessels that had incidents, and the people injured aboard them.</p>
+<div class="mio-stats">
+  <div class="stat-card">
+    <div class="value"><observablehq-loading></observablehq-loading><!--:94ce0408:--></div>
+    <div class="label">People Affected</div>
+  </div>
+  <div class="stat-card" style="border-top-color:var(--sev-very);">
+    <div class="value"><observablehq-loading></observablehq-loading><!--:d4c78db2:--></div>
+    <div class="label">PPE Deficiency Noted</div>
+    <div class="caveat">where investigators recorded PPE detail</div>
+  </div>
+  <div class="stat-card" style="border-top-color:#3a6c4a;">
+    <div class="value"><observablehq-loading></observablehq-loading><!--:3d1ac450:--></div>
+    <div class="label">PPE Recorded Worn</div>
+    <div class="caveat">where investigators recorded PPE detail</div>
+  </div>
+  <div class="stat-card">
+    <div class="value"><observablehq-loading></observablehq-loading><!--:2d571042:-->%</div>
+    <div class="label">On Duty</div>
+    <div class="caveat">of records where duty status is known</div>
+  </div>
+  <div class="stat-card" style="border-top-color:var(--sev-serious);">
+    <div class="value"><observablehq-loading></observablehq-loading><!--:e4ea07ee:--></div>
+    <div class="label">Vessel Losses</div>
+  </div>
+</div>
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 <h2 id="by-vessel-type" tabindex="-1"><a class="observablehq-header-anchor" href="#by-vessel-type">By Vessel Type</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:3bcf45b0:--></div>
-</div><div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:6d146a04:--></div>
+</div>
+<div class="mio-panel">
 <h2 id="casualties-by-type" tabindex="-1"><a class="observablehq-header-anchor" href="#casualties-by-type">Casualties by Type</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:99003d2a:--></div>
-</div></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
-<div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:91e12f7e:--></div>
+</div>
+</div>
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 <h2 id="age-distribution" tabindex="-1"><a class="observablehq-header-anchor" href="#age-distribution">Age Distribution</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:addee5c4:--></div>
-</div><div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:d04fd743:--></div>
+</div>
+<div class="mio-panel">
 <h2 id="injury-types" tabindex="-1"><a class="observablehq-header-anchor" href="#injury-types">Injury Types</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:2375f5e0:--></div>
-</div></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:0e505fb0:--></div>
+</div>
+</div>
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 <h2 id="body-parts-injured" tabindex="-1"><a class="observablehq-header-anchor" href="#body-parts-injured">Body Parts Injured</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:ffc3cd2a:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:0cde77ff:--></div>
+</div>
+<div class="mio-panel">
 <h2 id="top-flag-states" tabindex="-1"><a class="observablehq-header-anchor" href="#top-flag-states">Top Flag States</a></h2>
-<div class="observablehq observablehq--block"><!--:489f9fe4:--></div>
+<div class="observablehq observablehq--block"><!--:8a171e7a:--></div>
+</div>
+</div>
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./trends"><span>Trends</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T12:21:23">May 15, 2026</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-07-02T07:38:47">Jul 2, 2026</a>.</div>
 </footer>
 </div>
 </body>

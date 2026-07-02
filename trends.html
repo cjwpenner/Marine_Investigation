@@ -7,16 +7,17 @@
 <title>Trends | Marine Safety Observatory</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_import/style.db85ef9b.css">
+<link rel="preload" as="style" href="./_import/style.98f1df7b.css">
 <link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_import/style.db85ef9b.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.98f1df7b.css">
 <link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
-<link rel="modulepreload" href="./_observablehq/client.86d48a53.js">
+<link rel="modulepreload" href="./_observablehq/client.88bf8894.js">
 <link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
-<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.5c9dc7a6.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/a96a6bbb.js">
-<link rel="modulepreload" href="./_observablehq/stdlib/inputs.31cd1366.js">
+<link rel="modulepreload" href="./_import/components/colors.38102ef8.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.5572d8fc.js">
 <link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
 <link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
@@ -55,42 +56,52 @@
 <link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
 <link rel="modulepreload" href="./_npm/delaunator@5.1.0/d4ec0aa1.js">
 <link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/42820bfa.js">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%220.9em%22%20font-size=%2290%22%3E%E2%9A%93%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap">
 <script>
+// Inject the report download link into the nav bar after the DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
   var sidebar = document.getElementById("observablehq-sidebar");
   if (!sidebar) return;
+  var base = location.pathname.indexOf("/Marine_Investigation") === 0 ? "/Marine_Investigation" : "";
   var li = document.createElement("li");
   li.className = "observablehq-link nav-download";
   var a = document.createElement("a");
-  a.href = "/Marine_Investigation/marine_safety_analysis_report_2025.docx";
+  a.href = base + "/marine_safety_analysis_report_2025.docx";
   a.download = "Marine_Safety_Analysis_Report_2025.docx";
-  a.textContent = "⬇ Download Report";
+  a.textContent = "Download Report";
   li.appendChild(a);
   sidebar.appendChild(li);
 });
 </script>
 <script type="module">
 
-import {define} from "./_observablehq/client.86d48a53.js";
-import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
+import {define} from "./_observablehq/client.88bf8894.js";
+import {registerFile} from "./_observablehq/stdlib.5c9dc7a6.js";
 
-registerFile("./data/incidents_map.json", {"name":"./data/incidents_map.json","mimeType":"application/json","path":"./_file/data/incidents_map.614d635d.json","lastModified":1778847678899,"size":9314056});
-registerFile("./data/time_series.json", {"name":"./data/time_series.json","mimeType":"application/json","path":"./_file/data/time_series.b7e71da3.json","lastModified":1778847678904,"size":15283});
-registerFile("./data/weather_stats.json", {"name":"./data/weather_stats.json","mimeType":"application/json","path":"./_file/data/weather_stats.7cef6d3c.json","lastModified":1778847678904,"size":2349});
+registerFile("./data/summary.json", {"name":"./data/summary.json","mimeType":"application/json","path":"./_file/data/summary.1ff14dd3.json","lastModified":1782977918274,"size":949});
+registerFile("./data/time_series.json", {"name":"./data/time_series.json","mimeType":"application/json","path":"./_file/data/time_series.b7e71da3.json","lastModified":1782977918279,"size":15283});
+registerFile("./data/weather_stats.json", {"name":"./data/weather_stats.json","mimeType":"application/json","path":"./_file/data/weather_stats.7cef6d3c.json","lastModified":1782977918279,"size":2349});
 
-define({id: "6bd74340", inputs: ["FileAttachment"], outputs: ["Plot","timeSeries","weatherStats","incidentsMap","lightData","SEA_STATE_ORDER","seaStateData","windForceData","weatherTypeData","VIS_ORDER","visibilityData","catNight","catTotal","overallNightPct","nightByCat","years","minYear","maxYear"], body: async (FileAttachment) => {
-const Plot = await import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js");
+define({id: "7c62b806", inputs: ["FileAttachment"], outputs: ["Plot","SEVERITY_COLORS","SEVERITY_ORDER","LIGHT_COLORS","BAR_COLOR","BAR_COLOR_DARK","timeSeries","weatherStats","summary","isUnknown","lightData","SEA_STATE_ORDER","shortSeaState","seaStateData","windForceData","windDomain","weatherTypeData","VIS_ORDER","shortVis","visibilityData","visDomain","overallNightPct","prettyCat","nightByCat","monthly","years","minYear","maxYear"], body: async (FileAttachment) => {
+const [Plot, {SEVERITY_COLORS, SEVERITY_ORDER, LIGHT_COLORS, BAR_COLOR, BAR_COLOR_DARK}] = await Promise.all([import("./_npm/@observablehq/plot@0.6.17/a96a6bbb.js"), import("./_import/components/colors.38102ef8.js")]);
+
 const timeSeries = await FileAttachment("./data/time_series.json").json();
 const weatherStats = await FileAttachment("./data/weather_stats.json").json();
-const incidentsMap = await FileAttachment("./data/incidents_map.json").json();
+const summary = await FileAttachment("./data/summary.json").json();
+
+const isUnknown = s => /^unknown/i.test(s ?? "");
 
 // Lighting conditions (exclude Unknown)
 const lightData = Object.entries(weatherStats.by_natural_light)
-  .map(([k,v]) => ({light: k, count: v}))
-  .filter(d => d.light !== "Unknown" && d.light !== "Unknown NL")
-  .sort((a,b) => b.count - a.count);
+  .map(([k, v]) => ({light: k, count: v}))
+  .filter(d => !isUnknown(d.light) && d.light !== "Unknown NL")
+  .sort((a, b) => b.count - a.count);
 
-// Sea state — sort by Douglas scale order
+// Sea state — Douglas scale order, short labels, Unknown excluded
 const SEA_STATE_ORDER = [
   "0 - Calm glassy - (0 m)",
   "1 - Calm rippled - (0 - 0.1 m)",
@@ -103,200 +114,235 @@ const SEA_STATE_ORDER = [
   "8 - Very high - (9.0 - 14.0 m)",
   "9 - Phenomenal - (> 14.0 m)"
 ];
-const seaStateData = Object.entries(weatherStats.by_sea_state ?? {})
-  .map(([k,v]) => ({state: k, count: v}))
-  .sort((a,b) => SEA_STATE_ORDER.indexOf(a.state) - SEA_STATE_ORDER.indexOf(b.state));
+const shortSeaState = s => {
+  const m = s.match(/^(\d+) - ([^-]+?) - \((.+)\)$/);
+  return m ? `${m[1]} ${m[2].trim()} (${m[3].trim()})` : s;
+};
+const seaStateData = SEA_STATE_ORDER
+  .filter(k => (weatherStats.by_sea_state ?? {})[k] > 0)
+  .map(k => ({state: shortSeaState(k), count: weatherStats.by_sea_state[k]}));
 
-// Wind force — strip long label to just "F0"–"F12"
+// Wind force — "F0"–"F12", numeric order
 const windForceData = Object.entries(weatherStats.by_wind_force ?? {})
-  .filter(([k]) => k !== "Beaufort scale: Unknown")
-  .map(([k,v]) => {
+  .filter(([k]) => !/unknown/i.test(k))
+  .map(([k, v]) => {
     const match = k.match(/^(\d+)/);
     return {label: match ? "F" + match[1] : k, force: match ? +match[1] : 99, count: v};
   })
-  .sort((a,b) => a.force - b.force);
+  .sort((a, b) => a.force - b.force);
+const windDomain = windForceData.map(d => d.label);
 
 // Weather type (exclude Unknown variants)
 const weatherTypeData = Object.entries(weatherStats.by_weather_type ?? {})
-  .map(([k,v]) => ({type: k, count: v}))
-  .filter(d => !d.type.startsWith("Unknown"))
-  .sort((a,b) => b.count - a.count);
+  .map(([k, v]) => ({type: k, count: v}))
+  .filter(d => !isUnknown(d.type))
+  .sort((a, b) => b.count - a.count);
 
-// Visibility
+// Visibility — short labels, best → worst
 const VIS_ORDER = [
-  "Calm glassy - (0 m)",
   "Very good - Vis >= 25.0 nm",
   "Good - 5.0 <= Vis < 25.0 nm",
   "Moderate - 2.0 <=Vis < 5.0 nm",
   "Poor - 0.5 <=Vis < 2.0 nm",
   "Very poor - Vis < 0.5 nm"
 ];
-const visibilityData = Object.entries(weatherStats.by_visibility ?? {})
-  .map(([k,v]) => ({vis: k, count: v}))
-  .filter(d => !d.vis.startsWith("Unknown"))
-  .sort((a,b) => VIS_ORDER.indexOf(a.vis) - VIS_ORDER.indexOf(b.vis));
+const shortVis = s => s.split(" - ")[0];
+const visibilityData = VIS_ORDER
+  .filter(k => (weatherStats.by_visibility ?? {})[k] > 0)
+  .map(k => ({vis: shortVis(k), count: weatherStats.by_visibility[k]}));
+const visDomain = visibilityData.map(d => d.vis);
 
-// Night incidents by category (Night + Twilight)
-const catNight = {};
-const catTotal = {};
-for (const inc of incidentsMap) {
-  const cat = inc.incident_category ?? "other";
-  catTotal[cat] = (catTotal[cat] ?? 0) + 1;
-  if (inc.natural_light === "Night" || inc.natural_light === "Twilight") {
-    catNight[cat] = (catNight[cat] ?? 0) + 1;
-  }
-}
-const overallNightPct = incidentsMap.filter(d => d.natural_light === "Night" || d.natural_light === "Twilight").length / Math.max(incidentsMap.length, 1);
-const nightByCat = Object.entries(catTotal)
-  .map(([cat, total]) => ({
-    cat,
-    total,
-    night_pct: (catNight[cat] ?? 0) / total
-  }))
+// Night incidents by category (Night + Twilight), pre-aggregated at export time
+const overallNightPct = summary.overall_night_pct;
+const prettyCat = c => (c[0].toUpperCase() + c.slice(1)).replace(/_/g, " ");
+const nightByCat = summary.night_by_category
   .filter(d => d.total >= 20)
+  .map(d => ({...d, cat: prettyCat(d.cat)}))
   .sort((a, b) => b.night_pct - a.night_pct);
 
+// time series with real dates
+const monthly = timeSeries.map(d => ({...d, date: new Date(d.year_month + "-01T00:00:00Z")}));
 const years = [...new Set(timeSeries.map(d => d.year_month.slice(0, 4)))].sort();
 const minYear = years[0] ?? "2010";
 const maxYear = years[years.length - 1] ?? "2024";
-return {Plot,timeSeries,weatherStats,incidentsMap,lightData,SEA_STATE_ORDER,seaStateData,windForceData,weatherTypeData,VIS_ORDER,visibilityData,catNight,catTotal,overallNightPct,nightByCat,years,minYear,maxYear};
+return {Plot,SEVERITY_COLORS,SEVERITY_ORDER,LIGHT_COLORS,BAR_COLOR,BAR_COLOR_DARK,timeSeries,weatherStats,summary,isUnknown,lightData,SEA_STATE_ORDER,shortSeaState,seaStateData,windForceData,windDomain,weatherTypeData,VIS_ORDER,shortVis,visibilityData,visDomain,overallNightPct,prettyCat,nightByCat,monthly,years,minYear,maxYear};
 }});
 
-define({id: "1aac5076", inputs: ["view","Inputs","years","minYear","maxYear"], outputs: ["fromYear","toYear"], body: (view,Inputs,years,minYear,maxYear) => {
+define({id: "fc3d399d", inputs: ["view","Inputs","years","minYear"], outputs: ["fromYear"], body: (view,Inputs,years,minYear) => {
 const fromYear = view(Inputs.select(years, {label: "From year", value: minYear}));
-const toYear = view(Inputs.select(years, {label: "To year", value: maxYear}));
-return {fromYear,toYear};
+return {fromYear};
 }});
 
-define({id: "8ff88d6a", inputs: ["timeSeries","fromYear","toYear","Plot"], outputs: ["filtered","stackData"], body: (timeSeries,fromYear,toYear,Plot) => {
-const filtered = timeSeries.filter(d => d.year_month >= fromYear && d.year_month <= toYear + "-99");
-const stackData = filtered.flatMap(d => [
-  {year_month: d.year_month, count: d.less_serious,  severity: "Less Serious"},
-  {year_month: d.year_month, count: d.serious,        severity: "Serious"},
-  {year_month: d.year_month, count: d.very_serious,   severity: "Very Serious"},
-]);
-Plot.plot({
-  height: 240, marginLeft: 40,
+define({id: "c71825bb", inputs: ["view","Inputs","years","maxYear"], outputs: ["toYear"], body: (view,Inputs,years,maxYear) => {
+const toYear = view(Inputs.select(years, {label: "To year", value: maxYear}));
+return {toYear};
+}});
+
+define({id: "7c25fefc", inputs: ["monthly","fromYear","toYear"], outputs: ["stackData"], body: (monthly,fromYear,toYear) => {
+const stackData = monthly
+  .filter(d => d.year_month >= fromYear && d.year_month <= toYear + "-99")
+  .flatMap(d => [
+    {date: d.date, count: d.less_serious, severity: "Less Serious"},
+    {date: d.date, count: d.serious, severity: "Serious"},
+    {date: d.date, count: d.very_serious, severity: "Very Serious"},
+  ]);
+return {stackData};
+}});
+
+define({id: "d8ca262a", inputs: ["resize","Plot","SEVERITY_ORDER","SEVERITY_COLORS","stackData","display"], body: async (resize,Plot,SEVERITY_ORDER,SEVERITY_COLORS,stackData,display) => {
+display(await(
+resize((width) => Plot.plot({
+  width,
+  height: 260,
+  marginLeft: 40,
   x: {label: null},
   y: {label: "Incidents"},
-  color: {domain: ["Less Serious","Serious","Very Serious"], range: ["#bfdbfe","#d97706","#dc2626"]},
+  color: {domain: SEVERITY_ORDER, range: SEVERITY_ORDER.map(s => SEVERITY_COLORS[s]), legend: true},
   marks: [
-    Plot.barY(stackData, Plot.stackY({x: "year_month", y: "count", fill: "severity", tip: true})),
+    Plot.rectY(stackData, {x: "date", y: "count", fill: "severity", interval: "month", tip: true, order: SEVERITY_ORDER}),
     Plot.ruleY([0])
   ]
-})
-return {filtered,stackData};
+}))
+))
 }});
 
-define({id: "8708c3db", inputs: ["Plot","lightData","display"], body: async (Plot,lightData,display) => {
+define({id: "799859f4", inputs: ["resize","Plot","LIGHT_COLORS","lightData","display"], body: async (resize,Plot,LIGHT_COLORS,lightData,display) => {
 display(await(
-Plot.plot({
-  height: 80, marginLeft: 10,
+resize((width) => Plot.plot({
+  width,
+  height: 96,
+  marginLeft: 10,
   x: {label: "Incidents"},
-  color: {domain: ["Daylight","Night","Twilight"], range: ["#60a5fa","#1e293b","#d97706"], legend: true},
+  color: {
+    domain: ["Daylight", "Twilight", "Night"],
+    range: [LIGHT_COLORS.Daylight, LIGHT_COLORS.Twilight, LIGHT_COLORS.Night],
+    legend: true
+  },
   marks: [
     Plot.barX(lightData, Plot.stackX({x: "count", fill: "light", tip: true,
-      order: ["Daylight","Twilight","Night"]}))
+      order: ["Daylight", "Twilight", "Night"], insetRight: 2}))
   ]
-})
+}))
 ))
 }});
 
-define({id: "4c47eb19", inputs: ["Plot","seaStateData","display"], body: async (Plot,seaStateData,display) => {
+define({id: "b5359c8b", inputs: ["resize","Plot","seaStateData","BAR_COLOR","display"], body: async (resize,Plot,seaStateData,BAR_COLOR,display) => {
 display(await(
-Plot.plot({
-  height: 220, marginLeft: 200,
+resize((width) => Plot.plot({
+  width,
+  height: 230,
+  marginLeft: 150,
   x: {label: "Incidents"},
+  y: {label: null},
   marks: [
-    Plot.barX(seaStateData, {x: "count", y: "state", fill: "#1e40af", tip: true,
-      sort: {y: null}})
+    Plot.barX(seaStateData, {x: "count", y: "state", fill: BAR_COLOR, tip: true, sort: {y: null}})
   ]
-})
+}))
 ))
 }});
 
-define({id: "a029217d", inputs: ["Plot","windForceData","display"], body: async (Plot,windForceData,display) => {
+define({id: "6a34055c", inputs: ["resize","Plot","windDomain","windForceData","BAR_COLOR","display"], body: async (resize,Plot,windDomain,windForceData,BAR_COLOR,display) => {
 display(await(
-Plot.plot({
-  height: 200, marginLeft: 40,
-  x: {label: "Beaufort force"},
+resize((width) => Plot.plot({
+  width,
+  height: 210,
+  marginLeft: 40,
+  x: {label: "Beaufort force", domain: windDomain},
   y: {label: "Incidents"},
   marks: [
-    Plot.barY(windForceData, {x: "label", y: "count", fill: "#1e40af", tip: true})
+    Plot.barY(windForceData, {x: "label", y: "count", fill: BAR_COLOR, tip: true})
   ]
-})
+}))
 ))
 }});
 
-define({id: "568ee239", inputs: ["Plot","weatherTypeData","display"], body: async (Plot,weatherTypeData,display) => {
+define({id: "acd1e30c", inputs: ["resize","Plot","weatherTypeData","BAR_COLOR","display"], body: async (resize,Plot,weatherTypeData,BAR_COLOR,display) => {
 display(await(
-Plot.plot({
-  height: 200, marginLeft: 80,
+resize((width) => Plot.plot({
+  width,
+  height: 210,
+  marginLeft: 70,
   x: {label: "Incidents"},
+  y: {label: null},
   marks: [
-    Plot.barX(weatherTypeData, {x: "count", y: "type", fill: "#1e40af", tip: true,
-      sort: {y: "-x"}})
+    Plot.barX(weatherTypeData, {x: "count", y: "type", fill: BAR_COLOR, tip: true, sort: {y: "-x"}})
   ]
-})
+}))
 ))
 }});
 
-define({id: "4ff16f63", inputs: ["Plot","visibilityData","display"], body: async (Plot,visibilityData,display) => {
+define({id: "79d2e191", inputs: ["resize","Plot","visDomain","visibilityData","BAR_COLOR","display"], body: async (resize,Plot,visDomain,visibilityData,BAR_COLOR,display) => {
 display(await(
-Plot.plot({
-  height: 180, marginLeft: 220,
+resize((width) => Plot.plot({
+  width,
+  height: 190,
+  marginLeft: 74,
   x: {label: "Incidents"},
+  y: {label: null, domain: visDomain},
   marks: [
-    Plot.barX(visibilityData, {x: "count", y: "vis", fill: "#1e40af", tip: true,
-      sort: {y: null}})
+    Plot.barX(visibilityData, {x: "count", y: "vis", fill: BAR_COLOR, tip: true})
   ]
-})
+}))
 ))
 }});
 
-define({id: "d354265c", inputs: ["Plot","weatherStats","display"], body: async (Plot,weatherStats,display) => {
+define({id: "de751a2c", inputs: ["resize","Plot","weatherStats","BAR_COLOR","BAR_COLOR_DARK","display"], body: async (resize,Plot,weatherStats,BAR_COLOR,BAR_COLOR_DARK,display) => {
 display(await(
-Plot.plot({
-  height: 180, marginLeft: 40,
-  x: {label: "Month", tickFormat: d => ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d]},
-  y: {label: "% incidents with weather factor", percent: true},
+resize((width) => Plot.plot({
+  width,
+  height: 190,
+  marginLeft: 40,
+  x: {label: null, tickFormat: d => ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][d], ticks: 12},
+  y: {label: "% with weather factor", percent: true},
   marks: [
-    Plot.areaY(weatherStats.weather_factor_by_month, {x: "month", y: "pct", fill: "#bfdbfe", fillOpacity: 0.5}),
-    Plot.lineY(weatherStats.weather_factor_by_month, {x: "month", y: "pct", stroke: "#1e40af", strokeWidth: 2}),
-    Plot.dot(weatherStats.weather_factor_by_month, {x: "month", y: "pct", fill: "#1e40af", tip: true})
+    Plot.areaY(weatherStats.weather_factor_by_month, {x: "month", y: "pct", fill: BAR_COLOR, fillOpacity: 0.14}),
+    Plot.lineY(weatherStats.weather_factor_by_month, {x: "month", y: "pct", stroke: BAR_COLOR_DARK, strokeWidth: 2}),
+    Plot.dot(weatherStats.weather_factor_by_month, {x: "month", y: "pct", fill: BAR_COLOR_DARK, r: 3, tip: true})
   ]
-})
+}))
 ))
 }});
 
-define({id: "374ddf68", inputs: ["Plot","timeSeries","display"], body: async (Plot,timeSeries,display) => {
+define({id: "4a920bcb", inputs: ["resize","Plot","overallNightPct","monthly","BAR_COLOR_DARK","display"], body: async (resize,Plot,overallNightPct,monthly,BAR_COLOR_DARK,display) => {
 display(await(
-Plot.plot({
-  height: 180, marginLeft: 40,
+resize((width) => Plot.plot({
+  width,
+  height: 200,
+  marginLeft: 40,
   x: {label: null},
-  y: {label: "Night %", percent: true},
+  y: {label: "Night / twilight %", percent: true},
   marks: [
-    Plot.lineY(timeSeries, {x: "year_month", y: "night_pct", stroke: "#1e293b", strokeWidth: 2}),
-    Plot.dot(timeSeries, {x: "year_month", y: "night_pct", fill: "#1e293b", r: 2, tip: true})
+    Plot.ruleY([overallNightPct], {stroke: "#8d99a6", strokeDasharray: "4,3"}),
+    Plot.lineY(monthly, {x: "date", y: "night_pct", stroke: BAR_COLOR_DARK, strokeWidth: 1.6, curve: "monotone-x", tip: true})
   ]
-})
+}))
 ))
 }});
 
-define({id: "38f32b1f", inputs: ["Plot","nightByCat","overallNightPct","display"], body: async (Plot,nightByCat,overallNightPct,display) => {
+define({id: "5ddbfe66", mode: "inline", inputs: ["overallNightPct","display"], body: async (overallNightPct,display) => {
 display(await(
-Plot.plot({
-  height: 250, marginLeft: 120,
+Math.round(overallNightPct * 100)
+))
+}});
+
+define({id: "0eb51a61", inputs: ["resize","Plot","nightByCat","overallNightPct","display"], body: async (resize,Plot,nightByCat,overallNightPct,display) => {
+display(await(
+resize((width) => Plot.plot({
+  width,
+  height: 260,
+  marginLeft: 90,
   x: {label: "Night / twilight %", percent: true},
+  y: {label: null},
   marks: [
     Plot.barX(nightByCat, {
-      x: "night_pct", y: "cat", fill: d => d.night_pct > overallNightPct ? "#1e293b" : "#60a5fa",
+      x: "night_pct", y: "cat",
+      fill: d => d.night_pct > overallNightPct ? "#4b56a8" : "#3e6fb0",
+      fillOpacity: d => d.night_pct > overallNightPct ? 1 : 0.55,
       tip: true, sort: {y: "-x"}
     }),
-    Plot.ruleX([overallNightPct], {stroke: "#dc2626", strokeDasharray: "4,3",
-      title: "Overall average"})
+    Plot.ruleX([overallNightPct], {stroke: "#bb1e2d", strokeDasharray: "4,3"})
   ]
-})
+}))
 ))
 }});
 
@@ -330,47 +376,61 @@ Plot.plot({
 <li class="observablehq-secondary-link"><a href="#weather-conditions">Weather Conditions</a></li>
 <li class="observablehq-secondary-link"><a href="#visibility-at-incident">Visibility at Incident</a></li>
 <li class="observablehq-secondary-link"><a href="#weather-factor-by-month">Weather Factor by Month</a></li>
-<li class="observablehq-secondary-link"><a href="#night-incident-by-month">Night Incident % by Month</a></li>
+<li class="observablehq-secondary-link"><a href="#night-incident-over-time">Night Incident % over Time</a></li>
 <li class="observablehq-secondary-link"><a href="#night-incidents-by-category">Night Incidents by Category</a></li>
 </ol>
 </nav>
 </aside>
 <main id="observablehq-main" class="observablehq">
-<div class="observablehq observablehq--block"><!--:6bd74340:--></div>
+<div class="observablehq observablehq--block"><!--:7c62b806:--></div>
 <h1 id="trends" tabindex="-1"><a class="observablehq-header-anchor" href="#trends">Trends</a></h1>
-<div class="observablehq observablehq--block"><!--:1aac5076:--></div>
+<p>How incident volume, severity, lighting and weather conditions have shifted across fifteen years of MAIB reports.</p>
+<div style="display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;margin:1rem 0 0.4rem;">
+<div class="observablehq observablehq--block"><!--:fc3d399d:--></div>
+<div class="observablehq observablehq--block"><!--:c71825bb:--></div>
+</div>
 <h2 id="incidents-per-month" tabindex="-1"><a class="observablehq-header-anchor" href="#incidents-per-month">Incidents per Month</a></h2>
-<div class="observablehq observablehq--block"><!--:8ff88d6a:--></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
-<div>
+<div class="observablehq observablehq--block"><!--:7c25fefc:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:d8ca262a:--></div>
+<div class="mio-grid mio-grid-2" style="margin-top:2rem;">
+<div class="mio-panel">
 <h2 id="lighting-conditions" tabindex="-1"><a class="observablehq-header-anchor" href="#lighting-conditions">Lighting Conditions</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:8708c3db:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:799859f4:--></div>
 </div>
-<div>
+<div class="mio-panel">
 <h2 id="sea-state-at-incident" tabindex="-1"><a class="observablehq-header-anchor" href="#sea-state-at-incident">Sea State at Incident</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:4c47eb19:--></div>
-</div></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
-<div>
-<h2 id="wind-force-beaufort" tabindex="-1"><a class="observablehq-header-anchor" href="#wind-force-beaufort">Wind Force (Beaufort)</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:a029217d:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:b5359c8b:--></div>
 </div>
-<div>
+</div>
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
+<h2 id="wind-force-beaufort" tabindex="-1"><a class="observablehq-header-anchor" href="#wind-force-beaufort">Wind Force (Beaufort)</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:6a34055c:--></div>
+</div>
+<div class="mio-panel">
 <h2 id="weather-conditions" tabindex="-1"><a class="observablehq-header-anchor" href="#weather-conditions">Weather Conditions</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:568ee239:--></div>
-</div></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:acd1e30c:--></div>
+</div>
+</div>
+<div class="mio-grid mio-grid-2">
+<div class="mio-panel">
 <h2 id="visibility-at-incident" tabindex="-1"><a class="observablehq-header-anchor" href="#visibility-at-incident">Visibility at Incident</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:4ff16f63:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:79d2e191:--></div>
+</div>
+<div class="mio-panel">
 <h2 id="weather-factor-by-month" tabindex="-1"><a class="observablehq-header-anchor" href="#weather-factor-by-month">Weather Factor by Month</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:d354265c:--></div>
-<h2 id="night-incident-by-month" tabindex="-1"><a class="observablehq-header-anchor" href="#night-incident-by-month">Night Incident % by Month</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:374ddf68:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:de751a2c:--></div>
+</div>
+</div>
+<h2 id="night-incident-over-time" tabindex="-1"><a class="observablehq-header-anchor" href="#night-incident-over-time">Night Incident % over Time</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:4a920bcb:--></div>
 <h2 id="night-incidents-by-category" tabindex="-1"><a class="observablehq-header-anchor" href="#night-incidents-by-category">Night Incidents by Category</a></h2>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:38f32b1f:--></div>
+<p>Categories whose bar crosses the dashed line see more night-time incidents than the overall average (<observablehq-loading></observablehq-loading><!--:5ddbfe66:-->%).</p>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:0eb51a61:--></div>
 </main>
 <footer id="observablehq-footer">
 <nav><a rel="prev" href="./themes"><span>Themes</span></a><a rel="next" href="./vessels"><span>Vessels &amp; People</span></a></nav>
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-05-15T12:21:23">May 15, 2026</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-07-02T07:38:47">Jul 2, 2026</a>.</div>
 </footer>
 </div>
 </body>
